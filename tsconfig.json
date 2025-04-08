@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    "target": "es6",                        // ES6
+    "module": "commonjs",                   // CommonJS for Node.js
+    "rootDir": "./",                        // Root of source code
+    "outDir": "./dist",                     // Output compiled JS to 'dist' folder
+    "strict": true,                         // Enable strict type-checking
+    "moduleResolution": "node",   
+    "allowSyntheticDefaultImports": true,          // Resolve modules
+    "esModuleInterop": true,                // default imports from CJS modules
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,              // Allow importing .json files
+    "skipLibCheck": true                    // Skip type checks for 3rd party libraries
+  },
+  "rootDir": "src",
+"include": ["src/**/*.ts"],                 // Include all TypeScript files
+  "exclude": ["node_modules", "dist"]       // Don't compile node_modules or output folder
+}

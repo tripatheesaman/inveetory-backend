@@ -23,6 +23,7 @@ export const login = async (req: Request, res: Response): Promise<void> => {
     {
       UserInfo: {
         username: user.username,
+        name:user.first_name + " " + user.last_name,
         role: user.role,
         permissions: permissions
       },

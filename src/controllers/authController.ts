@@ -17,7 +17,7 @@ export const login = async (req: Request, res: Response): Promise<void> => {
     res.status(401).json({ message: "Invalid credentials" });
     return;
   }
-  const permissions = getPermissionsByUserId(user.id)
+  const permissions = await getPermissionsByUserId(user.id)
 
   const accessToken = jwt.sign(
     {

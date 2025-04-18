@@ -36,14 +36,66 @@ export const login = async (req: Request, res: Response): Promise<void> => {
       username: user.username,
     },
     process.env.REFRESH_TOKEN_SECRET as string,
-    { expiresIn: "1d" }
+    { expiresIn: "7d" }
   );
-  console.log("reached")
-  res.cookie("jwt", refreshToken, {
+
+  // Set both tokens in cookies
+  res.cookie("accessToken", accessToken, {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
-    sameSite: "none",
-    maxAge: 7 * 24 * 60 * 60 * 1000,
+    sameSite: "strict",
+    maxAge: 15 * 60 * 1000, // 15 minutes
   });
+
+  res.cookie("refreshToken", refreshToken, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "strict",
+    maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+  });
+
   res.json({ accessToken });
+};
+
+export const refreshToken = async (req: Request, res: Response): Promise<void> => {
+  const refreshToken = req.cookies.refreshToken;
+
+  if (!refreshToken) {
+    res.status(401).json({ message: "No refresh token provided" });
+    return;
+  }
+
+  try {
+    const decoded = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET as string) as any;
+    const user = await findUserByEmail(decoded.username);
+    
+    if (!user) {
+      res.status(404).json({ message: "User not found" });
+      return;
+    }
+
+    const permissions = getPermissionsByUserId(user.id);
+    const newAccessToken = jwt.sign(
+      {
+        UserInfo: {
+          username: user.username,
+          role: user.role,
+          permissions: permissions
+        },
+      },
+      process.env.ACCESS_TOKEN_SECRET as string,
+      { expiresIn: "15m" }
+    );
+
+    res.cookie("accessToken", newAccessToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+      maxAge: 15 * 60 * 1000, // 15 minutes
+    });
+
+    res.json({ accessToken: newAccessToken });
+  } catch (error) {
+    res.status(403).json({ message: "Invalid refresh token" });
+  }
 };

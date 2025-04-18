@@ -8,3 +8,6 @@
 20250408	16:33:49	126d364c-6dfe-4707-ae1f-1432731a7a0a	Error	secretOrPrivateKey must have a value	POST,/auth/login,http://localhost:3000
 20250408	16:34:57	3fe7942f-e4a6-4115-9783-2efa2ac034d3	Error	secretOrPrivateKey must have a value	POST,/auth/login,http://localhost:3000
 20250408	16:35:27	4c83ea57-334d-4316-a9a3-c6c2d72dae9f	Error	secretOrPrivateKey must have a value	POST,/auth/login,http://localhost:3000
+20250409	10:23:27	98e410d7-78d9-4a2d-a86a-34803972803d	Error	secretOrPrivateKey must have a value	POST,/auth/login,http://localhost:3000
+20250409	10:25:33	b46eae0b-eaad-423b-a87a-07d9bb8ea461	Error	secretOrPrivateKey must have a value	POST,/auth/login,http://localhost:3000
+20250409	10:25:45	f813bf3e-e401-41f6-b6e9-65b9cdd85957	Error	secretOrPrivateKey must have a value	POST,/auth/login,http://localhost:3000

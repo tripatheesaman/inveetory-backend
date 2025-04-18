@@ -3,6 +3,8 @@ import pool from "../config/db";
 export interface User {
   id: number;
   username: string;
+  first_name: string;
+  last_name: string;
   password: string;
   permissions: string;
   role: "superadmin" | "admin" | "manager" | "entrant" | "custom";

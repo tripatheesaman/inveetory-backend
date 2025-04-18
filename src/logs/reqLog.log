@@ -251,3 +251,7 @@
 20250418	11:29:09	7e8540c2-ac60-4cee-994d-ce5667a68118	POST	/auth/login	http://localhost:3000
 20250418	11:33:46	18e24629-1b1c-45e3-842d-5616c5b57c92	OPTIONS	/auth/login	http://localhost:3000
 20250418	11:33:46	40ac12b0-9f94-4e57-bc67-ab307f11cedc	POST	/auth/login	http://localhost:3000
+20250418	11:57:40	7f4644d2-3c21-4d13-b666-fe2c424779e8	OPTIONS	/auth/login	http://localhost:3000
+20250418	11:57:40	747bd856-81ad-4b5e-9adc-539f65046ed6	POST	/auth/login	http://localhost:3000
+20250418	12:13:23	2ab880c1-1e0f-481c-9aef-d4e4f8fc8830	OPTIONS	/auth/login	http://localhost:3000
+20250418	12:13:23	d36c8c24-690f-4624-8509-44d31705fd4c	POST	/auth/login	http://localhost:3000

@@ -4,13 +4,29 @@ import { RowDataPacket } from 'mysql2';
 
 interface SearchResult extends RowDataPacket {
   id: number;
-  nac_code: string;
-  name: string;
+  nacCode: string;
+  itemName: string;
   partNumber: string;
   equipmentNumber: string;
   currentBalance: number;
   location: string;
   cardNumber: string;
+}
+
+interface ItemDetails extends RowDataPacket {
+  id: number;
+  nacCode: string;
+  itemName: string;
+  partNumber: string;
+  equipmentNumber: string;
+  currentBalance: number;
+  location: string;
+  cardNumber: string;
+  unit: string;
+  openQuantity: number;
+  openAmount: number;
+  imageUrl: string;
+  altText: string;
 }
 
 interface SearchError extends Error {
@@ -19,6 +35,64 @@ interface SearchError extends Error {
   sqlState?: string;
   sqlMessage?: string;
 }
+
+export const getItemDetails = async (req: Request, res: Response): Promise<void> => {
+  const { id } = req.params;
+
+  if (!id) {
+    res.status(400).json({
+      error: 'Bad Request',
+      message: 'Item ID is required'
+    });
+    return;
+  }
+
+  try {
+    const query = `
+      SELECT 
+        id,
+        nac_code as nacCode,
+        item_name as itemName,
+        part_numbers as partNumber,
+        applicable_equipments as equipmentNumber,
+        current_balance as currentBalance,
+        location,
+        card_number as cardNumber,
+        unit,
+        open_quantity as openQuantity,
+        open_amount as openAmount,
+        image_url as imageUrl,
+        CASE 
+          WHEN INSTR(item_name, ',') > 0 
+          THEN SUBSTRING_INDEX(item_name, ',', 1)
+          ELSE item_name
+        END as altText
+      FROM stock_details
+      WHERE id = ?
+    `;
+
+    const [results] = await pool.execute<ItemDetails[]>(query, [id]);
+
+    if (results.length === 0) {
+      res.status(404).json({
+        error: 'Not Found',
+        message: 'Item not found'
+      });
+      return;
+    }
+
+    res.json(results[0]);
+  } catch (error) {
+    const searchError = error as SearchError;
+    console.error('Error fetching item details:', searchError);
+
+    res.status(500).json({
+      error: 'Internal Server Error',
+      message: 'An error occurred while fetching item details',
+      details: searchError.message
+    });
+  }
+};
 
 export const searchStockDetails = async (req: Request, res: Response): Promise<void> => {
   const { universal, equipmentNumber, partNumber } = req.query;
@@ -36,8 +110,8 @@ export const searchStockDetails = async (req: Request, res: Response): Promise<v
     let query = `
       SELECT 
         id,
-        nac_code,
-        item_name as name,
+        nac_code as nacCode,
+        item_name as itemName,
         part_numbers as partNumber,
         applicable_equipments as equipmentNumber,
         current_balance as currentBalance,

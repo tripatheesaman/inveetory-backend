@@ -96,6 +96,7 @@ export const getItemDetails = async (req: Request, res: Response): Promise<void>
 
 export const searchStockDetails = async (req: Request, res: Response): Promise<void> => {
   const { universal, equipmentNumber, partNumber } = req.query;
+
   // Input validation
   if (!universal && !equipmentNumber && !partNumber) {
     res.status(400).json({ 
@@ -122,16 +123,14 @@ export const searchStockDetails = async (req: Request, res: Response): Promise<v
     `;
     const params: (string | number)[] = [];
 
-    // Add search conditions
+    // Add search conditions with AND logic
     if (universal) {
       // Try FULLTEXT search first
       try {
-        const fulltextQuery = query + ` AND (
+        query += ` AND (
           MATCH(nac_code, item_name, part_numbers, applicable_equipments) AGAINST(? IN BOOLEAN MODE)
-        ) LIMIT 50`;
-        const [results] = await pool.execute<SearchResult[]>(fulltextQuery, [`${universal}*`]);
-        res.json(results.length === 0 ? null : results);
-        return;
+        )`;
+        params.push(`${universal}*`);
       } catch (error) {
         const searchError = error as SearchError;
         if (searchError.code === 'ER_FT_MATCHING_KEY_NOT_FOUND') {

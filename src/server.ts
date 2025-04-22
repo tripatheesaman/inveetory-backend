@@ -9,6 +9,7 @@ import errorHandler from "./middlewares/errorhandler";
 import pool from "./config/db";
 import rootRoutes from "./routes/root";
 import authRoutes from "./routes/authRoutes";
+import issueRoutes from './routes/issueRoutes';
 
 const app = express();
 const PORT = process.env.PORT || 3500;
@@ -28,6 +29,7 @@ app.use("/", express.static(path.join(__dirname, "../", "public")));
 // Routes
 app.use("/", rootRoutes);
 app.use("/auth", authRoutes);
+app.use('/api/issues', issueRoutes);
 // Catch-All Route
 app.use((req: Request, res: Response) => {
   if (req.accepts("html")) {

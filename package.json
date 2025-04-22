@@ -10,6 +10,7 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@types/pg": "^8.11.13",
     "bcryptjs": "^3.0.2",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
@@ -18,6 +19,7 @@
     "express": "^5.1.0",
     "jsonwebtoken": "^9.0.2",
     "mysql2": "^3.14.0",
+    "pg": "^8.14.1",
     "sequelize": "^6.37.7",
     "sequelize-auto": "^0.8.8",
     "sequelize-cli": "^6.6.2",

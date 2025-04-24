@@ -10,6 +10,8 @@ import pool from "./config/db";
 import rootRoutes from "./routes/root";
 import authRoutes from "./routes/authRoutes";
 import issueRoutes from './routes/issueRoutes';
+import searchRoutes from './routes/searchRoutes';
+import transactionRoutes from './routes/transactionRoutes';
 
 const app = express();
 const PORT = process.env.PORT || 3500;
@@ -17,8 +19,8 @@ const PORT = process.env.PORT || 3500;
 // Middleware
 app.use(logger);
 app.use(cors({
-  origin: 'http://localhost:3000', 
-  credentials: true               
+  origin: process.env.CORS_ORIGIN || 'http://localhost:3000',
+  credentials: true
 }));
 app.use(cookieParser());
 app.use(express.json());
@@ -30,7 +32,10 @@ app.use("/", express.static(path.join(__dirname, "../", "public")));
 app.use("/", rootRoutes);
 app.use("/auth", authRoutes);
 app.use('/api/issues', issueRoutes);
-// Catch-All Route
+app.use('/api/search', searchRoutes);
+app.use('/api/transactions', transactionRoutes);
+
+// 404 Handler - Catch all unmatched routes
 app.use((req: Request, res: Response) => {
   if (req.accepts("html")) {
     res.sendFile(path.join(__dirname, "..", "views", "404.html"));
@@ -41,9 +46,24 @@ app.use((req: Request, res: Response) => {
   }
 });
 
-
-
+// Error Handler
 app.use(errorHandler);
+
+// Graceful shutdown
+const gracefulShutdown = async () => {
+  try {
+    await pool.end();
+    console.log('Database connection closed.');
+    process.exit(0);
+  } catch (err) {
+    console.error('Error during shutdown:', err);
+    process.exit(1);
+  }
+};
+
+process.on('SIGTERM', gracefulShutdown);
+process.on('SIGINT', gracefulShutdown);
+
 const startServer = async () => {
   try {
     await pool.query("SELECT 1");
@@ -59,6 +79,8 @@ const startServer = async () => {
     } else {
       logEvents(`${err}`, "MySQLErrLog.log");
     }
+    process.exit(1);
   }
 };
+
 startServer();

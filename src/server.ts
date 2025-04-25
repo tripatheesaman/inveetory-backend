@@ -12,6 +12,7 @@ import authRoutes from "./routes/authRoutes";
 import issueRoutes from './routes/issueRoutes';
 import searchRoutes from './routes/searchRoutes';
 import transactionRoutes from './routes/transactionRoutes';
+import requestRoutes from './routes/requestRoutes';
 
 const app = express();
 const PORT = process.env.PORT || 3500;
@@ -20,7 +21,7 @@ const PORT = process.env.PORT || 3500;
 app.use(logger);
 app.use(cors({
   origin: process.env.CORS_ORIGIN || 'http://localhost:3000',
-  credentials: true
+  credentials: true               
 }));
 app.use(cookieParser());
 app.use(express.json());
@@ -34,6 +35,7 @@ app.use("/auth", authRoutes);
 app.use('/api/issues', issueRoutes);
 app.use('/api/search', searchRoutes);
 app.use('/api/transactions', transactionRoutes);
+app.use('/api/request', requestRoutes);
 
 // 404 Handler - Catch all unmatched routes
 app.use((req: Request, res: Response) => {

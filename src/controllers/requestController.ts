@@ -13,6 +13,24 @@ interface ReceiveDetail extends RowDataPacket {
     receive_quantity: number;
 }
 
+interface PendingRequest extends RowDataPacket {
+    request_number: string;
+    request_date: Date;
+    requested_by: string;
+}
+
+interface RequestItem extends RowDataPacket {
+    id: number;
+    request_number: string;
+    item_name: string;
+    part_number: string;
+    equipment_number: string;
+    requested_quantity: number;
+    image_path: string;
+    specifications: string;
+    remarks: string;
+}
+
 // Function to format date for MySQL
 const formatDateForMySQL = (isoDate: string): string => {
     const date = new Date(isoDate);
@@ -144,5 +162,64 @@ export const createRequest = async (req: Request, res: Response): Promise<void> 
         });
     } finally {
         connection.release();
+    }
+};
+
+export const getPendingRequests = async (req: Request, res: Response): Promise<void> => {
+    try {
+        const [rows] = await pool.query<PendingRequest[]>(
+            `SELECT id,request_number, request_date, requested_by 
+             FROM request_details 
+             WHERE approval_status = 'PENDING'`
+        );
+
+        const pendingRequests = rows.map(row => ({
+            requestId:row.id,
+            requestNumber: row.request_number,
+            requestDate: row.request_date,
+            requestedBy: row.requested_by
+        }));
+        
+        res.status(200).json(pendingRequests);
+    } catch (error) {
+        console.error('Error fetching pending requests:', error);
+        res.status(500).json({ 
+            error: 'Internal Server Error',
+            message: error instanceof Error ? error.message : 'An error occurred while fetching pending requests'
+        });
+    }
+};
+
+export const getRequestItems = async (req: Request, res: Response): Promise<void> => {
+    try {
+        const { requestNumber } = req.params;
+
+        const [rows] = await pool.query<RequestItem[]>(
+            `SELECT id, request_number, item_name, part_number, equipment_number, 
+                    requested_quantity, image_path, specifications, remarks
+             FROM request_details 
+             WHERE request_number = ?`,
+            [requestNumber]
+        );
+
+        const requestItems = rows.map(row => ({
+            id: row.id,
+            requestNumber: row.request_number,
+            itemName: row.item_name,
+            partNumber: row.part_number,
+            equipmentNumber: row.equipment_number,
+            requestedQuantity: row.requested_quantity,
+            imageUrl: row.image_path,
+            specifications: row.specifications,
+            remarks: row.remarks
+        }));
+        
+        res.status(200).json(requestItems);
+    } catch (error) {
+        console.error('Error fetching request items:', error);
+        res.status(500).json({ 
+            error: 'Internal Server Error',
+            message: error instanceof Error ? error.message : 'An error occurred while fetching request items'
+        });
     }
 }; 

@@ -13,6 +13,7 @@ import issueRoutes from './routes/issueRoutes';
 import searchRoutes from './routes/searchRoutes';
 import transactionRoutes from './routes/transactionRoutes';
 import requestRoutes from './routes/requestRoutes';
+import notificationRoutes from './routes/notificationRoutes';
 
 const app = express();
 const PORT = process.env.PORT || 3500;
@@ -36,6 +37,7 @@ app.use('/api/issues', issueRoutes);
 app.use('/api/search', searchRoutes);
 app.use('/api/transactions', transactionRoutes);
 app.use('/api/request', requestRoutes);
+app.use('/api/notification', notificationRoutes);
 
 // 404 Handler - Catch all unmatched routes
 app.use((req: Request, res: Response) => {

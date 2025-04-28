@@ -13,6 +13,69 @@ interface ReceiveDetail extends RowDataPacket {
     receive_quantity: number;
 }
 
+interface PendingRequest extends RowDataPacket {
+    request_number: string;
+    request_date: Date;
+    requested_by: string;
+}
+
+interface RequestItem extends RowDataPacket {
+    id: number;
+    request_number: string;
+    item_name: string;
+    part_number: string;
+    equipment_number: string;
+    requested_quantity: number;
+    image_path: string;
+    specifications: string;
+    remarks: string;
+}
+
+interface UpdateRequestDTO {
+    requestNumber: string;
+    requestDate: string;
+    remarks: string;
+    items: Array<{
+        id?: number;
+        requestNumber: string;
+        partNumber: string;
+        itemName: string;
+        requestedQuantity: number;
+        equipmentNumber: string;
+        specifications: string;
+        imageUrl: string;
+        approvalStatus?: string;
+    }>;
+}
+
+interface ApproveRequestDTO {
+    approvedBy: string;
+}
+
+interface RejectRequestDTO {
+    rejectedBy: string;
+    rejectionReason: string;
+}
+
+interface RequestWithItems extends RowDataPacket {
+    id: number;
+    request_number: string;
+    request_date: Date;
+    part_number: string;
+    item_name: string;
+    unit: string;
+    requested_quantity: number;
+    current_balance: number | string;
+    previous_rate: number | string;
+    equipment_number: string;
+    image_path: string;
+    specifications: string;
+    remarks: string;
+    requested_by: string;
+    approval_status: string;
+    nac_code: string;
+}
+
 // Function to format date for MySQL
 const formatDateForMySQL = (isoDate: string): string => {
     const date = new Date(isoDate);
@@ -77,7 +140,8 @@ const processRequestItem = async (
         specifications: item.specifications,
         remarks: requestData.remarks,
         requested_by: requestData.requestedBy,
-        approval_status: 'PENDING'
+        approval_status: 'PENDING',
+        nac_code: item.nacCode
     };
 };
 
@@ -107,8 +171,8 @@ export const createRequest = async (req: Request, res: Response): Promise<void> 
                 `INSERT INTO request_details 
                 (request_number, request_date, part_number, item_name, unit, 
                  requested_quantity, current_balance, previous_rate, equipment_number, 
-                 image_path, specifications, remarks, requested_by, approval_status)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+                 image_path, specifications, remarks, requested_by, approval_status, nac_code)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
                 [
                     detail.request_number,
                     formatDateForMySQL(detail.request_date.toISOString()),
@@ -123,7 +187,8 @@ export const createRequest = async (req: Request, res: Response): Promise<void> 
                     detail.specifications,
                     detail.remarks,
                     detail.requested_by,
-                    detail.approval_status
+                    detail.approval_status,
+                    detail.nac_code
                 ]
             );
         }
@@ -141,6 +206,381 @@ export const createRequest = async (req: Request, res: Response): Promise<void> 
         res.status(500).json({ 
             error: 'Internal Server Error',
             message: error instanceof Error ? error.message : 'An error occurred while creating the request'
+        });
+    } finally {
+        connection.release();
+    }
+};
+
+export const getPendingRequests = async (req: Request, res: Response): Promise<void> => {
+    try {
+        const [rows] = await pool.query<PendingRequest[]>(
+            `SELECT id,request_number, request_date, requested_by 
+             FROM request_details 
+             WHERE approval_status = 'PENDING'`
+        );
+
+        const pendingRequests = rows.map(row => ({
+            requestId:row.id,
+            requestNumber: row.request_number,
+            requestDate: row.request_date,
+            requestedBy: row.requested_by
+        }));
+        
+        res.status(200).json(pendingRequests);
+    } catch (error) {
+        console.error('Error fetching pending requests:', error);
+        res.status(500).json({ 
+            error: 'Internal Server Error',
+            message: error instanceof Error ? error.message : 'An error occurred while fetching pending requests'
+        });
+    }
+};
+
+export const getRequestItems = async (req: Request, res: Response): Promise<void> => {
+    try {
+        const { requestNumber } = req.params;
+
+        const [rows] = await pool.query<RequestItem[]>(
+            `SELECT id, request_number, item_name, part_number, equipment_number, 
+                    requested_quantity, image_path, specifications, remarks
+             FROM request_details 
+             WHERE request_number = ?`,
+            [requestNumber]
+        );
+
+        const requestItems = rows.map(row => ({
+            id: row.id,
+            requestNumber: row.request_number,
+            itemName: row.item_name,
+            partNumber: row.part_number,
+            equipmentNumber: row.equipment_number,
+            requestedQuantity: row.requested_quantity,
+            imageUrl: row.image_path,
+            specifications: row.specifications,
+            remarks: row.remarks
+        }));
+        
+        res.status(200).json(requestItems);
+    } catch (error) {
+        console.error('Error fetching request items:', error);
+        res.status(500).json({ 
+            error: 'Internal Server Error',
+            message: error instanceof Error ? error.message : 'An error occurred while fetching request items'
+        });
+    }
+};
+
+export const updateRequest = async (req: Request, res: Response): Promise<void> => {
+    const connection = await pool.getConnection();
+    
+    try {
+        const { requestNumber: newRequestNumber, requestDate, remarks, items }: UpdateRequestDTO = req.body;
+        const { requestNumber: oldRequestNumber } = req.params;
+        await connection.beginTransaction();
+
+        // Get existing items for this request
+        const [existingItems] = await connection.query<RowDataPacket[]>(
+            'SELECT id FROM request_details WHERE request_number = ?',
+            [oldRequestNumber]
+        );
+
+        const existingItemIds = existingItems.map(item => item.id);
+        const updatedItemIds = items.filter(item => item.id).map(item => item.id);
+
+        // Delete items that are no longer in the request
+        const itemsToDelete = existingItemIds.filter(id => !updatedItemIds.includes(id));
+        if (itemsToDelete.length > 0) {
+            await connection.query(
+                'DELETE FROM request_details WHERE id IN (?)',
+                [itemsToDelete]
+            );
+        }
+
+        // Update or insert items
+        for (const item of items) {
+            if (item.id) {
+                // Update existing item
+                const updateFields = [
+                    'request_number = ?',
+                    'request_date = ?',
+                    'part_number = ?',
+                    'item_name = ?',
+                    'requested_quantity = ?',
+                    'equipment_number = ?',
+                    'specifications = ?',
+                    'image_path = ?',
+                    'remarks = ?'
+                ];
+                const updateValues = [
+                    newRequestNumber,
+                    formatDateForMySQL(requestDate),
+                    item.partNumber,
+                    item.itemName,
+                    item.requestedQuantity,
+                    item.equipmentNumber,
+                    item.specifications,
+                    item.imageUrl,
+                    remarks
+                ];
+
+                // Add approval_status to update if provided
+                if (item.approvalStatus) {
+                    updateFields.push('approval_status = ?');
+                    updateValues.push(item.approvalStatus);
+                }
+
+                await connection.query(
+                    `UPDATE request_details 
+                     SET ${updateFields.join(', ')}
+                     WHERE id = ?`,
+                    [...updateValues, item.id]
+                );
+            } else {
+                // Insert new item
+                const insertFields = [
+                    'request_number',
+                    'request_date',
+                    'part_number',
+                    'item_name',
+                    'requested_quantity',
+                    'equipment_number',
+                    'specifications',
+                    'image_path',
+                    'remarks',
+                    'approval_status'
+                ];
+                const insertValues = [
+                    newRequestNumber,
+                    formatDateForMySQL(requestDate),
+                    item.partNumber,
+                    item.itemName,
+                    item.requestedQuantity,
+                    item.equipmentNumber,
+                    item.specifications,
+                    item.imageUrl,
+                    remarks,
+                    item.approvalStatus || 'PENDING'
+                ];
+
+                await connection.query(
+                    `INSERT INTO request_details 
+                     (${insertFields.join(', ')})
+                     VALUES (${insertValues.map(() => '?').join(', ')})`,
+                    insertValues
+                );
+            }
+        }
+
+        await connection.commit();
+        
+        res.status(200).json({ 
+            message: 'Request updated successfully',
+            requestNumber: newRequestNumber
+        });
+    } catch (error) {
+        await connection.rollback();
+        console.error('Error updating request:', error);
+        res.status(500).json({ 
+            error: 'Internal Server Error',
+            message: error instanceof Error ? error.message : 'An error occurred while updating the request'
+        });
+    } finally {
+        connection.release();
+    }
+};
+
+export const approveRequest = async (req: Request, res: Response): Promise<void> => {
+    const connection = await pool.getConnection();
+    
+    try {
+        const { requestNumber } = req.params;
+        const { approvedBy } = req.body as ApproveRequestDTO;
+
+        await connection.beginTransaction();
+
+        // Update all items for this request
+        await connection.query(
+            `UPDATE request_details 
+             SET approval_status = 'APPROVED',
+                 approved_by = ?
+             WHERE request_number = ?`,
+            [approvedBy, requestNumber]
+        );
+
+        await connection.commit();
+        
+        res.status(200).json({ 
+            message: 'Request approved successfully',
+            requestNumber
+        });
+    } catch (error) {
+        await connection.rollback();
+        console.error('Error approving request:', error);
+        res.status(500).json({ 
+            error: 'Internal Server Error',
+            message: error instanceof Error ? error.message : 'An error occurred while approving the request'
+        });
+    } finally {
+        connection.release();
+    }
+};
+
+export const rejectRequest = async (req: Request, res: Response): Promise<void> => {
+    const connection = await pool.getConnection();
+    
+    try {
+        const { requestNumber } = req.params;
+        const { rejectedBy, rejectionReason } = req.body as RejectRequestDTO;
+
+        await connection.beginTransaction();
+
+        // Get the first item's ID and the requested_by username
+        const [requestDetails] = await connection.query<RowDataPacket[]>(
+            `SELECT id, requested_by 
+             FROM request_details 
+             WHERE request_number = ? 
+             ORDER BY id ASC 
+             LIMIT 1`,
+            [requestNumber]
+        );
+
+        if (requestDetails.length === 0) {
+            res.status(404).json({
+                error: 'Not Found',
+                message: 'Request not found'
+            });
+            return;
+        }
+
+        const firstItemId = requestDetails[0].id;
+        const requestedBy = requestDetails[0].requested_by;
+
+        // Get the user ID from the username
+        const [users] = await connection.query<RowDataPacket[]>(
+            'SELECT id FROM users WHERE username = ?',
+            [requestedBy]
+        );
+
+        if (users.length === 0) {
+            res.status(404).json({
+                error: 'Not Found',
+                message: 'User not found'
+            });
+            return;
+        }
+
+        const userId = users[0].id;
+
+        // Update all items for this request
+        await connection.query(
+            `UPDATE request_details 
+             SET approval_status = 'REJECTED',
+                 rejected_by = ?,
+                 rejection_reason = ?
+             WHERE request_number = ?`,
+            [rejectedBy, rejectionReason, requestNumber]
+        );
+
+        // Create notification
+        await connection.query(
+            `INSERT INTO notifications 
+             (user_id, reference_type, message, reference_id)
+             VALUES (?, ?, ?, ?)`,
+            [
+                userId,
+                'request',
+                `Your request number ${requestNumber} has been rejected for the following reason: ${rejectionReason}`,
+                firstItemId
+            ]
+        );
+
+        await connection.commit();
+        
+        res.status(200).json({ 
+            message: 'Request rejected successfully',
+            requestNumber
+        });
+    } catch (error) {
+        await connection.rollback();
+        console.error('Error rejecting request:', error);
+        res.status(500).json({ 
+            error: 'Internal Server Error',
+            message: error instanceof Error ? error.message : 'An error occurred while rejecting the request'
+        });
+    } finally {
+        connection.release();
+    }
+};
+
+export const getRequestById = async (req: Request, res: Response): Promise<void> => {
+    const connection = await pool.getConnection();
+    
+    try {
+        const { id } = req.params;
+
+        // First get the request number for this ID
+        const [requestRows] = await connection.query<RowDataPacket[]>(
+            'SELECT request_number FROM request_details WHERE id = ?',
+            [id]
+        );
+
+        if (requestRows.length === 0) {
+            res.status(404).json({
+                error: 'Not Found',
+                message: 'Request not found'
+            });
+            return;
+        }
+
+        const requestNumber = requestRows[0].request_number;
+
+        // Then get all items for this request number
+        const [items] = await connection.query<RequestWithItems[]>(
+            `SELECT id, request_number, request_date, part_number, item_name, unit,
+                    requested_quantity, current_balance, previous_rate, equipment_number,
+                    image_path, specifications, remarks, requested_by, approval_status, nac_code
+             FROM request_details
+             WHERE request_number = ?
+             ORDER BY id`,
+            [requestNumber]
+        );
+
+        if (items.length === 0) {
+            res.status(404).json({
+                error: 'Not Found',
+                message: 'Request items not found'
+            });
+            return;
+        }
+
+        const requestDetails = {
+            requestNumber: items[0].request_number,
+            requestDate: items[0].request_date,
+            requestedBy: items[0].requested_by,
+            approvalStatus: items[0].approval_status,
+            items: items.map(item => ({
+                id: item.id,
+                partNumber: item.part_number,
+                itemName: item.item_name,
+                unit: item.unit,
+                requestedQuantity: item.requested_quantity,
+                currentBalance: item.current_balance,
+                previousRate: item.previous_rate,
+                equipmentNumber: item.equipment_number,
+                imageUrl: item.image_path,
+                specifications: item.specifications,
+                remarks: item.remarks,
+                nacCode: item.nac_code
+            }))
+        };
+        
+        res.status(200).json(requestDetails);
+    } catch (error) {
+        console.error('Error fetching request:', error);
+        res.status(500).json({ 
+            error: 'Internal Server Error',
+            message: error instanceof Error ? error.message : 'An error occurred while fetching the request'
         });
     } finally {
         connection.release();

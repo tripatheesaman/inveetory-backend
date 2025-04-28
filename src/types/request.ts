@@ -32,4 +32,5 @@ export interface RequestDetail {
     remarks: string;
     requested_by: string;
     approval_status: string;
+    nac_code: string;
 } 

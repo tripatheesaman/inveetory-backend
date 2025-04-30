@@ -76,6 +76,18 @@ interface RequestWithItems extends RowDataPacket {
     nac_code: string;
 }
 
+interface SearchRequestResult extends RowDataPacket {
+    id: number;
+    request_number: string;
+    request_date: Date;
+    requested_by: string;
+    part_number: string;
+    item_name: string;
+    equipment_number: string;
+    requested_quantity: number;
+    approval_status: string;
+}
+
 // Function to format date for MySQL
 const formatDateForMySQL = (isoDate: string): string => {
     const date = new Date(isoDate);
@@ -368,7 +380,7 @@ export const updateRequest = async (req: Request, res: Response): Promise<void> 
                      (${insertFields.join(', ')})
                      VALUES (${insertValues.map(() => '?').join(', ')})`,
                     insertValues
-                );
+                ); 
             }
         }
 
@@ -584,5 +596,94 @@ export const getRequestById = async (req: Request, res: Response): Promise<void>
         });
     } finally {
         connection.release();
+    }
+};
+
+export const searchRequests = async (req: Request, res: Response): Promise<void> => {
+    const { universal, equipmentNumber, partNumber } = req.query;
+    // Input validation
+    if (!universal && !equipmentNumber && !partNumber) {
+        res.status(400).json({ 
+            error: 'Bad Request',
+            message: 'At least one search parameter is required'
+        });
+        return;
+    }
+    try {
+        // Build the base query
+        let query = `
+            SELECT DISTINCT
+                rd.id,
+                rd.request_number,
+                rd.request_date,
+                rd.requested_by,
+                rd.part_number,
+                rd.item_name,
+                rd.equipment_number,
+                rd.requested_quantity,
+                rd.approval_status,
+                rd.nac_code
+            FROM request_details rd
+            WHERE 1=1
+        `;
+        const params: (string | number)[] = [];
+
+        // Add search conditions with AND logic
+        if (universal) {
+            query += ` AND (
+                rd.request_number LIKE ? OR
+                rd.item_name LIKE ? OR
+                rd.part_number LIKE ? OR
+                rd.equipment_number LIKE ? OR
+                rd.nac_code LIKE ?
+            )`;
+            params.push(`%${universal}%`, `%${universal}%`, `%${universal}%`, `%${universal}%`, `%${universal}%`);
+        }
+
+        if (equipmentNumber) {
+            query += ` AND rd.equipment_number LIKE ?`;
+            params.push(`%${equipmentNumber}%`);
+        }
+
+        if (partNumber) {
+            query += ` AND rd.part_number LIKE ?`;
+            params.push(`%${partNumber}%`);
+        }
+
+        // Add LIMIT to prevent overwhelming results
+        query += ' ORDER BY rd.request_date DESC LIMIT 50';
+
+        const [results] = await pool.execute<SearchRequestResult[]>(query, params);
+        
+        // Group results by request number
+        const groupedResults = results.reduce((acc, result) => {
+            if (!acc[result.request_number]) {
+                acc[result.request_number] = {
+                    requestNumber: result.request_number,
+                    requestDate: result.request_date,
+                    requestedBy: result.requested_by,
+                    approvalStatus: result.approval_status,
+                    items: []
+                };
+            }
+            acc[result.request_number].items.push({
+                id: result.id,
+                partNumber: result.part_number,
+                itemName: result.item_name,
+                equipmentNumber: result.equipment_number,
+                requestedQuantity: result.requested_quantity,
+                nacCode: result.nac_code
+            });
+            return acc;
+        }, {} as Record<string, any>);
+
+        const response = Object.values(groupedResults);
+        res.json(response);
+    } catch (error) {
+        console.error('Error searching requests:', error);
+        res.status(500).json({ 
+            error: 'Internal Server Error',
+            message: error instanceof Error ? error.message : 'An error occurred while searching requests'
+        });
     }
 }; 

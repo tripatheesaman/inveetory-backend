@@ -12,14 +12,18 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@types/exceljs": "^0.5.3",
     "bcryptjs": "^3.0.2",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
     "date-fns": "^4.1.0",
     "dotenv": "^16.4.7",
+    "exceljs": "^4.4.0",
     "express": "^5.1.0",
     "jsonwebtoken": "^9.0.2",
     "mysql2": "^3.14.0",
+    "pdfkit": "^0.17.0",
+    "sharp": "^0.34.1",
     "uuid": "^11.1.0"
   },
   "devDependencies": {
@@ -29,6 +33,7 @@
     "@types/express": "^5.0.1",
     "@types/jsonwebtoken": "^9.0.9",
     "@types/node": "^22.14.0",
+    "@types/pdfkit": "^0.13.9",
     "@types/uuid": "^10.0.0",
     "nodemon": "^3.1.9",
     "ts-node": "^10.9.2",

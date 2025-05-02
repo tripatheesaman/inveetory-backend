@@ -137,29 +137,51 @@ export class ExcelService {
             throw new Error('Template worksheet not found');
         }
 
-        // Set page setup for A4 landscape and fit to one page
-        worksheet.pageSetup = {
-            paperSize: 9, // A4
-            orientation: 'landscape',
-            fitToPage: true,
-            fitToWidth: 1,
-            fitToHeight: 1,
-            margins: { left: 0.3, right: 0.3, top: 0.5, bottom: 0.5, header: 0.2, footer: 0.2 }
-        };
+        // Copy all properties from template
+        const templateWorksheet = workbook.getWorksheet('Request Template');
+        if (!templateWorksheet) {
+            throw new Error('Template worksheet not found');
+        }
 
-        // Set column widths to match the template file
-        worksheet.getColumn('A').width = 4.28515625;
-        worksheet.getColumn('B').width = 11.85546875;
-        worksheet.getColumn('C').width = 23.7109375;
-        worksheet.getColumn('D').width = 25.28515625;
-        worksheet.getColumn('E').width = 8.140625;
-        worksheet.getColumn('F').width = 10.7109375;
-        worksheet.getColumn('G').width = 10.5703125;
-        worksheet.getColumn('H').width = 13.28515625;
-        worksheet.getColumn('I').width = 27.7109375;
-        worksheet.getColumn('J').width = 9.140625;
-        worksheet.getColumn('K').width = 13.0;
-        worksheet.getColumn('L').width = 13.0;
+        // Copy all properties, styles, and layouts
+        worksheet.properties = { ...templateWorksheet.properties };
+        worksheet.views = templateWorksheet.views;
+        worksheet.pageSetup = { ...templateWorksheet.pageSetup };
+        worksheet.headerFooter = { ...templateWorksheet.headerFooter };
+        worksheet.autoFilter = templateWorksheet.autoFilter;
+        worksheet.mergeCells = templateWorksheet.mergeCells;
+
+        // Copy column properties
+        templateWorksheet.columns.forEach((col, index) => {
+            if (col) {
+                const targetCol = worksheet.getColumn(index + 1);
+                targetCol.width = col.width || 8.43; // Default width if undefined
+                if (col.style) {
+                    targetCol.style = col.style;
+                }
+                targetCol.hidden = col.hidden || false;
+                targetCol.outlineLevel = col.outlineLevel || 0;
+            }
+        });
+
+        // Copy row properties and cell styles
+        templateWorksheet.eachRow((row, rowNumber) => {
+            const targetRow = worksheet.getRow(rowNumber);
+            targetRow.height = row.height || 15; // Default height if undefined
+            targetRow.hidden = row.hidden || false;
+            targetRow.outlineLevel = row.outlineLevel || 0;
+
+            // Copy cell styles and values
+            row.eachCell((cell, colNumber) => {
+                const targetCell = worksheet.getCell(rowNumber, colNumber);
+                if (cell.style) targetCell.style = cell.style;
+                if (cell.numFmt) targetCell.numFmt = cell.numFmt;
+                if (cell.font) targetCell.font = cell.font;
+                if (cell.alignment) targetCell.alignment = cell.alignment;
+                if (cell.border) targetCell.border = cell.border;
+                if (cell.fill) targetCell.fill = cell.fill;
+            });
+        });
 
         // Set request number and date in C7
         const formattedDate = ExcelService.formatDate(requestDetails.request_date);
@@ -193,63 +215,74 @@ export class ExcelService {
         worksheet.getCell('A14').alignment = { vertical: 'top', wrapText: true };
 
         // Place all images in the specifications area (A13:H13), horizontally in row 14, using template's column widths
-        const imageWidthPx = 250;
-        const imageHeightPx = 120;
+        const imageWidthPx = 200;
+        const imageHeightPx = 100;
         const startCol = 0; // A
         const endCol = 7;   // H
         const EMU = 9525;
-        // Calculate pixel widths of columns A to H from the template
-        let colPixelWidths: number[] = [];
+        
+        // Calculate total available width in pixels
+        let totalWidthPx = 0;
         for (let c = startCol; c <= endCol; c++) {
-            const colWidth = worksheet.getColumn(c + 1).width || 8.43; // ExcelJS columns are 1-based
-            colPixelWidths.push(colWidth * 7);
+            const colWidth = worksheet.getColumn(c + 1).width || 8.43;
+            totalWidthPx += colWidth * 7;
         }
-        const totalAvailablePx = colPixelWidths.reduce((a, b) => a + b, 0);
+
         const imageItems = items.filter(item => item.image_path);
         const imageCount = imageItems.length;
-        const totalImageWidth = imageCount * imageWidthPx;
-        const spacingPx = imageCount > 1 ? (totalAvailablePx - totalImageWidth) / (imageCount - 1) : 0;
+        
+        if (imageCount > 0) {
+            // Calculate spacing to distribute images evenly
+            const totalImageWidth = imageCount * imageWidthPx;
+            const totalSpacing = totalWidthPx - totalImageWidth;
+            
+            // Use a smaller initial spacing and larger between-image spacing
+            const initialSpacing = totalSpacing * 0.2; // 20% of total spacing for initial gap
+            const remainingSpacing = totalSpacing - initialSpacing;
+            const spacingBetweenImages = remainingSpacing / (imageCount - 1); // Distribute remaining space between images
+            
+            // Position each image
+            for (let i = 0; i < imageCount; i++) {
+                const item = imageItems[i];
+                const imageBuffer = await ExcelService.resizeImage(item.image_path, imageWidthPx, imageHeightPx);
+                
+                if (imageBuffer.length > 0) {
+                    const imageId = workbook.addImage({
+                        buffer: imageBuffer,
+                        extension: 'png'
+                    });
 
-        let leftPx = 0;
-        for (let i = 0; i < imageCount; i++) {
-            const item = imageItems[i];
-            const imageBuffer = await ExcelService.resizeImage(item.image_path, imageWidthPx, imageHeightPx);
-            if (imageBuffer.length > 0) {
-                const imageId = workbook.addImage({
-                    buffer: imageBuffer,
-                    extension: 'png'
-                });
-                // Find which column and offset this leftPx falls into
-                let pxSum = 0, col = startCol, colOff = 0;
-                for (; col <= endCol; col++) {
-                    if (pxSum + colPixelWidths[col - startCol] > leftPx) {
-                        colOff = (leftPx - pxSum) * EMU;
-                        break;
+                    // Calculate position for this image
+                    let imagePosition;
+                    if (i === 0) {
+                        imagePosition = initialSpacing; // First image position
+                    } else {
+                        imagePosition = initialSpacing + (i * imageWidthPx) + (i * spacingBetweenImages);
                     }
-                    pxSum += colPixelWidths[col - startCol];
-                }
-                worksheet.addImage(imageId, {
-                    tl: { col, row: 14.5, nativeColOff: colOff },
-                    ext: { width: imageWidthPx, height: imageHeightPx }
-                });
-                leftPx += imageWidthPx + spacingPx;
-            }
-        }
-        worksheet.getRow(15).height = 120;
+                    
+                    // Find which column this position falls into
+                    let currentWidth = 0;
+                    let col = startCol;
+                    let colOffset = 0;
+                    
+                    for (let c = startCol; c <= endCol; c++) {
+                        const colWidth = worksheet.getColumn(c + 1).width || 8.43;
+                        const colWidthPx = colWidth * 7;
+                        
+                        if (currentWidth + colWidthPx > imagePosition) {
+                            col = c;
+                            colOffset = (imagePosition - currentWidth) * EMU;
+                            break;
+                        }
+                        currentWidth += colWidthPx;
+                    }
 
-        // Reset the image at A1 to its original size (assume 200x60 for now)
-        // If you know the exact image path or id, use it here
-        // Example: If the logo is always the first image in the template, reload and re-insert it
-        try {
-            const logoPath = path.join(__dirname, '../../public/logo.png'); // Adjust path if needed
-            const logoBuffer = await sharp(logoPath).resize(200, 60, { fit: 'inside' }).toBuffer();
-            const logoId = workbook.addImage({ buffer: logoBuffer, extension: 'png' });
-            worksheet.addImage(logoId, {
-                tl: { col: 0, row: 0 },
-                ext: { width: 200, height: 60 }
-            });
-        } catch (e) {
-            // If logo not found, skip
+                    worksheet.addImage(imageId, {
+                        tl: { col, row: 14.2, nativeColOff: colOffset },
+                        ext: { width: imageWidthPx, height: imageHeightPx }
+                    });
+                }
+            }
         }
 
         // Insert user details (Request Prepared By)
@@ -277,4 +310,4 @@ export class ExcelService {
     }
 }
 
-export const generateRequestExcel = ExcelService.generateRequestExcel.bind(ExcelService); 
+export const generateRequestExcel = ExcelService.generateRequestExcel.bind(ExcelService);

@@ -23,36 +23,21 @@ export const login = async (req: Request, res: Response): Promise<void> => {
     {
       UserInfo: {
         username: user.username,
-        name:user.first_name + " " + user.last_name,
+        name: user.first_name + " " + user.last_name,
         role: user.role,
         permissions: permissions
       },
     },
     process.env.ACCESS_TOKEN_SECRET as string,
-    { expiresIn: "15m" }
+    { expiresIn: "1d" }
   );
 
-  const refreshToken = jwt.sign(
-    {
-      username: user.username,
-    },
-    process.env.REFRESH_TOKEN_SECRET as string,
-    { expiresIn: "7d" }
-  );
-
-  // Set both tokens in cookies
+  // Set access token in cookie
   res.cookie("accessToken", accessToken, {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: "strict",
-    maxAge: 15 * 60 * 1000, // 15 minutes
-  });
-
-  res.cookie("refreshToken", refreshToken, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "strict",
-    maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+    maxAge: 24 * 60 * 60 * 1000, // 1 day
   });
 
   res.json({ accessToken });

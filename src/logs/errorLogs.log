@@ -11,3 +11,4 @@
 20250409	10:23:27	98e410d7-78d9-4a2d-a86a-34803972803d	Error	secretOrPrivateKey must have a value	POST,/auth/login,http://localhost:3000
 20250409	10:25:33	b46eae0b-eaad-423b-a87a-07d9bb8ea461	Error	secretOrPrivateKey must have a value	POST,/auth/login,http://localhost:3000
 20250409	10:25:45	f813bf3e-e401-41f6-b6e9-65b9cdd85957	Error	secretOrPrivateKey must have a value	POST,/auth/login,http://localhost:3000
+20250505	14:41:24	df2be498-27b1-48e3-a0c2-666bf27558de	TypeError	Cannot destructure property 'universal' of 'req.body' as it is undefined.	GET,/api/receive/receivable/search?universal=cott&equipmentNumber=&partNumber=,http://localhost:3000

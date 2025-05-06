@@ -106,10 +106,11 @@ const getStockDetails = async (nacCode: string): Promise<StockDetail | null> => 
 // Function to get previous rate
 const getPreviousRate = async (nacCode: string): Promise<string | number> => {
     const [rows] = await pool.query<ReceiveDetail[]>(
-        `SELECT total_amount, receive_quantity 
-         FROM receive_details 
-         WHERE nac_code = ? 
-         ORDER BY receive_date DESC 
+        `SELECT rd.received_quantity, rd.receive_date
+         FROM rrp_details rrp
+         JOIN receive_details rd ON rrp.receive_fk = rd.id
+         WHERE rd.nac_code = ? 
+         ORDER BY rd.receive_date DESC 
          LIMIT 1`,
         [nacCode]
     );

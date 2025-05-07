@@ -1,13 +1,14 @@
 import express from 'express';
-import { searchReceivables, createReceive, getPendingReceives, getReceiveDetails, updateReceiveQuantity } from '../controllers/receiveController';
 import verifyJWT from '../middlewares/verifyJWT';
+import * as receiveController from '../controllers/receiveController';
 
 const router = express.Router();
 
-router.get('/receivable/search', verifyJWT, searchReceivables);
-router.post('/', verifyJWT, createReceive);
-router.get('/pending', verifyJWT, getPendingReceives);
-router.get('/:receiveId/details', verifyJWT, getReceiveDetails);
-router.put('/:receiveId/update', verifyJWT, updateReceiveQuantity);
+router.get('/pending', verifyJWT, receiveController.getPendingReceives);
+router.get('/search', verifyJWT, receiveController.searchReceivables);
+router.post('/', verifyJWT, receiveController.createReceive);
+router.get('/:receiveId/details', verifyJWT, receiveController.getReceiveDetails);
+router.put('/:receiveId/update', verifyJWT, receiveController.updateReceiveQuantity);
+router.put('/:receiveId/approve', verifyJWT, receiveController.approveReceive);
 
 export default router; 

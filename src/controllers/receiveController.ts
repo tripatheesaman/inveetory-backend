@@ -30,6 +30,8 @@ export interface ReceiveItem {
     imagePath: string;
     unit: string;
     requestId: number;
+    location?: string;
+    cardNumber?: string;
 }
 
 export interface ReceiveRequest {
@@ -62,6 +64,21 @@ interface ReceiveDetailResult extends RowDataPacket {
     unit: string;
     requested_image: string;
     received_image: string;
+    location?: string;
+    card_number?: string;
+}
+
+interface StockDetailResult extends RowDataPacket {
+    id: number;
+    nac_code: string;
+    item_name: string;
+    part_numbers: string;
+    applicable_equipments: string;
+    current_balance: number;
+    location: string;
+    card_number: string;
+    image_url: string;
+    unit: string;
 }
 
 export const getPendingReceives = async (req: Request, res: Response): Promise<void> => {
@@ -246,22 +263,38 @@ export const createReceive = async (req: Request, res: Response): Promise<void> 
 
             const requestNumber = (requestCheck as any[])[0].request_number;
 
-            // Insert receive detail with the specific request_fk and image_path
+            // Build dynamic columns and values for optional fields
+            const columns = [
+                'receive_date', 'request_fk', 'nac_code', 'part_number', 'item_name',
+                'received_quantity', 'unit', 'approval_status', 'approved_by', 'image_path'
+            ];
+            const values = [
+                formattedDate,
+                item.requestId,
+                item.nacCode,
+                item.partNumber,
+                item.itemName,
+                item.receiveQuantity,
+                item.unit,
+                'PENDING',
+                receiveData.receivedBy,
+                item.imagePath
+            ];
+
+            // Add optional fields if they exist
+            if (item.location !== undefined && item.location !== null && item.location !== '') {
+                columns.push('location');
+                values.push(item.location);
+            }
+            if (item.cardNumber !== undefined && item.cardNumber !== null && item.cardNumber !== '') {
+                columns.push('card_number');
+                values.push(item.cardNumber);
+            }
+
+            const placeholders = columns.map(() => '?').join(', ');
             const [result] = await connection.execute(
-                `INSERT INTO receive_details 
-                (receive_date, request_fk, nac_code, part_number, item_name, received_quantity, unit, approval_status, approved_by, image_path, created_at, updated_at)
-                VALUES (?, ?, ?, ?, ?, ?, ?, 'PENDING', ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)`,
-                [
-                    formattedDate,
-                    item.requestId,  // Use the specific request ID for this item
-                    item.nacCode,
-                    item.partNumber,
-                    item.itemName,
-                    item.receiveQuantity,
-                    item.unit,
-                    receiveData.receivedBy,
-                    item.imagePath
-                ]
+                `INSERT INTO receive_details (${columns.join(', ')}) VALUES (${placeholders})`,
+                values
             );
 
             const receiveId = (result as any).insertId;
@@ -310,7 +343,9 @@ export const getReceiveDetails = async (req: Request, res: Response): Promise<vo
                 req.equipment_number,
                 req.unit,
                 req.image_path as requested_image,
-                rd.image_path as received_image
+                rd.image_path as received_image,
+                rd.location,
+                rd.card_number
             FROM receive_details rd
             JOIN request_details req ON rd.request_fk = req.id
             WHERE rd.id = ?`,
@@ -329,7 +364,7 @@ export const getReceiveDetails = async (req: Request, res: Response): Promise<vo
         const requestDate = new Date(result.request_date);
         const receiveDate = new Date(result.receive_date);
 
-        const formattedResponse = {
+        const formattedResponse: any = {
             receiveId: parseInt(receiveId),
             requestNumber: result.request_number,
             requestDate: `${requestDate.getFullYear()}/${String(requestDate.getMonth() + 1).padStart(2, '0')}/${String(requestDate.getDate()).padStart(2, '0')}`,
@@ -344,7 +379,12 @@ export const getReceiveDetails = async (req: Request, res: Response): Promise<vo
             requestedImage: result.requested_image,
             receivedImage: result.received_image
         };
-
+        if (result.location !== undefined && result.location !== null && result.location !== '') {
+            formattedResponse.location = result.location;
+        }
+        if (result.card_number !== undefined && result.card_number !== null && result.card_number !== '') {
+            formattedResponse.cardNumber = result.card_number;
+        }
         res.status(200).json(formattedResponse);
     } catch (error) {
         console.error('Error fetching receive details:', error);
@@ -401,4 +441,212 @@ export const updateReceiveQuantity = async (req: Request, res: Response): Promis
             message: error instanceof Error ? error.message : 'An error occurred while updating receive quantity'
         });
     }
-}; 
+};
+
+export const approveReceive = async (req: Request, res: Response): Promise<void> => {
+    const { receiveId } = req.params;
+    const connection = await pool.getConnection();
+
+    try {
+        await connection.beginTransaction();
+
+        // 1. Get receive details with equipment_number from request_details
+        const [receiveDetails] = await connection.execute<ReceiveDetailResult[]>(
+            `SELECT 
+                rd.nac_code,
+                rd.item_name,
+                rd.part_number,
+                rd.received_quantity,
+                req.equipment_number,
+                rd.location,
+                rd.card_number,
+                rd.image_path,
+                rd.unit
+            FROM receive_details rd
+            JOIN request_details req ON rd.request_fk = req.id
+            WHERE rd.id = ?`,
+            [receiveId]
+        );
+
+        if (!receiveDetails.length) {
+            throw new Error('Receive record not found');
+        }
+
+        const receive = receiveDetails[0];
+
+        // 2. Update receive approval status
+        await connection.execute(
+            `UPDATE receive_details 
+            SET approval_status = 'APPROVED',
+                updated_at = CURRENT_TIMESTAMP
+            WHERE id = ?`,
+            [receiveId]
+        );
+
+        // 3. Check if stock record exists for this NAC code
+        const [stockDetails] = await connection.execute<StockDetailResult[]>(
+            `SELECT * FROM stock_details 
+            WHERE nac_code = ?`,
+            [receive.nac_code]
+        );
+
+        if (stockDetails.length > 0) {
+            // Stock record exists - update it
+            const stock = stockDetails[0];
+            
+            // Update current balance - ensure proper numeric addition
+            const currentBalance = typeof stock.current_balance === 'string' 
+                ? parseFloat(stock.current_balance) 
+                : stock.current_balance;
+            const receivedQty = typeof receive.received_quantity === 'string'
+                ? parseFloat(receive.received_quantity)
+                : receive.received_quantity;
+            const newBalance = currentBalance + receivedQty;
+
+            // Update part numbers - only add if not exists
+            let partNumbers = stock.part_numbers.split(',').map(pn => pn.trim()).filter(pn => pn !== '');
+            if (!partNumbers.includes(receive.part_number)) {
+                partNumbers = [receive.part_number, ...partNumbers];
+            }
+            const updatedPartNumbers = partNumbers.join(',');
+
+            // Update item names - only add if not exists
+            let itemNames = stock.item_name.split(',').map(name => name.trim()).filter(name => name !== '');
+            if (!itemNames.includes(receive.item_name)) {
+                itemNames = [receive.item_name, ...itemNames];
+            }
+            const updatedItemNames = itemNames.join(',');
+
+            // Process equipment numbers
+            const existingEquipmentNumbers = new Set(stock.applicable_equipments.split(',').map(num => num.trim()).filter(num => num !== ''));
+            const newEquipmentNumbers = expandEquipmentNumbers(receive.equipment_number);
+            const uniqueNewNumbers = Array.from(newEquipmentNumbers).filter(num => !existingEquipmentNumbers.has(num));
+            
+            const updatedEquipmentNumbers = uniqueNewNumbers.length > 0 
+                ? [...uniqueNewNumbers, ...Array.from(existingEquipmentNumbers)].join(',')
+                : stock.applicable_equipments;
+
+            // Prepare update query with optional fields
+            const updateFields = [
+                'current_balance = ?',
+                'part_numbers = ?',
+                'item_name = ?',
+                'applicable_equipments = ?'
+            ];
+            const updateValues = [
+                newBalance,
+                updatedPartNumbers,
+                updatedItemNames,
+                updatedEquipmentNumbers
+            ];
+
+            // Add optional fields if they exist in receive record
+            if (receive.location && receive.location.trim() !== '') {
+                updateFields.push('location = ?');
+                updateValues.push(receive.location);
+            }
+            if (receive.card_number && receive.card_number.trim() !== '') {
+                updateFields.push('card_number = ?');
+                updateValues.push(receive.card_number);
+            }
+            if (receive.image_path && receive.image_path.trim() !== '') {
+                updateFields.push('image_url = ?');
+                updateValues.push(receive.image_path);
+            }
+            if (receive.unit && receive.unit.trim() !== '') {
+                updateFields.push('unit = ?');
+                updateValues.push(receive.unit);
+            }
+
+            // Add receiveId to updateValues
+            updateValues.push(stock.id);
+
+            // Execute update
+            await connection.execute(
+                `UPDATE stock_details 
+                SET ${updateFields.join(', ')},
+                    updated_at = CURRENT_TIMESTAMP
+                WHERE id = ?`,
+                updateValues
+            );
+        } else {
+            // No stock record exists - create new one
+            const insertFields = [
+                'nac_code',
+                'item_name',
+                'part_numbers',
+                'applicable_equipments',
+                'current_balance',
+                'unit'
+            ];
+            const insertValues = [
+                receive.nac_code,
+                receive.item_name,
+                receive.part_number,
+                receive.equipment_number,
+                receive.received_quantity,
+                receive.unit
+            ];
+
+            // Add optional fields if they exist
+            if (receive.location && receive.location.trim() !== '') {
+                insertFields.push('location');
+                insertValues.push(receive.location);
+            }
+            if (receive.card_number && receive.card_number.trim() !== '') {
+                insertFields.push('card_number');
+                insertValues.push(receive.card_number);
+            }
+            if (receive.image_path && receive.image_path.trim() !== '') {
+                insertFields.push('image_url');
+                insertValues.push(receive.image_path);
+            }
+
+            const placeholders = insertFields.map(() => '?').join(', ');
+            await connection.execute(
+                `INSERT INTO stock_details (${insertFields.join(', ')}) 
+                VALUES (${placeholders})`,
+                insertValues
+            );
+        }
+
+        await connection.commit();
+        res.status(200).json({
+            message: 'Receive approved and stock updated successfully'
+        });
+    } catch (error) {
+        await connection.rollback();
+        console.error('Error approving receive:', error);
+        res.status(500).json({
+            error: 'Internal Server Error',
+            message: error instanceof Error ? error.message : 'An error occurred while approving receive'
+        });
+    } finally {
+        connection.release();
+    }
+};
+
+// Helper function to expand equipment numbers
+function expandEquipmentNumbers(equipmentNumber: string): Set<string> {
+    const numbers = new Set<string>();
+    const parts = equipmentNumber.split(',');
+
+    for (const part of parts) {
+        const trimmedPart = part.trim();
+        if (/^[A-Za-z\s]+$/.test(trimmedPart)) {
+            // If it's purely alphabets & spaces
+            numbers.add(trimmedPart);
+        } else if (/^\d+-\d+$/.test(trimmedPart)) {
+            // If it's a number range (e.g., "1000-1024")
+            const [start, end] = trimmedPart.split('-').map(Number);
+            for (let num = start; num <= end; num++) {
+                numbers.add(num.toString());
+            }
+        } else if (/^\d+$/.test(trimmedPart)) {
+            // If it's a single number
+            numbers.add(trimmedPart);
+        }
+    }
+
+    return numbers;
+} 

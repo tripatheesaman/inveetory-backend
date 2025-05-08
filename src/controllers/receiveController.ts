@@ -154,10 +154,13 @@ export const searchReceivables = async (req: Request, res: Response): Promise<vo
                 rd.previous_rate,
                 rd.image_path,
                 rd.specifications,
-                rd.remarks
+                rd.remarks,
+                COALESCE(sd.location, '') as location,
+                COALESCE(sd.card_number, '') as card_number
             FROM request_details rd
+            LEFT JOIN stock_details sd ON rd.nac_code COLLATE utf8mb4_unicode_ci = sd.nac_code COLLATE utf8mb4_unicode_ci
             WHERE rd.approval_status = 'APPROVED'
-            AND rd.is_received = FALSE
+            AND rd.is_received = 0
         `;
         const params: (string | number)[] = [];
 
@@ -211,7 +214,9 @@ export const searchReceivables = async (req: Request, res: Response): Promise<vo
                 previousRate: result.previous_rate,
                 imageUrl: result.image_path,
                 specifications: result.specifications,
-                remarks: result.remarks
+                remarks: result.remarks,
+                location: result.location,
+                cardNumber: result.card_number
             });
             return acc;
         }, {} as Record<string, any>);
@@ -244,8 +249,9 @@ export const createReceive = async (req: Request, res: Response): Promise<void> 
     try {
         await connection.beginTransaction();
 
-        // Format the date to YYYY-MM-DD format
-        const formattedDate = new Date(receiveData.receiveDate).toISOString().split('T')[0];
+        // Format the date to YYYY/MM/DD format
+        const date = new Date(receiveData.receiveDate);
+        const formattedDate = `${date.getFullYear()}/${String(date.getMonth() + 1).padStart(2, '0')}/${String(date.getDate()).padStart(2, '0')}`;
 
         // Insert all items into receive_details table and store their IDs
         const receiveIds: number[] = [];
@@ -266,7 +272,7 @@ export const createReceive = async (req: Request, res: Response): Promise<void> 
             // Build dynamic columns and values for optional fields
             const columns = [
                 'receive_date', 'request_fk', 'nac_code', 'part_number', 'item_name',
-                'received_quantity', 'unit', 'approval_status', 'approved_by', 'image_path'
+                'received_quantity', 'unit', 'approval_status', 'received_by', 'image_path'
             ];
             const values = [
                 formattedDate,
@@ -620,6 +626,96 @@ export const approveReceive = async (req: Request, res: Response): Promise<void>
         res.status(500).json({
             error: 'Internal Server Error',
             message: error instanceof Error ? error.message : 'An error occurred while approving receive'
+        });
+    } finally {
+        connection.release();
+    }
+};
+
+export const rejectReceive = async (req: Request, res: Response): Promise<void> => {
+    const { receiveId } = req.params;
+    const { rejectedBy, rejectionReason } = req.body;
+    const connection = await pool.getConnection();
+
+    try {
+        await connection.beginTransaction();
+
+        // 1. Get the request_fk and item_name from receive_details
+        const [receiveDetails] = await connection.execute<RowDataPacket[]>(
+            `SELECT rd.request_fk, rd.received_by, rd.item_name 
+            FROM receive_details rd 
+            WHERE rd.id = ?`,
+            [receiveId]
+        );
+
+        if (!receiveDetails.length) {
+            throw new Error('Receive record not found');
+        }
+
+        const requestFk = receiveDetails[0].request_fk;
+        const receivedBy = receiveDetails[0].received_by;
+        const itemName = receiveDetails[0].item_name;
+
+        // 2. Update receive_details with rejection info
+        await connection.execute(
+            `UPDATE receive_details 
+            SET approval_status = 'REJECTED',
+                rejected_by = ?,
+                rejection_reason = ?,
+                updated_at = CURRENT_TIMESTAMP
+            WHERE id = ?`,
+            [rejectedBy, rejectionReason, receiveId]
+        );
+
+        // 3. Update request_details to set is_received back to false
+        await connection.execute(
+            `UPDATE request_details 
+            SET is_received = FALSE,
+                receive_fk = NULL,
+                updated_at = CURRENT_TIMESTAMP
+            WHERE id = ?`,
+            [requestFk]
+        );
+
+        // 4. Get user ID for notification
+        const [users] = await connection.query<RowDataPacket[]>(
+            'SELECT id FROM users WHERE username = ?',
+            [receivedBy]
+        );
+
+        if (users.length === 0) {
+            res.status(404).json({
+                error: 'Not Found',
+                message: 'User not found'
+            });
+            return;
+        }
+
+        const userId = users[0].id;
+
+        // 5. Create notification
+        await connection.query(
+            `INSERT INTO notifications 
+             (user_id, reference_type, message, reference_id)
+             VALUES (?, ?, ?, ?)`,
+            [
+                userId,
+                'receive',
+                `Your receive for ${itemName} has been rejected for the following reason: ${rejectionReason}`,
+                receiveId
+            ]
+        );
+
+        await connection.commit();
+        res.status(200).json({
+            message: 'Receive rejected successfully'
+        });
+    } catch (error) {
+        await connection.rollback();
+        console.error('Error rejecting receive:', error);
+        res.status(500).json({
+            error: 'Internal Server Error',
+            message: error instanceof Error ? error.message : 'An error occurred while rejecting receive'
         });
     } finally {
         connection.release();

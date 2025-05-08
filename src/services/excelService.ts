@@ -213,7 +213,7 @@ export class ExcelService {
         // Place specifications text in the already-merged cell A13 (A13:H13)
         worksheet.getCell('A14').value = specificationsText.trim();
         worksheet.getCell('A14').alignment = { vertical: 'top', wrapText: true };
-
+        worksheet.getCell('I14').value =requestDetails.remarks.trim() ? requestDetails.remarks.trim() : "";
         // Place all images in the specifications area (A13:H13), horizontally in row 14, using template's column widths
         const imageWidthPx = 200;
         const imageHeightPx = 100;

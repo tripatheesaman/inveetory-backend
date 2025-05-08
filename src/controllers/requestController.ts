@@ -88,11 +88,11 @@ interface SearchRequestResult extends RowDataPacket {
     approval_status: string;
 }
 
-// Function to format date for MySQL
-const formatDateForMySQL = (isoDate: string): string => {
-    const date = new Date(isoDate);
-    return date.toISOString().slice(0, 19).replace('T', ' ');
-};
+// Helper function to format date for MySQL
+function formatDateForMySQL(dateString: string): string {
+    const date = new Date(dateString);
+    return `${date.getFullYear()}/${String(date.getMonth() + 1).padStart(2, '0')}/${String(date.getDate()).padStart(2, '0')}`;
+}
 
 // Function to get stock details
 const getStockDetails = async (nacCode: string): Promise<StockDetail | null> => {
@@ -169,6 +169,29 @@ export const createRequest = async (req: Request, res: Response): Promise<void> 
             res.status(400).json({ 
                 error: 'Bad Request',
                 message: 'Missing required fields: requestNumber, requestDate, and items are required' 
+            });
+            return;
+        }
+
+        // Check if request number already has 3 items
+        const [existingItems] = await connection.query<RowDataPacket[]>(
+            'SELECT COUNT(*) as itemCount FROM request_details WHERE request_number = ?',
+            [requestData.requestNumber]
+        );
+
+        if (existingItems[0].itemCount >= 3) {
+            res.status(400).json({
+                error: 'Bad Request',
+                message: 'Maximum limit of 3 items reached for this request number'
+            });
+            return;
+        }
+
+        // Check if new items would exceed the limit
+        if (existingItems[0].itemCount + requestData.items.length > 3) {
+            res.status(400).json({
+                error: 'Bad Request',
+                message: `Cannot add ${requestData.items.length} items. Only ${3 - existingItems[0].itemCount} more items allowed for this request number`
             });
             return;
         }

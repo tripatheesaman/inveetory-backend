@@ -7,7 +7,6 @@ import cors from "cors";
 import { logger, logEvents } from "./middlewares/logger";
 import errorHandler from "./middlewares/errorhandler";
 import pool from "./config/db";
-import rootRoutes from "./routes/root";
 import authRoutes from "./routes/authRoutes";
 import issueRoutes from './routes/issueRoutes';
 import searchRoutes from './routes/searchRoutes';
@@ -33,8 +32,7 @@ app.use("/", express.static(path.join(__dirname, "../", "public")));
 app.use("/images", express.static(path.join(__dirname, "../", "frontend", "public", "images")));
 
 // Routes
-app.use("/", rootRoutes);
-app.use("/auth", authRoutes);
+app.use("/api/auth", authRoutes);
 app.use('/api/issues', issueRoutes);
 app.use('/api/search', searchRoutes);
 app.use('/api/transactions', transactionRoutes);

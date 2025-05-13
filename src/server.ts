@@ -14,6 +14,7 @@ import transactionRoutes from './routes/transactionRoutes';
 import requestRoutes from './routes/requestRoutes';
 import notificationRoutes from './routes/notificationRoutes';
 import receiveRoutes from './routes/receiveRoutes';
+import rrpRoutes from './routes/rrpRoutes';
 
 const app = express();
 const PORT = process.env.PORT || 3500;
@@ -39,6 +40,7 @@ app.use('/api/transactions', transactionRoutes);
 app.use('/api/request', requestRoutes);
 app.use('/api/notification', notificationRoutes);
 app.use('/api/receive', receiveRoutes);
+app.use('/api/rrp', rrpRoutes);
 
 // 404 Handler - Catch all unmatched routes
 app.use((req: Request, res: Response) => {

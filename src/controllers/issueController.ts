@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import pool from '../config/db';
 import { RowDataPacket } from 'mysql2';
+import { formatDate, formatDateForDB } from '../utils/dateUtils';
 
 interface IssueItem {
   nacCode: string;
@@ -44,12 +45,6 @@ const calculateIssueCost = (openAmount: number, openQuantity: number, quantity: 
   return (openAmount / openQuantity) * quantity;
 };
 
-// Function to format date for MySQL
-const formatDateForMySQL = (isoDate: string): string => {
-  const date = new Date(isoDate);
-  return date.toISOString().slice(0, 19).replace('T', ' ');
-};
-
 export const createIssue = async (req: Request, res: Response): Promise<void> => {
   const { issueDate, items, issuedBy }: IssueRequest = req.body;
   console.log("reacehd")
@@ -67,7 +62,7 @@ export const createIssue = async (req: Request, res: Response): Promise<void> =>
     await connection.beginTransaction();
 
     // Format the date for MySQL
-    const formattedIssueDate = formatDateForMySQL(issueDate);
+    const formattedIssueDate = formatDateForDB(issueDate);
 
     for (const item of items) {
       // Get current stock details
@@ -131,7 +126,7 @@ export const createIssue = async (req: Request, res: Response): Promise<void> =>
     await connection.commit();
     res.status(201).json({
       message: 'Issue created successfully',
-      issueDate,
+      issueDate: formatDate(issueDate),
       items
     });
   } catch (error) {

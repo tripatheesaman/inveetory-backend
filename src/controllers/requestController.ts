@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { RowDataPacket } from 'mysql2';
 import pool from '../config/db';
 import { CreateRequestDTO, RequestDetail } from '../types/request';
+import { formatDate, formatDateForDB } from '../utils/dateUtils';
 
 interface StockDetail extends RowDataPacket {
     current_balance: number;
@@ -162,43 +163,12 @@ export const createRequest = async (req: Request, res: Response): Promise<void> 
     const connection = await pool.getConnection();
     
     try {
+        await connection.beginTransaction();
+        
         const requestData: CreateRequestDTO = req.body;
         
-        // Basic validation
-        if (!requestData.requestNumber || !requestData.requestDate || !requestData.items || !requestData.items.length) {
-            res.status(400).json({ 
-                error: 'Bad Request',
-                message: 'Missing required fields: requestNumber, requestDate, and items are required' 
-            });
-            return;
-        }
-
-        // Check if request number already has 3 items
-        const [existingItems] = await connection.query<RowDataPacket[]>(
-            'SELECT COUNT(*) as itemCount FROM request_details WHERE request_number = ?',
-            [requestData.requestNumber]
-        );
-
-        if (existingItems[0].itemCount >= 3) {
-            res.status(400).json({
-                error: 'Bad Request',
-                message: 'Maximum limit of 3 items reached for this request number'
-            });
-            return;
-        }
-
-        // Check if new items would exceed the limit
-        if (existingItems[0].itemCount + requestData.items.length > 3) {
-            res.status(400).json({
-                error: 'Bad Request',
-                message: `Cannot add ${requestData.items.length} items. Only ${3 - existingItems[0].itemCount} more items allowed for this request number`
-            });
-            return;
-        }
-
-        await connection.beginTransaction();
-
-        const requestDetails: RequestDetail[] = await Promise.all(
+        // Process each item
+        const requestDetails = await Promise.all(
             requestData.items.map(item => processRequestItem(item, requestData))
         );
 
@@ -211,7 +181,7 @@ export const createRequest = async (req: Request, res: Response): Promise<void> 
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
                 [
                     detail.request_number,
-                    formatDateForMySQL(detail.request_date.toISOString()),
+                    formatDateForDB(detail.request_date),
                     detail.part_number,
                     detail.item_name,
                     detail.unit,
@@ -234,7 +204,7 @@ export const createRequest = async (req: Request, res: Response): Promise<void> 
         res.status(201).json({ 
             message: 'Request created successfully',
             requestNumber: requestData.requestNumber,
-            requestDate: requestData.requestDate
+            requestDate: formatDate(requestData.requestDate)
         });
     } catch (error) {
         await connection.rollback();
@@ -350,7 +320,7 @@ export const updateRequest = async (req: Request, res: Response): Promise<void> 
                 ];
                 const updateValues = [
                     newRequestNumber,
-                    formatDateForMySQL(requestDate),
+                    formatDateForDB(requestDate),
                     item.partNumber,
                     item.itemName,
                     item.requestedQuantity,
@@ -388,7 +358,7 @@ export const updateRequest = async (req: Request, res: Response): Promise<void> 
                 ];
                 const insertValues = [
                     newRequestNumber,
-                    formatDateForMySQL(requestDate),
+                    formatDateForDB(requestDate),
                     item.partNumber,
                     item.itemName,
                     item.requestedQuantity,

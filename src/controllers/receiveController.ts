@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { RowDataPacket } from 'mysql2';
 import pool from '../config/db';
+import { formatDate, formatDateForDB } from '../utils/dateUtils';
 
 export interface SearchRequestResult extends RowDataPacket {
     id: number;
@@ -98,20 +99,15 @@ export const getPendingReceives = async (req: Request, res: Response): Promise<v
             ORDER BY rd.created_at DESC`
         );
 
-        const pendingReceives = results.map(item => {
-            const date = new Date(item.receive_date);
-            const formattedDate = `${date.getFullYear()}/${String(date.getMonth() + 1).padStart(2, '0')}/${String(date.getDate()).padStart(2, '0')}`;
-            
-            return {
-                id: item.id,
-                nacCode: item.nac_code,
-                itemName: item.item_name,
-                partNumber: item.part_number,
-                receivedQuantity: item.received_quantity,
-                receiveDate: formattedDate,
-                equipmentNumber: item.equipment_number
-            };
-        });
+        const pendingReceives = results.map(item => ({
+            id: item.id,
+            nacCode: item.nac_code,
+            itemName: item.item_name,
+            partNumber: item.part_number,
+            receivedQuantity: item.received_quantity,
+            receiveDate: formatDate(item.receive_date),
+            equipmentNumber: item.equipment_number
+        }));
 
         res.status(200).json(pendingReceives);
     } catch (error) {
@@ -249,9 +245,8 @@ export const createReceive = async (req: Request, res: Response): Promise<void> 
     try {
         await connection.beginTransaction();
 
-        // Format the date to YYYY/MM/DD format
-        const date = new Date(receiveData.receiveDate);
-        const formattedDate = `${date.getFullYear()}/${String(date.getMonth() + 1).padStart(2, '0')}/${String(date.getDate()).padStart(2, '0')}`;
+        // Format the date for database
+        const formattedDate = formatDateForDB(receiveData.receiveDate);
 
         // Insert all items into receive_details table and store their IDs
         const receiveIds: number[] = [];
@@ -305,19 +300,12 @@ export const createReceive = async (req: Request, res: Response): Promise<void> 
 
             const receiveId = (result as any).insertId;
             receiveIds.push(receiveId);
-
-            // Update the specific request with its corresponding receive_fk
-            await connection.execute(
-                `UPDATE request_details 
-                SET is_received = TRUE, receive_fk = ?
-                WHERE id = ?`,
-                [receiveId, item.requestId]
-            );
         }
 
         await connection.commit();
         res.status(201).json({
-            message: 'Items received successfully',
+            message: 'Receive created successfully',
+            receiveDate: formatDate(receiveData.receiveDate),
             receiveIds
         });
     } catch (error) {
@@ -367,14 +355,11 @@ export const getReceiveDetails = async (req: Request, res: Response): Promise<vo
         }
 
         const result = results[0];
-        const requestDate = new Date(result.request_date);
-        const receiveDate = new Date(result.receive_date);
-
         const formattedResponse: any = {
             receiveId: parseInt(receiveId),
             requestNumber: result.request_number,
-            requestDate: `${requestDate.getFullYear()}/${String(requestDate.getMonth() + 1).padStart(2, '0')}/${String(requestDate.getDate()).padStart(2, '0')}`,
-            receiveDate: `${receiveDate.getFullYear()}/${String(receiveDate.getMonth() + 1).padStart(2, '0')}/${String(receiveDate.getDate()).padStart(2, '0')}`,
+            requestDate: formatDate(result.request_date),
+            receiveDate: formatDate(result.receive_date),
             itemName: result.item_name,
             requestedPartNumber: result.requested_part_number,
             receivedPartNumber: result.received_part_number,

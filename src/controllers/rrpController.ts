@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { RowDataPacket } from 'mysql2';
 import pool from '../config/db';
+import { formatDate, formatDateForDB } from '../utils/dateUtils';
 
 interface ConfigRow extends RowDataPacket {
     config_name: string;
@@ -20,6 +21,42 @@ interface RRPItem extends RowDataPacket {
     part_number: string;
     received_quantity: number;
     unit: string;
+}
+
+interface RRPSubmissionItem {
+    receive_id: number;
+    price: number;
+    vat_status: boolean;
+    customs_charge: number;
+    quantity: number;
+    unit: string;
+    nac_code: string;
+    item_name: string;
+    part_number: string;
+    equipment_number: string;
+    request_number: string;
+    request_date: string;
+    currency: string;
+    forex_rate: number;
+}
+
+interface RRPSubmission {
+    type: 'local' | 'foreign';
+    rrp_date: string;
+    invoice_date: string;
+    supplier: string;
+    inspection_user: string;
+    invoice_number: string;
+    freight_charge: number;
+    custom_service_charge: number;
+    vat_rate: number;
+    created_by: string;
+    customs_date?: string;
+    po_number?: string;
+    airway_bill_number?: string;
+    currency?: string;
+    forex_rate?: number;
+    items: RRPSubmissionItem[];
 }
 
 export const getRRPConfig = async (req: Request, res: Response): Promise<void> => {
@@ -75,11 +112,11 @@ export const getRRPItems = async (req: Request, res: Response): Promise<void> =>
             ORDER BY rd.receive_date DESC`
         );
 
-        // Format dates to YYYY/MM/DD
+        // Format dates
         const formattedItems = rows.map(item => ({
             ...item,
-            request_date: new Date(item.request_date).toISOString().split('T')[0].replace(/-/g, '/'),
-            receive_date: new Date(item.receive_date).toISOString().split('T')[0].replace(/-/g, '/')
+            request_date: formatDate(item.request_date),
+            receive_date: formatDate(item.receive_date)
         }));
 
         res.status(200).json(formattedItems);
@@ -89,5 +126,425 @@ export const getRRPItems = async (req: Request, res: Response): Promise<void> =>
             error: 'Internal Server Error',
             message: error instanceof Error ? error.message : 'An error occurred while fetching RRP items'
         });
+    }
+};
+
+export const createRRP = async (req: Request, res: Response): Promise<void> => {
+    const connection = await pool.getConnection();
+    
+    try {
+        await connection.beginTransaction();
+        
+        const submissionData: RRPSubmission = req.body;
+        
+        // Get RRP configuration
+        const [configRows] = await connection.query<ConfigRow[]>(
+            'SELECT config_name, config_value FROM app_config WHERE config_type = ?',
+            ['rrp']
+        );
+        
+        const config: Record<string, any> = {};
+        configRows.forEach(row => {
+            try {
+                config[row.config_name] = JSON.parse(row.config_value);
+            } catch {
+                config[row.config_name] = row.config_value;
+            }
+        });
+
+        // Generate RRP number
+        const [lastRRP] = await connection.query<RowDataPacket[]>(
+            `SELECT rrp_number FROM rrp_details 
+            WHERE rrp_number LIKE ? 
+            ORDER BY id DESC LIMIT 1`,
+            [`${submissionData.type === 'local' ? 'L' : 'F'}%`]
+        );
+        
+        const prefix = submissionData.type === 'local' ? 'L' : 'F';
+        const lastNumber = lastRRP.length > 0 
+            ? parseInt(lastRRP[0].rrp_number.substring(1)) 
+            : 0;
+        const rrpNumber = `${prefix}${String(lastNumber + 1).padStart(3, '0')}`;
+
+        // Process each item
+        for (const item of submissionData.items) {
+            // Get receive details
+            const [receiveDetails] = await connection.query<RowDataPacket[]>(
+                'SELECT * FROM receive_details WHERE id = ?',
+                [item.receive_id]
+            );
+
+            if (receiveDetails.length === 0) {
+                throw new Error(`Receive details not found for ID: ${item.receive_id}`);
+            }
+
+            const receive = receiveDetails[0];
+
+            // Calculate total amount for the item
+            const itemPrice = item.price * (submissionData.type === 'foreign' && submissionData.forex_rate ? submissionData.forex_rate : 1);
+            
+            // Calculate total price of all items for proportion calculation
+            const totalItemPrice = submissionData.items.reduce((sum: number, curr: RRPSubmissionItem) => 
+                sum + (curr.price * (submissionData.type === 'foreign' && submissionData.forex_rate ? submissionData.forex_rate : 1)), 0);
+            
+            // Calculate proportional charges
+            const freightCharge = (itemPrice / totalItemPrice) * (submissionData.freight_charge || 0) * 
+                (submissionData.type === 'foreign' && submissionData.forex_rate ? submissionData.forex_rate : 1);
+            
+            const customServiceCharge = (itemPrice / totalItemPrice) * (submissionData.custom_service_charge || 0);
+
+            // Calculate VAT if applicable
+            let vatAmount = 0;
+            if (item.vat_status) {
+                const vatBase = itemPrice + freightCharge + (item.customs_charge || 0) + customServiceCharge;
+                vatAmount = vatBase * ((submissionData.vat_rate || 0) / 100);
+            }
+
+            // Calculate total amount
+            const totalAmount = itemPrice + 
+                              freightCharge + 
+                              (item.customs_charge || 0) + 
+                              customServiceCharge + 
+                              vatAmount;
+
+            // Format dates for database
+            const formattedRRPDate = formatDateForDB(submissionData.rrp_date);
+            const formattedInvoiceDate = formatDateForDB(submissionData.invoice_date);
+            const formattedCustomsDate = formatDateForDB(submissionData.customs_date);
+
+            // Insert into rrp_details
+            const [result] = await connection.query(
+                `INSERT INTO rrp_details (
+                    receive_fk, rrp_number, supplier_name, date, currency, forex_rate,
+                    item_price, customs_charge, customs_service_charge, vat_percentage,
+                    invoice_number, invoice_date, po_number, airway_bill_number,
+                    inspection_details, approval_status, created_by, total_amount,
+                    freight_charge, customs_date
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'PENDING', ?, ?, ?, ?)`,
+                [
+                    item.receive_id,
+                    rrpNumber,
+                    submissionData.supplier,
+                    formattedRRPDate,
+                    submissionData.type === 'foreign' ? submissionData.currency : 'NPR',
+                    submissionData.type === 'foreign' && submissionData.forex_rate ? submissionData.forex_rate : 1,
+                    item.price,
+                    item.customs_charge,
+                    customServiceCharge,
+                    submissionData.vat_rate,
+                    submissionData.invoice_number,
+                    formattedInvoiceDate,
+                    submissionData.po_number || null,
+                    submissionData.airway_bill_number || null,
+                    JSON.stringify({
+                        inspection_user: submissionData.inspection_user,
+                        inspection_details: config.inspection_details || {}
+                    }),
+                    submissionData.created_by,
+                    totalAmount,
+                    freightCharge,
+                    formattedCustomsDate
+                ]
+            );
+
+            // Get the inserted RRP's ID
+            const rrpId = (result as any).insertId;
+
+            // Update receive_details with rrp_fk using the ID
+            await connection.query(
+                'UPDATE receive_details SET rrp_fk = ? WHERE id = ?',
+                [rrpId, item.receive_id]
+            );
+        }
+
+        await connection.commit();
+        res.status(201).json({ 
+            message: 'RRP created successfully',
+            rrp_number: rrpNumber
+        });
+    } catch (error) {
+        await connection.rollback();
+        console.error('Error creating RRP:', error);
+        res.status(500).json({ 
+            error: 'Internal Server Error',
+            message: error instanceof Error ? error.message : 'An error occurred while creating RRP'
+        });
+    } finally {
+        connection.release();
+    }
+};
+
+export const getPendingRRPs = async (req: Request, res: Response): Promise<void> => {
+    try {
+        // Get RRP configuration
+        const [configRows] = await pool.query<ConfigRow[]>(
+            'SELECT config_name, config_value FROM app_config WHERE config_type = ?',
+            ['rrp']
+        );
+        
+        const config: Record<string, any> = {};
+        configRows.forEach(row => {
+            try {
+                config[row.config_name] = JSON.parse(row.config_value);
+            } catch {
+                config[row.config_name] = row.config_value;
+            }
+        });
+
+        // Get pending RRPs
+        const [rows] = await pool.query<RowDataPacket[]>(
+            `SELECT 
+                rd.id,
+                rd.rrp_number,
+                rd.supplier_name,
+                rd.date,
+                rd.currency,
+                rd.forex_rate,
+                rd.item_price,
+                rd.customs_charge,
+                rd.customs_service_charge,
+                rd.vat_percentage,
+                rd.invoice_number,
+                rd.invoice_date,
+                rd.po_number,
+                rd.airway_bill_number,
+                rd.inspection_details,
+                rd.approval_status,
+                rd.created_by,
+                rd.total_amount,
+                rd.freight_charge,
+                rd.customs_date,
+                rd.receive_fk,
+                red.item_name,
+                red.nac_code,
+                red.part_number,
+                red.received_quantity,
+                red.unit,
+                red.received_by,
+                red.receive_date,
+                rqd.request_number,
+                rqd.request_date,
+                rqd.requested_by,
+                rqd.equipment_number
+            FROM rrp_details rd
+            JOIN receive_details red ON rd.receive_fk = red.id
+            JOIN request_details rqd ON red.request_fk = rqd.id
+            WHERE rd.approval_status = 'PENDING'
+            ORDER BY rd.date DESC`
+        );
+
+        // Format dates and parse JSON fields
+        const formattedRows = rows.map(row => ({
+            ...row,
+            date: formatDate(row.date),
+            invoice_date: formatDate(row.invoice_date),
+            receive_date: formatDate(row.receive_date),
+            request_date: formatDate(row.request_date),
+            customs_date: formatDate(row.customs_date),
+            inspection_details: JSON.parse(row.inspection_details)
+        }));
+
+        res.status(200).json({
+            config,
+            pendingRRPs: formattedRows
+        });
+    } catch (error) {
+        console.error('Error fetching pending RRPs:', error);
+        res.status(500).json({ 
+            error: 'Internal Server Error',
+            message: error instanceof Error ? error.message : 'An error occurred while fetching pending RRPs'
+        });
+    }
+};
+
+export const approveRRP = async (req: Request, res: Response): Promise<void> => {
+    const connection = await pool.getConnection();
+    
+    try {
+        await connection.beginTransaction();
+        
+        const { id, approved_by, approval_remarks } = req.body;
+        
+        // Update RRP status
+        await connection.query(
+            `UPDATE rrp_details 
+            SET approval_status = 'APPROVED',
+                approved_by = ?,
+                approval_remarks = ?,
+                approval_date = CURRENT_TIMESTAMP
+            WHERE id = ?`,
+            [approved_by, approval_remarks, id]
+        );
+
+        await connection.commit();
+        res.status(200).json({ message: 'RRP approved successfully' });
+    } catch (error) {
+        await connection.rollback();
+        console.error('Error approving RRP:', error);
+        res.status(500).json({ 
+            error: 'Internal Server Error',
+            message: error instanceof Error ? error.message : 'An error occurred while approving RRP'
+        });
+    } finally {
+        connection.release();
+    }
+};
+
+export const rejectRRP = async (req: Request, res: Response): Promise<void> => {
+    const connection = await pool.getConnection();
+    
+    try {
+        await connection.beginTransaction();
+        
+        const { id, rejected_by, rejection_remarks } = req.body;
+        
+        // Update RRP status
+        await connection.query(
+            `UPDATE rrp_details 
+            SET approval_status = 'REJECTED',
+                rejected_by = ?,
+                rejection_remarks = ?,
+                rejection_date = CURRENT_TIMESTAMP
+            WHERE id = ?`,
+            [rejected_by, rejection_remarks, id]
+        );
+
+        // Reset rrp_fk in receive_details
+        await connection.query(
+            `UPDATE receive_details 
+            SET rrp_fk = NULL 
+            WHERE rrp_fk = ?`,
+            [id]
+        );
+
+        await connection.commit();
+        res.status(200).json({ message: 'RRP rejected successfully' });
+    } catch (error) {
+        await connection.rollback();
+        console.error('Error rejecting RRP:', error);
+        res.status(500).json({ 
+            error: 'Internal Server Error',
+            message: error instanceof Error ? error.message : 'An error occurred while rejecting RRP'
+        });
+    } finally {
+        connection.release();
+    }
+};
+
+export const updateRRP = async (req: Request, res: Response): Promise<void> => {
+    const connection = await pool.getConnection();
+    try {
+        await connection.beginTransaction();
+        
+        const rrpNumber = req.params.rrpNumber;
+        const updateData = req.body;
+        
+        // Get RRP configuration
+        const [configRows] = await connection.query<ConfigRow[]>(
+            'SELECT config_name, config_value FROM app_config WHERE config_type = ?',
+            ['rrp']
+        );
+        
+        const config: Record<string, any> = {};
+        configRows.forEach(row => {
+            try {
+                config[row.config_name] = JSON.parse(row.config_value);
+            } catch {
+                config[row.config_name] = row.config_value;
+            }
+        });
+
+        // Format dates for database
+        const formattedRRPDate = formatDateForDB(updateData.rrpDate);
+        const formattedInvoiceDate = formatDateForDB(updateData.invoiceDate);
+        const formattedCustomsDate = formatDateForDB(updateData.customsDate);
+
+        // Process each item
+        for (const item of updateData.items) {
+            // Calculate total amount for the item
+            const itemPrice = item.item_price * (updateData.type === 'foreign' && updateData.forexRate ? updateData.forexRate : 1);
+            
+            // Calculate total price of all items for proportion calculation
+            const totalItemPrice = updateData.items.reduce((sum: number, curr: any) => 
+                sum + (curr.item_price * (updateData.type === 'foreign' && updateData.forexRate ? updateData.forexRate : 1)), 0);
+            
+            // Calculate proportional charges
+            const freightCharge = (itemPrice / totalItemPrice) * (updateData.freightCharge || 0) * 
+                (updateData.type === 'foreign' && updateData.forexRate ? updateData.forexRate : 1);
+            
+            // Calculate custom service charge proportionally based on item price
+            const customServiceCharge = (itemPrice / totalItemPrice) * (item.customs_service_charge || 0);
+
+            // Calculate VAT if applicable
+            let vatAmount = 0;
+            if (item.vat_percentage) {
+                const vatBase = itemPrice + freightCharge + (item.customs_charge || 0) + customServiceCharge;
+                vatAmount = vatBase * ((item.vat_percentage || 0) / 100);
+            }
+
+            // Calculate total amount
+            const totalAmount = itemPrice + 
+                              freightCharge + 
+                              (item.customs_charge || 0) + 
+                              customServiceCharge + 
+                              vatAmount;
+
+            // Update rrp_details
+            await connection.query(
+                `UPDATE rrp_details 
+                SET supplier_name = ?,
+                    date = ?,
+                    currency = ?,
+                    forex_rate = ?,
+                    item_price = ?,
+                    customs_charge = ?,
+                    customs_service_charge = ?,
+                    vat_percentage = ?,
+                    invoice_number = ?,
+                    invoice_date = ?,
+                    customs_date = ?,
+                    po_number = ?,
+                    airway_bill_number = ?,
+                    inspection_details = ?,
+                    freight_charge = ?,
+                    total_amount = ?
+                WHERE rrp_number = ? AND receive_fk = ?`,
+                [
+                    updateData.supplier,
+                    formattedRRPDate,
+                    updateData.type === 'foreign' ? updateData.currency : 'NPR',
+                    updateData.type === 'foreign' && updateData.forexRate ? updateData.forexRate : 1,
+                    item.item_price,
+                    item.customs_charge,
+                    customServiceCharge,
+                    item.vat_percentage,
+                    updateData.invoiceNumber,
+                    formattedInvoiceDate,
+                    formattedCustomsDate,
+                    updateData.poNumber || null,
+                    updateData.airwayBillNumber || null,
+                    JSON.stringify({
+                        inspection_user: updateData.inspectionUser,
+                        inspection_details: config.inspection_details || {}
+                    }),
+                    freightCharge,
+                    totalAmount,
+                    rrpNumber,
+                    item.id
+                ]
+            );
+        }
+
+        await connection.commit();
+        res.status(200).json({ message: 'RRP updated successfully' });
+    } catch (error) {
+        await connection.rollback();
+        console.error('Error updating RRP:', error);
+        res.status(500).json({ 
+            error: 'Internal Server Error',
+            message: error instanceof Error ? error.message : 'An error occurred while updating RRP'
+        });
+    } finally {
+        connection.release();
     }
 }; 

@@ -59,6 +59,15 @@ interface RRPSubmission {
     items: RRPSubmissionItem[];
 }
 
+interface RRPUpdateItem {
+    id?: number;
+    receive_id?: number;
+    item_price: number;
+    customs_charge?: number;
+    customs_service_charge?: number;
+    vat_percentage?: number;
+}
+
 export const getRRPConfig = async (req: Request, res: Response): Promise<void> => {
     try {
         // Query to get all RRP configurations
@@ -131,7 +140,6 @@ export const getRRPItems = async (req: Request, res: Response): Promise<void> =>
 
 export const createRRP = async (req: Request, res: Response): Promise<void> => {
     const connection = await pool.getConnection();
-    
     try {
         await connection.beginTransaction();
         
@@ -231,7 +239,7 @@ export const createRRP = async (req: Request, res: Response): Promise<void> => {
                     item.price,
                     item.customs_charge,
                     customServiceCharge,
-                    submissionData.vat_rate,
+                    item.vat_status ? submissionData.vat_rate : 0,
                     submissionData.invoice_number,
                     formattedInvoiceDate,
                     submissionData.po_number || null,
@@ -363,18 +371,26 @@ export const approveRRP = async (req: Request, res: Response): Promise<void> => 
     try {
         await connection.beginTransaction();
         
-        const { id, approved_by, approval_remarks } = req.body;
+        const rrpNumber = req.params.rrpNumber;
+        const { approved_by } = req.body;
         
-        // Update RRP status
-        await connection.query(
+        // Update all RRP records with the same RRP number
+        const [result] = await connection.query(
             `UPDATE rrp_details 
             SET approval_status = 'APPROVED',
                 approved_by = ?,
-                approval_remarks = ?,
-                approval_date = CURRENT_TIMESTAMP
-            WHERE id = ?`,
-            [approved_by, approval_remarks, id]
+            WHERE rrp_number = ?`,
+            [approved_by, rrpNumber]
         );
+
+        if ((result as any).affectedRows === 0) {
+            await connection.rollback();
+            res.status(404).json({ 
+                error: 'Not Found',
+                message: 'No RRP records found to approve'
+            });
+            return;
+        }
 
         await connection.commit();
         res.status(200).json({ message: 'RRP approved successfully' });
@@ -396,25 +412,76 @@ export const rejectRRP = async (req: Request, res: Response): Promise<void> => {
     try {
         await connection.beginTransaction();
         
-        const { id, rejected_by, rejection_remarks } = req.body;
+        const rrpNumber = req.params.rrpNumber;
+        const { rejected_by, rejection_reason } = req.body;
         
-        // Update RRP status
-        await connection.query(
+        // Get the first item's ID and the created_by username
+        const [rrpDetails] = await connection.query<RowDataPacket[]>(
+            `SELECT id, created_by 
+             FROM rrp_details 
+             WHERE rrp_number = ? 
+             ORDER BY id ASC 
+             LIMIT 1`,
+            [rrpNumber]
+        );
+
+        if (rrpDetails.length === 0) {
+            res.status(404).json({
+                error: 'Not Found',
+                message: 'RRP not found'
+            });
+            return;
+        }
+
+        const firstItemId = rrpDetails[0].id;
+        const createdBy = rrpDetails[0].created_by;
+
+        // Get the user ID from the username
+        const [users] = await connection.query<RowDataPacket[]>(
+            'SELECT id FROM users WHERE username = ?',
+            [createdBy]
+        );
+
+        if (users.length === 0) {
+            res.status(404).json({
+                error: 'Not Found',
+                message: 'User not found'
+            });
+            return;
+        }
+
+        const userId = users[0].id;
+
+        // Update all RRP records with the same RRP number
+        const [result] = await connection.query(
             `UPDATE rrp_details 
             SET approval_status = 'REJECTED',
                 rejected_by = ?,
-                rejection_remarks = ?,
-                rejection_date = CURRENT_TIMESTAMP
-            WHERE id = ?`,
-            [rejected_by, rejection_remarks, id]
+                rejection_reason = ?
+            WHERE rrp_number = ?`,
+            [rejected_by, rejection_reason, rrpNumber]
         );
 
-        // Reset rrp_fk in receive_details
+        if ((result as any).affectedRows === 0) {
+            await connection.rollback();
+            res.status(404).json({ 
+                error: 'Not Found',
+                message: 'No RRP records found to reject'
+            });
+            return;
+        }
+
+        // Create notification
         await connection.query(
-            `UPDATE receive_details 
-            SET rrp_fk = NULL 
-            WHERE rrp_fk = ?`,
-            [id]
+            `INSERT INTO notifications 
+             (user_id, reference_type, message, reference_id)
+             VALUES (?, ?, ?, ?)`,
+            [
+                userId,
+                'rrp',
+                `Your RRP number ${rrpNumber} has been rejected for the following reason: ${rejection_reason}`,
+                firstItemId
+            ]
         );
 
         await connection.commit();
@@ -438,8 +505,7 @@ export const updateRRP = async (req: Request, res: Response): Promise<void> => {
         
         const rrpNumber = req.params.rrpNumber;
         const updateData = req.body;
-        
-        // Get RRP configuration
+
         const [configRows] = await connection.query<ConfigRow[]>(
             'SELECT config_name, config_value FROM app_config WHERE config_type = ?',
             ['rrp']
@@ -455,84 +521,155 @@ export const updateRRP = async (req: Request, res: Response): Promise<void> => {
         });
 
         // Format dates for database
-        const formattedRRPDate = formatDateForDB(updateData.rrpDate);
-        const formattedInvoiceDate = formatDateForDB(updateData.invoiceDate);
-        const formattedCustomsDate = formatDateForDB(updateData.customsDate);
+        const formattedRRPDate = formatDateForDB(updateData.date);
+        const formattedInvoiceDate = formatDateForDB(updateData.invoice_date);
+        const formattedCustomsDate = formatDateForDB(updateData.customs_date);
+
+        // Get existing items for this RRP
+        const [existingItems] = await connection.query<RowDataPacket[]>(
+            'SELECT id, receive_fk FROM rrp_details WHERE rrp_number = ?',
+            [rrpNumber]
+        );
+
+        const existingItemIds = existingItems.map(item => item.id);
+        const updatedItemIds = updateData.items.filter((item: RRPUpdateItem) => item.id).map((item: RRPUpdateItem) => item.id);
+
+        // Delete items that are no longer in the RRP
+        const itemsToDelete = existingItemIds.filter(id => !updatedItemIds.includes(id));
+        if (itemsToDelete.length > 0) {
+            // Get receive_fk for items being deleted
+            const [itemsToDeleteDetails] = await connection.query<RowDataPacket[]>(
+                'SELECT receive_fk FROM rrp_details WHERE id IN (?)',
+                [itemsToDelete]
+            );
+
+            // Reset rrp_fk in receive_details for deleted items using receive_fk
+            const receiveFks = itemsToDeleteDetails.map(item => item.receive_fk);
+            if (receiveFks.length > 0) {
+                await connection.query(
+                    'UPDATE receive_details SET rrp_fk = NULL WHERE id IN (?)',
+                    [receiveFks]
+                );
+            }
+
+            // Then delete the RRP items
+            await connection.query(
+                'DELETE FROM rrp_details WHERE id IN (?)',
+                [itemsToDelete]
+            );
+        }
+
+        let updateSuccess = false;
 
         // Process each item
         for (const item of updateData.items) {
-            // Calculate total amount for the item
-            const itemPrice = item.item_price * (updateData.type === 'foreign' && updateData.forexRate ? updateData.forexRate : 1);
             
-            // Calculate total price of all items for proportion calculation
-            const totalItemPrice = updateData.items.reduce((sum: number, curr: any) => 
-                sum + (curr.item_price * (updateData.type === 'foreign' && updateData.forexRate ? updateData.forexRate : 1)), 0);
-            
-            // Calculate proportional charges
-            const freightCharge = (itemPrice / totalItemPrice) * (updateData.freightCharge || 0) * 
-                (updateData.type === 'foreign' && updateData.forexRate ? updateData.forexRate : 1);
-            
-            // Calculate custom service charge proportionally based on item price
-            const customServiceCharge = (itemPrice / totalItemPrice) * (item.customs_service_charge || 0);
+            if (item.id) {
+                // Update existing item
+                const [result] = await connection.query(
+                    `UPDATE rrp_details 
+                    SET rrp_number = ?,
+                        supplier_name = ?,
+                        date = ?,
+                        currency = ?,
+                        forex_rate = ?,
+                        item_price = ?,
+                        customs_charge = ?,
+                        customs_service_charge = ?,
+                        vat_percentage = ?,
+                        invoice_number = ?,
+                        invoice_date = ?,
+                        customs_date = ?,
+                        po_number = ?,
+                        airway_bill_number = ?,
+                        inspection_details = ?,
+                        freight_charge = ?,
+                        total_amount = ?,
+                        updated_at = CURRENT_TIMESTAMP
+                    WHERE id = ?`,
+                    [
+                        updateData.rrp_number,
+                        updateData.supplier_name,
+                        formattedRRPDate,
+                        updateData.currency,
+                        updateData.forex_rate,
+                        item.item_price,
+                        item.customs_charge,
+                        item.customs_service_charge,
+                        item.vat_percentage,
+                        updateData.invoice_number,
+                        formattedInvoiceDate,
+                        formattedCustomsDate,
+                        updateData.po_number || null,
+                        updateData.airway_bill_number || null,
+                        JSON.stringify({
+                            inspection_user: updateData.inspection_user,
+                            inspection_details: config.inspection_details || {}
+                        }),
+                        item.freight_charge,
+                        item.total_amount,
+                        item.id
+                    ]
+                );
 
-            // Calculate VAT if applicable
-            let vatAmount = 0;
-            if (item.vat_percentage) {
-                const vatBase = itemPrice + freightCharge + (item.customs_charge || 0) + customServiceCharge;
-                vatAmount = vatBase * ((item.vat_percentage || 0) / 100);
+                if ((result as any).affectedRows > 0) {
+                    updateSuccess = true;
+                }
+            } else {
+                // Insert new item
+                const [result] = await connection.query(
+                    `INSERT INTO rrp_details (
+                        receive_fk, rrp_number, supplier_name, date, currency, forex_rate,
+                        item_price, customs_charge, customs_service_charge, vat_percentage,
+                        invoice_number, invoice_date, po_number, airway_bill_number,
+                        inspection_details, approval_status, created_by, total_amount,
+                        freight_charge, customs_date
+                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'PENDING', ?, ?, ?, ?)`,
+                    [
+                        item.receive_id,
+                        updateData.rrp_number,
+                        updateData.supplier_name,
+                        formattedRRPDate,
+                        updateData.currency,
+                        updateData.forex_rate,
+                        item.item_price,
+                        item.customs_charge,
+                        item.customs_service_charge,
+                        item.vat_percentage,
+                        updateData.invoice_number,
+                        formattedInvoiceDate,
+                        updateData.po_number || null,
+                        updateData.airway_bill_number || null,
+                        JSON.stringify({
+                            inspection_user: updateData.inspection_user,
+                            inspection_details: config.inspection_details || {}
+                        }),
+                        updateData.created_by,
+                        item.total_amount,
+                        item.freight_charge,
+                        formattedCustomsDate
+                    ]
+                );
+
+                const rrpId = (result as any).insertId;
+
+                // Update receive_details with rrp_fk
+                await connection.query(
+                    'UPDATE receive_details SET rrp_fk = ? WHERE id = ?',
+                    [rrpId, item.receive_id]
+                );
+
+                updateSuccess = true;
             }
+        }
 
-            // Calculate total amount
-            const totalAmount = itemPrice + 
-                              freightCharge + 
-                              (item.customs_charge || 0) + 
-                              customServiceCharge + 
-                              vatAmount;
-
-            // Update rrp_details
-            await connection.query(
-                `UPDATE rrp_details 
-                SET supplier_name = ?,
-                    date = ?,
-                    currency = ?,
-                    forex_rate = ?,
-                    item_price = ?,
-                    customs_charge = ?,
-                    customs_service_charge = ?,
-                    vat_percentage = ?,
-                    invoice_number = ?,
-                    invoice_date = ?,
-                    customs_date = ?,
-                    po_number = ?,
-                    airway_bill_number = ?,
-                    inspection_details = ?,
-                    freight_charge = ?,
-                    total_amount = ?
-                WHERE rrp_number = ? AND receive_fk = ?`,
-                [
-                    updateData.supplier,
-                    formattedRRPDate,
-                    updateData.type === 'foreign' ? updateData.currency : 'NPR',
-                    updateData.type === 'foreign' && updateData.forexRate ? updateData.forexRate : 1,
-                    item.item_price,
-                    item.customs_charge,
-                    customServiceCharge,
-                    item.vat_percentage,
-                    updateData.invoiceNumber,
-                    formattedInvoiceDate,
-                    formattedCustomsDate,
-                    updateData.poNumber || null,
-                    updateData.airwayBillNumber || null,
-                    JSON.stringify({
-                        inspection_user: updateData.inspectionUser,
-                        inspection_details: config.inspection_details || {}
-                    }),
-                    freightCharge,
-                    totalAmount,
-                    rrpNumber,
-                    item.id
-                ]
-            );
+        if (!updateSuccess) {
+            await connection.rollback();
+            res.status(404).json({ 
+                error: 'Not Found',
+                message: 'No matching RRP items were found to update'
+            });
+            return;
         }
 
         await connection.commit();

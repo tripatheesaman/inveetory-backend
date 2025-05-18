@@ -43,6 +43,50 @@ interface AuthorityDetails extends RowDataPacket {
     level_2_authority_designation: string;
 }
 
+interface RRPItem extends RowDataPacket {
+    id: number;
+    rrp_number: string;
+    supplier_name: string;
+    date: Date;
+    currency: string;
+    forex_rate: number;
+    item_price: number;
+    customs_charge: number;
+    customs_service_charge: number;
+    vat_percentage: number;
+    invoice_number: string;
+    invoice_date: Date;
+    po_number: string;
+    airway_bill_number: string;
+    inspection_details: string;
+    approval_status: string;
+    created_by: string;
+    total_amount: number;
+    freight_charge: number;
+    customs_date: Date;
+    item_name: string;
+    part_number: string;
+    received_quantity: number;
+    unit: string;
+    equipment_number: string;
+}
+
+interface RRPDetails extends RowDataPacket {
+    rrp_number: string;
+    date: Date;
+    supplier_name: string;
+    currency: string;
+    forex_rate: number;
+    invoice_number: string;
+    invoice_date: Date;
+    po_number: string;
+    airway_bill_number: string;
+    inspection_details: string;
+    approval_status: string;
+    created_by: string;
+    customs_date: Date;
+}
+
 export class ExcelService {
     private static async getRequestDetails(requestNumber: string): Promise<{
         requestDetails: RequestDetails;
@@ -308,6 +352,181 @@ export class ExcelService {
         // Generate buffer
         return await workbook.xlsx.writeBuffer();
     }
+
+    private static async getRRPDetails(rrpNumber: string): Promise<{
+        rrpDetails: RRPDetails;
+        items: RRPItem[];
+        userDetails: UserDetails;
+        authorityDetails: AuthorityDetails;
+    }> {
+        const connection = await pool.getConnection();
+        try {
+            const [rrpRows] = await connection.query<RRPDetails[]>(
+                `SELECT rrp_number, date, supplier_name, currency, forex_rate, 
+                        invoice_number, invoice_date, po_number, airway_bill_number, 
+                        inspection_details, approval_status, created_by, customs_date 
+                 FROM rrp_details 
+                 WHERE rrp_number = ? 
+                 LIMIT 1`,
+                [rrpNumber]
+            );
+
+            const [itemRows] = await connection.query<RRPItem[]>(
+                `SELECT id, rrp_number, supplier_name, date, currency, forex_rate,
+                        item_price, customs_charge, customs_service_charge, vat_percentage,
+                        invoice_number, invoice_date, po_number, airway_bill_number,
+                        inspection_details, approval_status, created_by, total_amount,
+                        freight_charge, customs_date, item_name, part_number,
+                        received_quantity, unit, equipment_number
+                 FROM rrp_details rd
+                 JOIN receive_details red ON rd.receive_fk = red.id
+                 JOIN request_details rqd ON red.request_fk = rqd.id
+                 WHERE rd.rrp_number = ?`,
+                [rrpNumber]
+            );
+
+            if (!rrpRows.length) {
+                throw new Error('RRP not found');
+            }
+
+            // Get user details using username
+            const [userRows] = await connection.query<UserDetails[]>(
+                'SELECT first_name, last_name, staffid, designation FROM users WHERE username = ?',
+                [rrpRows[0].created_by]
+            );
+
+            if (!userRows.length) {
+                throw new Error('User details not found');
+            }
+
+            // Get authority details
+            const [authorityRows] = await connection.query<AuthorityDetails[]>(
+                'SELECT level_1_authority_name, level_1_authority_staffid, level_1_authority_designation, ' +
+                'level_2_authority_name, level_2_authority_staffid, level_2_authority_designation ' +
+                'FROM authority_details ORDER BY id DESC LIMIT 1'
+            );
+
+            if (!authorityRows.length) {
+                throw new Error('Authority details not found');
+            }
+
+            return {
+                rrpDetails: rrpRows[0],
+                items: itemRows,
+                userDetails: userRows[0],
+                authorityDetails: authorityRows[0]
+            };
+        } finally {
+            connection.release();
+        }
+    }
+
+    public static async generateRRPExcel(rrpNumber: string): Promise<ExcelJS.Buffer> {
+        const { rrpDetails, items, userDetails, authorityDetails } = await ExcelService.getRRPDetails(rrpNumber);
+        const templatePath = path.join(__dirname, '../../public/templates/rrp_template.xlsx');
+        
+        const workbook = new ExcelJS.Workbook();
+        await workbook.xlsx.readFile(templatePath);
+        
+        const worksheet = workbook.getWorksheet('RRP Template');
+        if (!worksheet) {
+            throw new Error('Template worksheet not found');
+        }
+
+        // Copy all properties from template
+        const templateWorksheet = workbook.getWorksheet('RRP Template');
+        if (!templateWorksheet) {
+            throw new Error('Template worksheet not found');
+        }
+
+        // Copy all properties, styles, and layouts
+        worksheet.properties = { ...templateWorksheet.properties };
+        worksheet.views = templateWorksheet.views;
+        worksheet.pageSetup = { ...templateWorksheet.pageSetup };
+        worksheet.headerFooter = { ...templateWorksheet.headerFooter };
+        worksheet.autoFilter = templateWorksheet.autoFilter;
+        worksheet.mergeCells = templateWorksheet.mergeCells;
+
+        // Copy column properties
+        templateWorksheet.columns.forEach((col, index) => {
+            if (col) {
+                const targetCol = worksheet.getColumn(index + 1);
+                targetCol.width = col.width || 8.43; // Default width if undefined
+                if (col.style) {
+                    targetCol.style = col.style;
+                }
+                targetCol.hidden = col.hidden || false;
+                targetCol.outlineLevel = col.outlineLevel || 0;
+            }
+        });
+
+        // Copy row properties and cell styles
+        templateWorksheet.eachRow((row, rowNumber) => {
+            const targetRow = worksheet.getRow(rowNumber);
+            targetRow.height = row.height || 15; // Default height if undefined
+            targetRow.hidden = row.hidden || false;
+            targetRow.outlineLevel = row.outlineLevel || 0;
+
+            // Copy cell styles and values
+            row.eachCell((cell, colNumber) => {
+                const targetCell = worksheet.getCell(rowNumber, colNumber);
+                if (cell.style) targetCell.style = cell.style;
+                if (cell.numFmt) targetCell.numFmt = cell.numFmt;
+                if (cell.font) targetCell.font = cell.font;
+                if (cell.alignment) targetCell.alignment = cell.alignment;
+                if (cell.border) targetCell.border = cell.border;
+                if (cell.fill) targetCell.fill = cell.fill;
+            });
+        });
+
+        // Set RRP number and date
+        const formattedDate = ExcelService.formatDate(rrpDetails.date);
+        worksheet.getCell('C7').value = `${rrpDetails.rrp_number}(${formattedDate})`;
+
+        // Set supplier details
+        worksheet.getCell('C8').value = rrpDetails.supplier_name;
+        worksheet.getCell('C9').value = rrpDetails.invoice_number;
+        worksheet.getCell('C10').value = ExcelService.formatDate(rrpDetails.invoice_date);
+        worksheet.getCell('C11').value = rrpDetails.po_number || '';
+        worksheet.getCell('C12').value = rrpDetails.airway_bill_number || '';
+        worksheet.getCell('C13').value = ExcelService.formatDate(rrpDetails.customs_date);
+
+        // Insert items starting from row 15
+        let currentRow = 15;
+        for (const item of items) {
+            worksheet.getCell(`B${currentRow}`).value = item.part_number;
+            worksheet.getCell(`C${currentRow}`).value = item.item_name;
+            worksheet.getCell(`D${currentRow}`).value = item.equipment_number;
+            worksheet.getCell(`E${currentRow}`).value = item.received_quantity;
+            worksheet.getCell(`F${currentRow}`).value = item.unit;
+            worksheet.getCell(`G${currentRow}`).value = item.item_price;
+            worksheet.getCell(`H${currentRow}`).value = item.customs_charge;
+            worksheet.getCell(`I${currentRow}`).value = item.customs_service_charge;
+            worksheet.getCell(`J${currentRow}`).value = item.vat_percentage;
+            worksheet.getCell(`K${currentRow}`).value = item.freight_charge;
+            worksheet.getCell(`L${currentRow}`).value = item.total_amount;
+            currentRow++;
+        }
+
+        // Insert user details (RRP Prepared By)
+        worksheet.getCell('A20').value = `${userDetails.first_name} ${userDetails.last_name}`;
+        worksheet.getCell('A21').value = userDetails.staffid;
+        worksheet.getCell('A22').value = userDetails.designation;
+
+        // Insert Level 1 authority details
+        worksheet.getCell('D20').value = authorityDetails.level_1_authority_name;
+        worksheet.getCell('D21').value = authorityDetails.level_1_authority_staffid;
+        worksheet.getCell('D22').value = authorityDetails.level_1_authority_designation;
+
+        // Insert Level 2 authority details
+        worksheet.getCell('I20').value = authorityDetails.level_2_authority_name;
+        worksheet.getCell('I21').value = authorityDetails.level_2_authority_staffid;
+        worksheet.getCell('I22').value = authorityDetails.level_2_authority_designation;
+
+        // Generate buffer
+        return await workbook.xlsx.writeBuffer();
+    }
 }
 
 export const generateRequestExcel = ExcelService.generateRequestExcel.bind(ExcelService);
+export const generateRRPExcel = ExcelService.generateRRPExcel.bind(ExcelService);

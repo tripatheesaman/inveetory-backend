@@ -85,6 +85,7 @@ interface RRPDetails extends RowDataPacket {
     approval_status: string;
     created_by: string;
     customs_date: Date;
+    customs_number: string;
 }
 
 export class ExcelService {
@@ -145,8 +146,10 @@ export class ExcelService {
         }
     }
 
-    private static formatDate(date: Date): string {
-        return date.toISOString().split('T')[0].replace(/-/g, '/');
+    private static formatDate(date: Date | string | null | undefined): string {
+        if (!date) return '';
+        const dateObj = typeof date === 'string' ? new Date(date) : date;
+        return dateObj.toISOString().split('T')[0].replace(/-/g, '/');
     }
 
     private static async resizeImage(imagePath: string, maxWidth = 120, maxHeight = 100): Promise<Buffer> {
@@ -358,13 +361,14 @@ export class ExcelService {
         items: RRPItem[];
         userDetails: UserDetails;
         authorityDetails: AuthorityDetails;
+        createdByUser: UserDetails;
     }> {
         const connection = await pool.getConnection();
         try {
             const [rrpRows] = await connection.query<RRPDetails[]>(
                 `SELECT rrp_number, date, supplier_name, currency, forex_rate, 
                         invoice_number, invoice_date, po_number, airway_bill_number, 
-                        inspection_details, approval_status, created_by, customs_date 
+                        inspection_details, approval_status, created_by, customs_date, customs_number 
                  FROM rrp_details 
                  WHERE rrp_number = ? 
                  LIMIT 1`,
@@ -372,12 +376,12 @@ export class ExcelService {
             );
 
             const [itemRows] = await connection.query<RRPItem[]>(
-                `SELECT id, rrp_number, supplier_name, date, currency, forex_rate,
-                        item_price, customs_charge, customs_service_charge, vat_percentage,
-                        invoice_number, invoice_date, po_number, airway_bill_number,
-                        inspection_details, approval_status, created_by, total_amount,
-                        freight_charge, customs_date, item_name, part_number,
-                        received_quantity, unit, equipment_number
+                `SELECT rd.id, rd.rrp_number, rd.supplier_name, rd.date, rd.currency, rd.forex_rate,
+                        rd.item_price, rd.customs_charge, rd.customs_service_charge, rd.vat_percentage,
+                        rd.invoice_number, rd.invoice_date, rd.po_number, rd.airway_bill_number,
+                        rd.inspection_details, rd.approval_status, rd.created_by, rd.total_amount,
+                        rd.freight_charge, rd.customs_date, rd.customs_number, red.item_name, red.part_number,
+                        red.received_quantity, red.unit, rqd.equipment_number
                  FROM rrp_details rd
                  JOIN receive_details red ON rd.receive_fk = red.id
                  JOIN request_details rqd ON red.request_fk = rqd.id
@@ -399,6 +403,16 @@ export class ExcelService {
                 throw new Error('User details not found');
             }
 
+            // Get created by user details
+            const [createdByUserRows] = await connection.query<UserDetails[]>(
+                'SELECT first_name, last_name, staffid, designation FROM users WHERE username = ?',
+                [rrpRows[0].created_by]
+            );
+
+            if (!createdByUserRows.length) {
+                throw new Error('Created by user details not found');
+            }
+
             // Get authority details
             const [authorityRows] = await connection.query<AuthorityDetails[]>(
                 'SELECT level_1_authority_name, level_1_authority_staffid, level_1_authority_designation, ' +
@@ -414,7 +428,8 @@ export class ExcelService {
                 rrpDetails: rrpRows[0],
                 items: itemRows,
                 userDetails: userRows[0],
-                authorityDetails: authorityRows[0]
+                authorityDetails: authorityRows[0],
+                createdByUser: createdByUserRows[0]
             };
         } finally {
             connection.release();
@@ -422,21 +437,26 @@ export class ExcelService {
     }
 
     public static async generateRRPExcel(rrpNumber: string): Promise<ExcelJS.Buffer> {
-        const { rrpDetails, items, userDetails, authorityDetails } = await ExcelService.getRRPDetails(rrpNumber);
-        const templatePath = path.join(__dirname, '../../public/templates/rrp_template.xlsx');
+        const { rrpDetails, items, userDetails, authorityDetails, createdByUser } = await ExcelService.getRRPDetails(rrpNumber);
+        
+        // Determine RRP type from the RRP number (L for local, F for foreign)
+        const rrpType = rrpNumber.charAt(0).toUpperCase() === 'L' ? 'local' : 'foreign';
+        const templatePath = path.join(__dirname, '../../public/templates/template_file.xlsx');
         
         const workbook = new ExcelJS.Workbook();
         await workbook.xlsx.readFile(templatePath);
         
-        const worksheet = workbook.getWorksheet('RRP Template');
+        // Use correct sheet name based on RRP type
+        const sheetName = rrpType === 'local' ? 'RRLP Template' : 'RRFP Template';
+        const worksheet = workbook.getWorksheet(sheetName);
         if (!worksheet) {
-            throw new Error('Template worksheet not found');
+            throw new Error(`Template worksheet '${sheetName}' not found`);
         }
 
         // Copy all properties from template
-        const templateWorksheet = workbook.getWorksheet('RRP Template');
+        const templateWorksheet = workbook.getWorksheet(sheetName);
         if (!templateWorksheet) {
-            throw new Error('Template worksheet not found');
+            throw new Error(`Template worksheet '${sheetName}' not found`);
         }
 
         // Copy all properties, styles, and layouts
@@ -479,49 +499,120 @@ export class ExcelService {
             });
         });
 
-        // Set RRP number and date
-        const formattedDate = ExcelService.formatDate(rrpDetails.date);
-        worksheet.getCell('C7').value = `${rrpDetails.rrp_number}(${formattedDate})`;
+        if (rrpType === 'local') {
+            // Format RRP number (remove 'L' prefix and ensure 3 digits)
+            const rrpNumberWithoutPrefix = rrpDetails.rrp_number.substring(1).padStart(3, '0');
+            worksheet.getCell('J5').value = `RRLP: ${rrpNumberWithoutPrefix}`;
+            
+            // Set date and supplier
+            const formattedDate = ExcelService.formatDate(rrpDetails.date);
+            worksheet.getCell('B5').value = formattedDate;
+            worksheet.getCell('D5').value = rrpDetails.supplier_name;
 
-        // Set supplier details
-        worksheet.getCell('C8').value = rrpDetails.supplier_name;
-        worksheet.getCell('C9').value = rrpDetails.invoice_number;
-        worksheet.getCell('C10').value = ExcelService.formatDate(rrpDetails.invoice_date);
-        worksheet.getCell('C11').value = rrpDetails.po_number || '';
-        worksheet.getCell('C12').value = rrpDetails.airway_bill_number || '';
-        worksheet.getCell('C13').value = ExcelService.formatDate(rrpDetails.customs_date);
+            // Set freight charge (NA if less than 1)
+            const freightCharge = rrpDetails.freight_charge || 0;
+            worksheet.getCell('C24').value = freightCharge < 1 ? 'NA' : freightCharge;
 
-        // Insert items starting from row 15
-        let currentRow = 15;
-        for (const item of items) {
-            worksheet.getCell(`B${currentRow}`).value = item.part_number;
-            worksheet.getCell(`C${currentRow}`).value = item.item_name;
-            worksheet.getCell(`D${currentRow}`).value = item.equipment_number;
-            worksheet.getCell(`E${currentRow}`).value = item.received_quantity;
-            worksheet.getCell(`F${currentRow}`).value = item.unit;
-            worksheet.getCell(`G${currentRow}`).value = item.item_price;
-            worksheet.getCell(`H${currentRow}`).value = item.customs_charge;
-            worksheet.getCell(`I${currentRow}`).value = item.customs_service_charge;
-            worksheet.getCell(`J${currentRow}`).value = item.vat_percentage;
-            worksheet.getCell(`K${currentRow}`).value = item.freight_charge;
-            worksheet.getCell(`L${currentRow}`).value = item.total_amount;
-            currentRow++;
+            // Set invoice number and date
+            const invoiceDate = ExcelService.formatDate(rrpDetails.invoice_date);
+            worksheet.getCell('C25').value = `${rrpDetails.invoice_number || ''}(${invoiceDate})`;
+
+            // Get unique request numbers and dates
+            const requestDetails = items
+                .filter(item => item.request_number && item.request_date)
+                .map(item => ({
+                    number: item.request_number,
+                    date: item.request_date
+                }))
+                .filter((item, index, self) => 
+                    index === self.findIndex(t => t.number === item.number)
+                );
+
+            // Sort by date
+            requestDetails.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+
+            // Format request numbers and date range
+            if (requestDetails.length > 0) {
+                const requestNumbers = requestDetails.map(r => r.number).join(',');
+                const earliestDate = ExcelService.formatDate(requestDetails[0].date);
+                const lastDate = ExcelService.formatDate(requestDetails[requestDetails.length - 1].date);
+                worksheet.getCell('I24').value = `${requestNumbers} (${earliestDate} - ${lastDate})`;
+            } else {
+                worksheet.getCell('I24').value = '';
+            }
+
+            // Set authority details
+            worksheet.getCell('A28').value = `${createdByUser.first_name} ${createdByUser.last_name}`;
+            worksheet.getCell('A29').value = createdByUser.designation;
+            worksheet.getCell('C28').value = authorityDetails.level_1_authority_name;
+            worksheet.getCell('C29').value = authorityDetails.level_1_authority_designation;
+            worksheet.getCell('E28').value = authorityDetails.level_2_authority_name;
+            worksheet.getCell('E29').value = authorityDetails.level_2_authority_designation;
+            worksheet.getCell('I28').value = authorityDetails.level_2_authority_name;
+            worksheet.getCell('I29').value = authorityDetails.level_2_authority_designation;
+
+            // Insert items starting from row 7
+            let currentRow = 7;
+            let sn = 1;
+            for (const item of items) {
+                worksheet.getCell(`A${currentRow}`).value = sn++;
+                worksheet.getCell(`B${currentRow}`).value = item.item_name || '';
+                worksheet.getCell(`C${currentRow}`).value = item.part_number || '';
+                worksheet.getCell(`D${currentRow}`).value = item.nac_code || '';
+                worksheet.getCell(`E${currentRow}`).value = item.received_quantity || 0;
+                worksheet.getCell(`F${currentRow}`).value = item.unit || '';
+                worksheet.getCell(`G${currentRow}`).value = (item.item_price || 0) + (freightCharge / items.length);
+                worksheet.getCell(`H${currentRow}`).value = item.vat_amount || 0;
+                worksheet.getCell(`I${currentRow}`).value = item.total_amount || 0;
+                worksheet.getCell(`J${currentRow}`).value = item.equipment_number || '';
+                currentRow++;
+            }
+        } else {
+            // Foreign RRP format (existing code)
+            const formattedDate = ExcelService.formatDate(rrpDetails.date);
+            worksheet.getCell('C7').value = `${rrpDetails.rrp_number}(${formattedDate})`;
+            worksheet.getCell('C8').value = rrpDetails.supplier_name;
+            worksheet.getCell('C9').value = rrpDetails.invoice_number;
+            worksheet.getCell('C10').value = ExcelService.formatDate(rrpDetails.invoice_date);
+            worksheet.getCell('C11').value = rrpDetails.currency;
+            worksheet.getCell('C12').value = rrpDetails.forex_rate;
+            worksheet.getCell('C13').value = rrpDetails.po_number || '';
+            worksheet.getCell('C14').value = rrpDetails.airway_bill_number || '';
+            worksheet.getCell('C15').value = ExcelService.formatDate(rrpDetails.customs_date);
+            worksheet.getCell('C16').value = rrpDetails.customs_number || '';
+
+            // Insert items starting from row 15
+            let currentRow = 15;
+            for (const item of items) {
+                worksheet.getCell(`B${currentRow}`).value = item.part_number || '';
+                worksheet.getCell(`C${currentRow}`).value = item.item_name || '';
+                worksheet.getCell(`D${currentRow}`).value = item.equipment_number || '';
+                worksheet.getCell(`E${currentRow}`).value = item.received_quantity || 0;
+                worksheet.getCell(`F${currentRow}`).value = item.unit || '';
+                worksheet.getCell(`G${currentRow}`).value = item.item_price || 0;
+                worksheet.getCell(`H${currentRow}`).value = item.customs_charge || 0;
+                worksheet.getCell(`I${currentRow}`).value = item.customs_service_charge || 0;
+                worksheet.getCell(`J${currentRow}`).value = item.vat_percentage || 0;
+                worksheet.getCell(`K${currentRow}`).value = item.freight_charge || 0;
+                worksheet.getCell(`L${currentRow}`).value = item.total_amount || 0;
+                currentRow++;
+            }
+
+            // Insert user details (RRP Prepared By)
+            worksheet.getCell('A20').value = `${createdByUser.first_name} ${createdByUser.last_name}`;
+            worksheet.getCell('A21').value = createdByUser.staffid;
+            worksheet.getCell('A22').value = createdByUser.designation;
+
+            // Insert Level 1 authority details
+            worksheet.getCell('D20').value = authorityDetails.level_1_authority_name;
+            worksheet.getCell('D21').value = authorityDetails.level_1_authority_staffid;
+            worksheet.getCell('D22').value = authorityDetails.level_1_authority_designation;
+
+            // Insert Level 2 authority details
+            worksheet.getCell('I20').value = authorityDetails.level_2_authority_name;
+            worksheet.getCell('I21').value = authorityDetails.level_2_authority_staffid;
+            worksheet.getCell('I22').value = authorityDetails.level_2_authority_designation;
         }
-
-        // Insert user details (RRP Prepared By)
-        worksheet.getCell('A20').value = `${userDetails.first_name} ${userDetails.last_name}`;
-        worksheet.getCell('A21').value = userDetails.staffid;
-        worksheet.getCell('A22').value = userDetails.designation;
-
-        // Insert Level 1 authority details
-        worksheet.getCell('D20').value = authorityDetails.level_1_authority_name;
-        worksheet.getCell('D21').value = authorityDetails.level_1_authority_staffid;
-        worksheet.getCell('D22').value = authorityDetails.level_1_authority_designation;
-
-        // Insert Level 2 authority details
-        worksheet.getCell('I20').value = authorityDetails.level_2_authority_name;
-        worksheet.getCell('I21').value = authorityDetails.level_2_authority_staffid;
-        worksheet.getCell('I22').value = authorityDetails.level_2_authority_designation;
 
         // Generate buffer
         return await workbook.xlsx.writeBuffer();

@@ -52,6 +52,7 @@ interface RRPSubmission {
     vat_rate: number;
     created_by: string;
     customs_date?: string;
+    customs_number?: string;
     po_number?: string;
     airway_bill_number?: string;
     currency?: string;
@@ -67,6 +68,25 @@ interface RRPUpdateItem {
     customs_service_charge?: number;
     vat_percentage?: number;
     approval_status?: string;
+    freight_charge?: number;
+    total_amount?: number;
+}
+
+interface RRPUpdateData {
+    rrp_number: string;
+    supplier_name: string;
+    date: string;
+    currency: string;
+    forex_rate: number;
+    invoice_number: string;
+    invoice_date: string;
+    customs_date: string;
+    customs_number?: string;
+    po_number?: string;
+    airway_bill_number?: string;
+    inspection_user: string;
+    created_by: string;
+    items: RRPUpdateItem[];
 }
 
 interface RRPType {
@@ -232,8 +252,8 @@ export const createRRP = async (req: Request, res: Response): Promise<void> => {
                     item_price, customs_charge, customs_service_charge, vat_percentage,
                     invoice_number, invoice_date, po_number, airway_bill_number,
                     inspection_details, approval_status, created_by, total_amount,
-                    freight_charge, customs_date
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'PENDING', ?, ?, ?, ?)`,
+                    freight_charge, customs_date, customs_number
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'PENDING', ?, ?, ?, ?, ?)`,
                 [
                     item.receive_id,
                     rrpNumber,
@@ -256,7 +276,8 @@ export const createRRP = async (req: Request, res: Response): Promise<void> => {
                     submissionData.created_by,
                     totalAmount,
                     freightCharge,
-                    formattedCustomsDate
+                    formattedCustomsDate,
+                    submissionData.customs_number || null
                 ]
             );
 
@@ -327,6 +348,7 @@ export const getPendingRRPs = async (req: Request, res: Response): Promise<void>
                 rd.total_amount,
                 rd.freight_charge,
                 rd.customs_date,
+                rd.customs_number,
                 rd.receive_fk,
                 red.item_name,
                 red.nac_code,
@@ -547,7 +569,7 @@ export const updateRRP = async (req: Request, res: Response): Promise<void> => {
     try {
         await connection.beginTransaction();
         const rrpNumber = req.params.rrpNumber;
-        const updateData = req.body;
+        const updateData: RRPUpdateData = req.body;
 
         const [configRows] = await connection.query<ConfigRow[]>(
             'SELECT config_name, config_value FROM app_config WHERE config_type = ?',
@@ -626,6 +648,7 @@ export const updateRRP = async (req: Request, res: Response): Promise<void> => {
                     'inspection_details = ?',
                     'freight_charge = ?',
                     'total_amount = ?',
+                    'customs_number = ?',
                     'updated_at = CURRENT_TIMESTAMP'
                 ];
 
@@ -646,10 +669,10 @@ export const updateRRP = async (req: Request, res: Response): Promise<void> => {
                     updateData.airway_bill_number || null,
                     JSON.stringify({
                         inspection_user: updateData.inspection_user,
-                        inspection_details: config.inspection_details || {}
                     }),
                     item.freight_charge,
-                    item.total_amount
+                    item.total_amount,
+                    updateData.customs_number || null
                 ];
 
                 // Only update approval_status if it's provided in the request
@@ -678,8 +701,8 @@ export const updateRRP = async (req: Request, res: Response): Promise<void> => {
                         item_price, customs_charge, customs_service_charge, vat_percentage,
                         invoice_number, invoice_date, po_number, airway_bill_number,
                         inspection_details, approval_status, created_by, total_amount,
-                        freight_charge, customs_date
-                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+                        freight_charge, customs_date, customs_number
+                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
                     [
                         item.receive_id,
                         updateData.rrp_number,
@@ -703,7 +726,8 @@ export const updateRRP = async (req: Request, res: Response): Promise<void> => {
                         updateData.created_by,
                         item.total_amount,
                         item.freight_charge,
-                        formattedCustomsDate
+                        formattedCustomsDate,
+                        updateData.customs_number || null
                     ]
                 );
 
@@ -797,6 +821,7 @@ export const getRRPById = async (req: Request, res: Response): Promise<void> => 
                 rd.forex_rate,
                 rd.item_price,
                 rd.customs_charge,
+                rd.customs_number,
                 rd.customs_service_charge,
                 rd.vat_percentage,
                 rd.invoice_number,

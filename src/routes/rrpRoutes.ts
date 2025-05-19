@@ -1,5 +1,6 @@
 import express from 'express';
 import { getRRPConfig, getRRPItems, createRRP, getPendingRRPs, approveRRP, rejectRRP, updateRRP, getRRPById, searchRRP } from '../controllers/rrpController';
+import { printRRP } from '../controllers/printController';
 
 const router = express.Router();
 
@@ -19,15 +20,15 @@ router.get('/pending', getPendingRRPs);
 router.get('/search', searchRRP);
 
 // Create RRP
-router.post('/', createRRP);
+router.post('/create', createRRP);
 
 // Approve RRP
-router.put('/:rrpNumber/approve', approveRRP);
+router.post('/approve/:rrpNumber', approveRRP);
 
 // Reject RRP
-router.put('/:rrpNumber/reject', rejectRRP);
+router.post('/reject/:rrpNumber', rejectRRP);
 
 // Update RRP
-router.put('/:rrpNumber', updateRRP);
-
+router.put('/update/:rrpNumber', updateRRP);
+router.get('/:rrpNumber/print', printRRP);
 export default router; 

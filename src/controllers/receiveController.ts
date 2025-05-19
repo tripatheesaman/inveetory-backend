@@ -390,8 +390,6 @@ export const updateReceiveQuantity = async (req: Request, res: Response): Promis
     try {
         const { receiveId } = req.params;
         const { receivedQuantity } = req.body;
-        console.log(receivedQuantity);
-        console.log(receiveId);
         // Input validation
         if (!receivedQuantity || typeof receivedQuantity !== 'number' || receivedQuantity <= 0) {
             res.status(400).json({

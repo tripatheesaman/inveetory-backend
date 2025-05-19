@@ -69,6 +69,10 @@ interface RRPUpdateItem {
     approval_status?: string;
 }
 
+interface RRPType {
+    type: 'local' | 'foreign';
+}
+
 export const getRRPConfig = async (req: Request, res: Response): Promise<void> => {
     try {
         // Query to get all RRP configurations
@@ -738,6 +742,14 @@ export const updateRRP = async (req: Request, res: Response): Promise<void> => {
     }
 };
 
+const getRRPType = (rrpNumber: string): RRPType => {
+    const firstChar = rrpNumber.charAt(0).toUpperCase();
+    
+    return {
+        type: firstChar === 'L' ? 'local' : 'foreign'
+    };
+};
+
 export const getRRPById = async (req: Request, res: Response): Promise<void> => {
     try {
         const id = req.params.id;
@@ -757,6 +769,7 @@ export const getRRPById = async (req: Request, res: Response): Promise<void> => 
         }
 
         const rrpNumber = rrpNumberResult[0].rrp_number;
+        const rrpType = getRRPType(rrpNumber);
 
         // Get RRP configuration
         const [configRows] = await pool.query<ConfigRow[]>(
@@ -829,13 +842,137 @@ export const getRRPById = async (req: Request, res: Response): Promise<void> => 
 
         res.status(200).json({
             config,
-            rrpDetails: formattedRows
+            rrpDetails: formattedRows,
+            type: rrpType.type
         });
     } catch (error) {
         console.error('Error fetching RRP details:', error);
         res.status(500).json({ 
             error: 'Internal Server Error',
             message: error instanceof Error ? error.message : 'An error occurred while fetching RRP details'
+        });
+    }
+};
+
+export const searchRRP = async (req: Request, res: Response): Promise<void> => {
+    const { universal, equipmentNumber, partNumber } = req.query;
+    
+    // Input validation
+    if (!universal && !equipmentNumber && !partNumber) {
+        res.status(400).json({ 
+            error: 'Bad Request',
+            message: 'At least one search parameter is required'
+        });
+        return;
+    }
+
+    try {
+        // Build the base query
+        let query = `
+            SELECT DISTINCT
+                rrp.id,
+                rrp.rrp_number,
+                rrp.date as rrp_date,
+                rrp.supplier_name,
+                rrp.currency,
+                rrp.forex_rate,
+                rrp.item_price,
+                rrp.customs_charge,
+                rrp.customs_service_charge,
+                rrp.vat_percentage,
+                rrp.invoice_number,
+                rrp.invoice_date,
+                rrp.po_number,
+                rrp.airway_bill_number,
+                rrp.inspection_details,
+                rrp.approval_status,
+                rrp.created_by,
+                rrp.total_amount,
+                rrp.freight_charge,
+                rrp.customs_date,
+                rd.item_name,
+                rd.part_number,
+                rd.received_quantity,
+                rd.unit,
+                rqd.equipment_number
+            FROM rrp_details rrp
+            JOIN receive_details rd ON rrp.receive_fk = rd.id
+            JOIN request_details rqd ON rd.request_fk = rqd.id
+            WHERE 1=1
+        `;
+        const params: (string | number)[] = [];
+
+        // Add search conditions with AND logic
+        if (universal) {
+            query += ` AND (
+                rrp.rrp_number LIKE ? OR
+                rd.item_name LIKE ? OR
+                rd.part_number LIKE ? OR
+                rqd.equipment_number LIKE ?
+            )`;
+            params.push(`%${universal}%`, `%${universal}%`, `%${universal}%`, `%${universal}%`);
+        }
+
+        if (equipmentNumber) {
+            query += ` AND rqd.equipment_number LIKE ?`;
+            params.push(`%${equipmentNumber}%`);
+        }
+
+        if (partNumber) {
+            query += ` AND rd.part_number LIKE ?`;
+            params.push(`%${partNumber}%`);
+        }
+
+        // Add LIMIT to prevent overwhelming results
+        query += ' ORDER BY rrp.date DESC LIMIT 50';
+
+        const [results] = await pool.execute<RowDataPacket[]>(query, params);
+        
+        // Group results by RRP number
+        const groupedResults = results.reduce((acc, result) => {
+            if (!acc[result.rrp_number]) {
+                acc[result.rrp_number] = {
+                    rrpNumber: result.rrp_number,
+                    type: getRRPType(result.rrp_number).type,
+                    rrpDate: formatDate(result.rrp_date),
+                    supplierName: result.supplier_name,
+                    currency: result.currency,
+                    forexRate: result.forex_rate,
+                    invoiceNumber: result.invoice_number,
+                    invoiceDate: formatDate(result.invoice_date),
+                    poNumber: result.po_number,
+                    airwayBillNumber: result.airway_bill_number,
+                    inspectionDetails: JSON.parse(result.inspection_details),
+                    approvalStatus: result.approval_status,
+                    createdBy: result.created_by,
+                    customsDate: formatDate(result.customs_date),
+                    items: []
+                };
+            }
+            acc[result.rrp_number].items.push({
+                id: result.id,
+                itemName: result.item_name,
+                partNumber: result.part_number,
+                equipmentNumber: result.equipment_number,
+                receivedQuantity: result.received_quantity,
+                unit: result.unit,
+                itemPrice: result.item_price,
+                customsCharge: result.customs_charge,
+                customsServiceCharge: result.customs_service_charge,
+                vatPercentage: result.vat_percentage,
+                freightCharge: result.freight_charge,
+                totalAmount: result.total_amount
+            });
+            return acc;
+        }, {} as Record<string, any>);
+
+        const response = Object.values(groupedResults);
+        res.json(response);
+    } catch (error) {
+        console.error('Error searching RRP:', error);
+        res.status(500).json({ 
+            error: 'Internal Server Error',
+            message: error instanceof Error ? error.message : 'An error occurred while searching RRP'
         });
     }
 }; 

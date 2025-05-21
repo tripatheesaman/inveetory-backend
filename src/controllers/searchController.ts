@@ -27,6 +27,8 @@ interface ItemDetails extends RowDataPacket {
   openAmount: number;
   imageUrl: string;
   altText: string;
+  trueBalance: number;
+  averageCostPerUnit: number;
 }
 
 interface SearchError extends Error {
@@ -49,6 +51,48 @@ export const getItemDetails = async (req: Request, res: Response): Promise<void>
 
   try {
     const query = `
+      WITH stock_info AS (
+        SELECT 
+          sd.id,
+          sd.nac_code,
+          sd.item_name,
+          sd.part_numbers,
+          sd.applicable_equipments,
+          sd.current_balance,
+          sd.location,
+          sd.card_number,
+          sd.unit,
+          sd.open_quantity,
+          sd.open_amount,
+          sd.image_url,
+          CASE 
+            WHEN INSTR(sd.item_name, ',') > 0 
+            THEN SUBSTRING_INDEX(sd.item_name, ',', 1)
+            ELSE sd.item_name
+          END as altText,
+          COALESCE(sd.open_quantity, 0) as openQuantity,
+          (
+            SELECT COALESCE(SUM(rd.received_quantity), 0)
+            FROM receive_details rd
+            WHERE rd.nac_code COLLATE utf8mb4_unicode_ci = sd.nac_code COLLATE utf8mb4_unicode_ci
+            AND rd.rrp_fk IS NOT NULL
+          ) as rrpQuantity,
+          (
+            SELECT COALESCE(SUM(id.issue_quantity), 0)
+            FROM issue_details id
+            WHERE id.nac_code COLLATE utf8mb4_unicode_ci = sd.nac_code COLLATE utf8mb4_unicode_ci
+          ) as issueQuantity,
+          (
+            SELECT COALESCE(SUM(rrp.total_amount), 0)
+            FROM receive_details rd
+            JOIN rrp_details rrp ON rd.rrp_fk = rrp.id
+            JOIN request_details rqd ON rd.request_fk = rqd.id
+            WHERE rqd.nac_code COLLATE utf8mb4_unicode_ci = sd.nac_code COLLATE utf8mb4_unicode_ci
+            AND rd.rrp_fk IS NOT NULL
+          ) as totalCost
+        FROM stock_details sd
+        WHERE sd.id = ?
+      )
       SELECT 
         id,
         nac_code as nacCode,
@@ -59,16 +103,20 @@ export const getItemDetails = async (req: Request, res: Response): Promise<void>
         location,
         card_number as cardNumber,
         unit,
-        open_quantity as openQuantity,
+        openQuantity,
         open_amount as openAmount,
         image_url as imageUrl,
+        altText,
+        openQuantity,
+        rrpQuantity,
+        issueQuantity,
+        (openQuantity + rrpQuantity - issueQuantity) as trueBalance,
         CASE 
-          WHEN INSTR(item_name, ',') > 0 
-          THEN SUBSTRING_INDEX(item_name, ',', 1)
-          ELSE item_name
-        END as altText
-      FROM stock_details
-      WHERE id = ?
+          WHEN rrpQuantity > 0 
+          THEN totalCost / rrpQuantity
+          ELSE 0 
+        END as averageCostPerUnit
+      FROM stock_info
     `;
 
     const [results] = await pool.execute<ItemDetails[]>(query, [id]);

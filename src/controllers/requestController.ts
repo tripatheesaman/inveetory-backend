@@ -89,12 +89,6 @@ interface SearchRequestResult extends RowDataPacket {
     approval_status: string;
 }
 
-// Helper function to format date for MySQL
-function formatDateForMySQL(dateString: string): string {
-    const date = new Date(dateString);
-    return `${date.getFullYear()}/${String(date.getMonth() + 1).padStart(2, '0')}/${String(date.getDate()).padStart(2, '0')}`;
-}
-
 // Function to get stock details
 const getStockDetails = async (nacCode: string): Promise<StockDetail | null> => {
     const [rows] = await pool.query<StockDetail[]>(
@@ -107,17 +101,17 @@ const getStockDetails = async (nacCode: string): Promise<StockDetail | null> => 
 // Function to get previous rate
 const getPreviousRate = async (nacCode: string): Promise<string | number> => {
     const [rows] = await pool.query<ReceiveDetail[]>(
-        `SELECT rd.received_quantity, rd.receive_date
+        `SELECT rd.received_quantity, rrp.total_amount
          FROM rrp_details rrp
          JOIN receive_details rd ON rrp.receive_fk = rd.id
-         WHERE rd.nac_code = ? 
+         WHERE rd.nac_code = ?
+         AND rd.rrp_fk is NOT NULL
          ORDER BY rd.receive_date DESC 
          LIMIT 1`,
         [nacCode]
     );
-
     if (rows[0]) {
-        return Number((rows[0].total_amount / rows[0].receive_quantity).toFixed(2));
+        return Number((Number(rows[0].total_amount) / Number(rows[0].received_quantity)).toFixed(2));
     }
     return 'N/A';
 };
@@ -678,6 +672,43 @@ export const searchRequests = async (req: Request, res: Response): Promise<void>
         res.status(500).json({ 
             error: 'Internal Server Error',
             message: error instanceof Error ? error.message : 'An error occurred while searching requests'
+        });
+    }
+};
+
+export const getLastRequestInfo = async (req: Request, res: Response): Promise<void> => {
+    try {
+        const [rows] = await pool.query<RowDataPacket[]>(
+            `SELECT 
+                request_number,
+                request_date,
+                COUNT(*) as number_of_items
+             FROM request_details 
+             GROUP BY request_number, request_date
+             ORDER BY request_date DESC, request_number DESC
+             LIMIT 1`
+        );
+
+        if (rows.length === 0) {
+            res.status(404).json({
+                error: 'Not Found',
+                message: 'No requests found'
+            });
+            return;
+        }
+
+        const lastRequest = {
+            requestNumber: rows[0].request_number,
+            requestDate: rows[0].request_date,
+            numberOfItems: rows[0].number_of_items
+        };
+
+        res.status(200).json(lastRequest);
+    } catch (error) {
+        console.error('Error fetching last request info:', error);
+        res.status(500).json({ 
+            error: 'Internal Server Error',
+            message: error instanceof Error ? error.message : 'An error occurred while fetching last request info'
         });
     }
 }; 

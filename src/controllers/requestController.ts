@@ -130,6 +130,8 @@ const processRequestItem = async (
             currentBalance = stockDetail.current_balance;
             unit = stockDetail.unit;
         }
+    }else{
+        currentBalance = 0;
     }
 
     const previousRate = await getPreviousRate(item.nacCode);

@@ -186,26 +186,76 @@ export const createRRP = async (req: Request, res: Response): Promise<void> => {
             }
         });
 
-        // Get the base RRP number from frontend (e.g., L001)
-        const baseRRPNumber = submissionData.rrp_number;
+        // Get current FY from config
+        const currentFY = config.current_fy;
+        if (!currentFY) {
+            await connection.rollback();
+            res.status(500).json({
+                error: 'Internal Server Error',
+                message: 'Current FY configuration not found'
+            });
+            return;
+        }
 
-        // Get the last RRP number for this base number
-        const [lastRRP] = await connection.query<RowDataPacket[]>(
-            `SELECT rrp_number FROM rrp_details 
-            WHERE rrp_number LIKE ? 
-            ORDER BY rrp_number DESC LIMIT 1`,
-            [`${baseRRPNumber}T%`]
-        );
-        
-        let rrpNumber;
-        if (lastRRP.length > 0) {
-            // Extract the T number from the last RRP number
-            const lastTNumber = parseInt(lastRRP[0].rrp_number.split('T')[1]);
-            // Increment the T number
-            rrpNumber = `${baseRRPNumber}T${lastTNumber + 1}`;
+        // Get the RRP number from frontend
+        const inputRRPNumber = submissionData.rrp_number;
+        let rrpNumber = inputRRPNumber;
+
+        // Check if the RRP number already contains 'T'
+        if (inputRRPNumber.includes('T')) {
+            // Search for existing RRP with this exact number
+            const [existingRRP] = await connection.query<RowDataPacket[]>(
+                'SELECT approval_status FROM rrp_details WHERE rrp_number = ?',
+                [inputRRPNumber]
+            );
+
+            if (existingRRP.length > 0) {
+                // Check if the existing RRP is rejected
+                if (existingRRP[0].approval_status !== 'REJECTED') {
+                    await connection.rollback();
+                    res.status(400).json({
+                        error: 'Bad Request',
+                        message: 'RRP number already exists and is not rejected'
+                    });
+                    return;
+                }
+
+                // If rejected, delete the existing entries
+                await connection.query(
+                    'DELETE FROM rrp_details WHERE rrp_number = ?',
+                    [inputRRPNumber]
+                );
+
+                // Reset rrp_fk in receive_details for the deleted items
+                await connection.query(
+                    `UPDATE receive_details rd
+                     SET rrp_fk = NULL
+                     WHERE EXISTS (
+                         SELECT 1 FROM rrp_details rrp
+                         WHERE rrp.receive_fk = rd.id
+                         AND rrp.rrp_number = ?
+                     )`,
+                    [inputRRPNumber]
+                );
+            }
         } else {
-            // If no previous RRP exists for this base number, start with T1
-            rrpNumber = `${baseRRPNumber}T1`;
+            // If no 'T' in the number, generate new RRP number as before
+            const [lastRRP] = await connection.query<RowDataPacket[]>(
+                `SELECT rrp_number FROM rrp_details 
+                WHERE rrp_number LIKE ? 
+                ORDER BY rrp_number DESC LIMIT 1`,
+                [`${inputRRPNumber}T%`]
+            );
+            
+            if (lastRRP.length > 0) {
+                // Extract the T number from the last RRP number
+                const lastTNumber = parseInt(lastRRP[0].rrp_number.split('T')[1]);
+                // Increment the T number
+                rrpNumber = `${inputRRPNumber}T${lastTNumber + 1}`;
+            } else {
+                // If no previous RRP exists for this base number, start with T1
+                rrpNumber = `${inputRRPNumber}T1`;
+            }
         }
 
         // Process each item
@@ -261,8 +311,8 @@ export const createRRP = async (req: Request, res: Response): Promise<void> => {
                     item_price, customs_charge, customs_service_charge, vat_percentage,
                     invoice_number, invoice_date, po_number, airway_bill_number,
                     inspection_details, approval_status, created_by, total_amount,
-                    freight_charge, customs_date, customs_number
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'PENDING', ?, ?, ?, ?, ?)`,
+                    freight_charge, customs_date, customs_number, current_fy
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'PENDING', ?, ?, ?, ?, ?, ?)`,
                 [
                     item.receive_id,
                     rrpNumber,
@@ -286,7 +336,8 @@ export const createRRP = async (req: Request, res: Response): Promise<void> => {
                     totalAmount,
                     freightCharge,
                     formattedCustomsDate,
-                    submissionData.customs_number || null
+                    submissionData.customs_number || null,
+                    currentFY
                 ]
             );
 
@@ -545,6 +596,18 @@ export const rejectRRP = async (req: Request, res: Response): Promise<void> => {
             });
             return;
         }
+
+        // Reset rrp_fk in receive_details for all items in this RRP
+        await connection.query(
+            `UPDATE receive_details rd
+             SET rrp_fk = NULL
+             WHERE EXISTS (
+                 SELECT 1 FROM rrp_details rrp
+                 WHERE rrp.receive_fk = rd.id
+                 AND rrp.rrp_number = ?
+             )`,
+            [rrpNumber]
+        );
 
         // Create notification
         await connection.query(
@@ -1031,7 +1094,7 @@ export const getLatestRRPDetails = async (req: Request, res: Response): Promise<
                 date as rrp_date
              FROM rrp_details 
              WHERE rrp_number LIKE ?
-             ORDER BY date DESC, rrp_number DESC
+             ORDER BY CAST(SUBSTRING_INDEX(rrp_number, 'T', -1) AS UNSIGNED) DESC
              LIMIT 1`,
             [`${prefix}%`]
         );
@@ -1041,7 +1104,6 @@ export const getLatestRRPDetails = async (req: Request, res: Response): Promise<
             rrpDate: rows[0].rrp_date
         } : {};
 
-        console.log(latestRRP);
         res.status(200).json(latestRRP);
     } catch (error) {
         console.error('Error fetching latest RRP details:', error);
@@ -1055,35 +1117,143 @@ export const getLatestRRPDetails = async (req: Request, res: Response): Promise<
 export const verifyRRPNumber = async (req: Request, res: Response): Promise<void> => {
     try {
         const { rrpNumber } = req.params;
+        const { date } = req.query;
 
-        if (!rrpNumber || !rrpNumber.match(/^[LF]\d{3}$/)) {
+        if (!rrpNumber || !rrpNumber.match(/^[LF]\d{3}(T\d+)?$/)) {
             res.status(400).json({
                 error: 'Bad Request',
-                message: 'Invalid RRP number format. Must be in format L001 or F001'
+                message: 'Invalid RRP number format. Must be in format L001 or L001T1'
             });
             return;
         }
 
-        // Get the latest RRP record with this prefix
-        const [rows] = await pool.query<RowDataPacket[]>(
-            `SELECT rrp_number, approval_status
-             FROM rrp_details 
-             WHERE rrp_number LIKE ?
-             ORDER BY rrp_number DESC
-             LIMIT 1`,
-            [`${rrpNumber}T%`]
-        );
-
-        // If no records found or latest record is not rejected, return empty
-        if (rows.length === 0 || rows[0].approval_status !== 'REJECTED') {
-            res.status(200).json({});
+        if (!date) {
+            res.status(400).json({
+                error: 'Bad Request',
+                message: 'RRP date is required'
+            });
             return;
         }
 
-        // If latest record is rejected, return the full RRP number
-        res.status(200).json({
-            rrpNumber: rows[0].rrp_number
-        });
+        // If RRP number contains T
+        if (rrpNumber.includes('T')) {
+            // First check if there's a rejected record with this exact number
+            const [rejectedRecord] = await pool.query<RowDataPacket[]>(
+                `SELECT rrp_number, date 
+                 FROM rrp_details 
+                 WHERE rrp_number = ? AND approval_status = 'REJECTED'`,
+                [rrpNumber]
+            );
+
+            if (rejectedRecord.length === 0) {
+                res.status(400).json({
+                    error: 'Bad Request',
+                    message: 'Invalid RRP Number'
+                });
+                return;
+            }
+
+            // Get the base number (part before T)
+            const baseNumber = rrpNumber.split('T')[0];
+            const currentTNumber = parseInt(rrpNumber.split('T')[1]);
+
+            // Get the previous T record
+            const [previousRecord] = await pool.query<RowDataPacket[]>(
+                `SELECT rrp_number, date 
+                 FROM rrp_details 
+                 WHERE rrp_number LIKE ? 
+                 AND CAST(SUBSTRING_INDEX(rrp_number, 'T', -1) AS UNSIGNED) < ?
+                 ORDER BY CAST(SUBSTRING_INDEX(rrp_number, 'T', -1) AS UNSIGNED) DESC
+                 LIMIT 1`,
+                [`${baseNumber}T%`, currentTNumber]
+            );
+
+            // Get the next T record
+            const [nextRecord] = await pool.query<RowDataPacket[]>(
+                `SELECT rrp_number, date 
+                 FROM rrp_details 
+                 WHERE rrp_number LIKE ? 
+                 AND CAST(SUBSTRING_INDEX(rrp_number, 'T', -1) AS UNSIGNED) > ?
+                 ORDER BY CAST(SUBSTRING_INDEX(rrp_number, 'T', -1) AS UNSIGNED) ASC
+                 LIMIT 1`,
+                [`${baseNumber}T%`, currentTNumber]
+            );
+
+            // Convert dates to Date objects for comparison
+            const inputDate = new Date(date as string);
+            
+            // Check against previous record if it exists
+            if (previousRecord.length > 0) {
+                const previousDate = new Date(previousRecord[0].date);
+                if (inputDate < previousDate) {
+                    res.status(400).json({
+                        error: 'Bad Request',
+                        message: 'RRP date cannot be before the previous RRP date'
+                    });
+                    return;
+                }
+            }
+
+            // Check against next record if it exists
+            if (nextRecord.length > 0) {
+                const nextDate = new Date(nextRecord[0].date);
+                if (inputDate > nextDate) {
+                    res.status(400).json({
+                        error: 'Bad Request',
+                        message: 'RRP date cannot be greater than the next RRP date'
+                    });
+                    return;
+                }
+            }
+
+            // If all validations pass, return the RRP number
+            res.status(200).json({
+                rrpNumber: rrpNumber
+            });
+        } else {
+            // Get current FY from RRP config
+            const [configRows] = await pool.query<RowDataPacket[]>(
+                'SELECT config_value FROM app_config WHERE config_type = ? AND config_name = ?',
+                ['rrp', 'current_fy']
+            );
+
+            if (configRows.length === 0) {
+                res.status(500).json({
+                    error: 'Internal Server Error',
+                    message: 'Current FY configuration not found'
+                });
+                return;
+            }
+
+            const currentFY = configRows[0].config_value;
+
+            // Get the latest record with this base RRP number
+            const [rows] = await pool.query<RowDataPacket[]>(
+                `SELECT rrp_number, approval_status, current_fy
+                 FROM rrp_details 
+                 WHERE rrp_number LIKE ?
+                 ORDER BY CAST(SUBSTRING_INDEX(rrp_number, 'T', -1) AS UNSIGNED) DESC
+                 LIMIT 1`,
+                [`${rrpNumber}T%`]
+            );
+
+            if (rows.length > 0) {
+
+                const recordFY = rows[0].current_fy;
+                console.log
+                // Check if the record's FY matches current FY
+                if (recordFY === currentFY) {
+                    res.status(400).json({
+                        error: 'Bad Request',
+                        message: 'Duplicate RRP number in current fiscal year'
+                    });
+                    return;
+                }
+            }
+
+            // If no records found or FY doesn't match, return empty
+            res.status(200).json({});
+        }
     } catch (error) {
         console.error('Error verifying RRP number:', error);
         res.status(500).json({ 

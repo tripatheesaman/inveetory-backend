@@ -1240,7 +1240,6 @@ export const verifyRRPNumber = async (req: Request, res: Response): Promise<void
             if (rows.length > 0) {
 
                 const recordFY = rows[0].current_fy;
-                console.log
                 // Check if the record's FY matches current FY
                 if (recordFY === currentFY) {
                     res.status(400).json({

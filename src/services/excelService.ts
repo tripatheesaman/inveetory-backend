@@ -364,26 +364,14 @@ export class ExcelService {
         createdByUser: UserDetails;
         inspectionName: string;
         inspectionDesignation: string;
-        currentFY: string;
     }> {
         const connection = await pool.getConnection();
         try {
-            // Get RRP configuration for current_fy
-            const [configRows] = await connection.query<RowDataPacket[]>(
-                'SELECT config_value FROM app_config WHERE config_type = ? AND config_name = ?',
-                ['rrp', 'current_fy']
-            );
-
-            if (!configRows.length) {
-                throw new Error('RRP configuration not found');
-            }
-
-            const currentFY = configRows[0].config_value;
 
             const [rrpRows] = await connection.query<RRPDetails[]>(
                 `SELECT rrp_number, date, supplier_name, currency, forex_rate, 
                         invoice_number, invoice_date, po_number, airway_bill_number, 
-                        inspection_details, approval_status, created_by, customs_date, customs_number 
+                        inspection_details, approval_status, created_by, customs_date, customs_number, current_fy 
                  FROM rrp_details 
                  WHERE rrp_number = ? 
                  LIMIT 1`,
@@ -396,7 +384,7 @@ export class ExcelService {
                         rd.invoice_number, rd.invoice_date, rd.po_number, rd.airway_bill_number,
                         rd.inspection_details, rd.approval_status, rd.created_by, rd.total_amount,
                         rd.freight_charge, rd.customs_date, rd.customs_number, red.item_name, red.part_number,
-                        red.received_quantity, red.unit, rqd.equipment_number, rqd.nac_code, rqd.request_number, rqd.request_date
+                        red.received_quantity, red.unit, rqd.equipment_number, red.nac_code, rqd.request_number, rqd.request_date
                  FROM rrp_details rd
                  JOIN receive_details red ON rd.receive_fk = red.id
                  JOIN request_details rqd ON red.request_fk = rqd.id
@@ -454,7 +442,6 @@ export class ExcelService {
                 createdByUser: createdByUserRows[0],
                 inspectionName,
                 inspectionDesignation,
-                currentFY
             };
         } finally {
             connection.release();
@@ -462,7 +449,7 @@ export class ExcelService {
     }
 
     public static async generateRRPExcel(rrpNumber: string): Promise<ExcelJS.Buffer> {
-        const { rrpDetails, items, userDetails, authorityDetails, createdByUser, inspectionName, inspectionDesignation, currentFY } = await ExcelService.getRRPDetails(rrpNumber);
+        const { rrpDetails, items, userDetails, authorityDetails, createdByUser, inspectionName, inspectionDesignation } = await ExcelService.getRRPDetails(rrpNumber);
         // Determine RRP type from the RRP number (L for local, F for foreign)
         const rrpType = rrpNumber.charAt(0).toUpperCase() === 'L' ? 'local' : 'foreign';
         const templatePath = path.join(__dirname, '../../public/templates/template_file.xlsx');
@@ -525,9 +512,9 @@ export class ExcelService {
 
         if (rrpType === 'local') {
             // Format RRP number (remove 'L' prefix and ensure 3 digits)
-            const rrpNumberWithoutPrefix = rrpDetails.rrp_number.substring(1).padStart(3, '0');
+            const rrpNumberWithoutPrefix = rrpDetails.rrp_number.substring(1).split('T')[0].padStart(3, '0');
             worksheet.getCell('J5').value = `RRLP: ${rrpNumberWithoutPrefix}`;
-            worksheet.getCell('J3').value = `FY: ${currentFY}`;
+            worksheet.getCell('J3').value = `FY: ${rrpDetails.current_fy}`;
             
             // Set date and supplier
             const formattedDate = ExcelService.formatDate(rrpDetails.date);
@@ -600,9 +587,9 @@ export class ExcelService {
             // Foreign RRP format
             const formattedDate = ExcelService.formatDate(rrpDetails.date);
             // Format RRP number (remove 'F' prefix and ensure 3 digits)
-            const rrpNumberWithoutPrefix = rrpDetails.rrp_number.substring(1).padStart(3, '0');
+            const rrpNumberWithoutPrefix = rrpDetails.rrp_number.substring(1).split('T')[0].padStart(3, '0');
             worksheet.getCell('L4').value = `RRFP: ${rrpNumberWithoutPrefix}`;
-            worksheet.getCell('L3').value = `FY: ${currentFY}`;
+            worksheet.getCell('L3').value = `FY: ${rrpDetails.current_fy}`;
             worksheet.getCell('A5').value = `DATE: ${formattedDate}`;
             worksheet.getCell('G5').value = rrpDetails.supplier_name;
             worksheet.getCell('C24').value = rrpDetails.customs_number || '';

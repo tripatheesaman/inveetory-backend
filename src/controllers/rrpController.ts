@@ -42,6 +42,7 @@ interface RRPSubmissionItem {
 
 interface RRPSubmission {
     type: 'local' | 'foreign';
+    rrp_number: string;
     rrp_date: string;
     invoice_date: string;
     supplier: string;
@@ -185,19 +186,27 @@ export const createRRP = async (req: Request, res: Response): Promise<void> => {
             }
         });
 
-        // Generate RRP number
+        // Get the base RRP number from frontend (e.g., L001)
+        const baseRRPNumber = submissionData.rrp_number;
+
+        // Get the last RRP number for this base number
         const [lastRRP] = await connection.query<RowDataPacket[]>(
             `SELECT rrp_number FROM rrp_details 
             WHERE rrp_number LIKE ? 
-            ORDER BY id DESC LIMIT 1`,
-            [`${submissionData.type === 'local' ? 'L' : 'F'}%`]
+            ORDER BY rrp_number DESC LIMIT 1`,
+            [`${baseRRPNumber}T%`]
         );
         
-        const prefix = submissionData.type === 'local' ? 'L' : 'F';
-        const lastNumber = lastRRP.length > 0 
-            ? parseInt(lastRRP[0].rrp_number.substring(1)) 
-            : 0;
-        const rrpNumber = `${prefix}${String(lastNumber + 1).padStart(3, '0')}`;
+        let rrpNumber;
+        if (lastRRP.length > 0) {
+            // Extract the T number from the last RRP number
+            const lastTNumber = parseInt(lastRRP[0].rrp_number.split('T')[1]);
+            // Increment the T number
+            rrpNumber = `${baseRRPNumber}T${lastTNumber + 1}`;
+        } else {
+            // If no previous RRP exists for this base number, start with T1
+            rrpNumber = `${baseRRPNumber}T1`;
+        }
 
         // Process each item
         for (const item of submissionData.items) {
@@ -998,6 +1007,88 @@ export const searchRRP = async (req: Request, res: Response): Promise<void> => {
         res.status(500).json({ 
             error: 'Internal Server Error',
             message: error instanceof Error ? error.message : 'An error occurred while searching RRP'
+        });
+    }
+};
+
+export const getLatestRRPDetails = async (req: Request, res: Response): Promise<void> => {
+    try {
+        const { type } = req.params;
+
+        if (!type || (type !== 'local' && type !== 'foreign')) {
+            res.status(400).json({
+                error: 'Bad Request',
+                message: 'Invalid RRP type. Must be either "local" or "foreign"'
+            });
+            return;
+        }
+
+        const prefix = type === 'local' ? 'L' : 'F';
+
+        const [rows] = await pool.query<RowDataPacket[]>(
+            `SELECT 
+                rrp_number,
+                date as rrp_date
+             FROM rrp_details 
+             WHERE rrp_number LIKE ?
+             ORDER BY date DESC, rrp_number DESC
+             LIMIT 1`,
+            [`${prefix}%`]
+        );
+
+        const latestRRP = rows.length > 0 ? {
+            rrpNumber: rows[0].rrp_number,
+            rrpDate: rows[0].rrp_date
+        } : {};
+
+        console.log(latestRRP);
+        res.status(200).json(latestRRP);
+    } catch (error) {
+        console.error('Error fetching latest RRP details:', error);
+        res.status(500).json({ 
+            error: 'Internal Server Error',
+            message: error instanceof Error ? error.message : 'An error occurred while fetching latest RRP details'
+        });
+    }
+};
+
+export const verifyRRPNumber = async (req: Request, res: Response): Promise<void> => {
+    try {
+        const { rrpNumber } = req.params;
+
+        if (!rrpNumber || !rrpNumber.match(/^[LF]\d{3}$/)) {
+            res.status(400).json({
+                error: 'Bad Request',
+                message: 'Invalid RRP number format. Must be in format L001 or F001'
+            });
+            return;
+        }
+
+        // Get the latest RRP record with this prefix
+        const [rows] = await pool.query<RowDataPacket[]>(
+            `SELECT rrp_number, approval_status
+             FROM rrp_details 
+             WHERE rrp_number LIKE ?
+             ORDER BY rrp_number DESC
+             LIMIT 1`,
+            [`${rrpNumber}T%`]
+        );
+
+        // If no records found or latest record is not rejected, return empty
+        if (rows.length === 0 || rows[0].approval_status !== 'REJECTED') {
+            res.status(200).json({});
+            return;
+        }
+
+        // If latest record is rejected, return the full RRP number
+        res.status(200).json({
+            rrpNumber: rows[0].rrp_number
+        });
+    } catch (error) {
+        console.error('Error verifying RRP number:', error);
+        res.status(500).json({ 
+            error: 'Internal Server Error',
+            message: error instanceof Error ? error.message : 'An error occurred while verifying RRP number'
         });
     }
 }; 

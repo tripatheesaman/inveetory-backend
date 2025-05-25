@@ -17,6 +17,7 @@ import receiveRoutes from './routes/receiveRoutes';
 import rrpRoutes from './routes/rrpRoutes';
 import userRoutes from './routes/userRoutes';
 import roleRoutes from './routes/roleRoutes';
+import permissionRoutes from './routes/permissionRoutes';
 
 const app = express();
 const PORT = process.env.PORT || 3500;
@@ -45,6 +46,7 @@ app.use('/api/receive', receiveRoutes);
 app.use('/api/rrp', rrpRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/roles', roleRoutes);
+app.use('/api/permissions', permissionRoutes);
 
 // 404 Handler - Catch all unmatched routes
 app.use((req: Request, res: Response) => {

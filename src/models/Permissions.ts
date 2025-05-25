@@ -9,8 +9,11 @@ export interface Permission {
 export const getPermissionsByUserId = async (userId: number): Promise<string[]> => {
   try {
     const [rows] = await pool.execute(
-      'SELECT permission_name FROM user_permissions WHERE allowed_user_ids = ?',
-      [userId]
+      `SELECT permission_name 
+       FROM user_permissions 
+       WHERE FIND_IN_SET(?, allowed_user_ids) > 0 
+       OR allowed_user_ids = ?`,
+      [userId.toString(), userId.toString()]
     );
     return (rows as Permission[]).map(row => row.permission_name);
   } catch (error) {

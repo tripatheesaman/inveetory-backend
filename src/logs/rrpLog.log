@@ -1,0 +1,314 @@
+20250526	12:28:52	9da8ad61-9de7-47ac-9664-48e4dfb68f0f	Successfully fetched 0 pending RRPs
+20250526	12:28:52	cba5383f-57a3-4982-84d6-2b01a2e47181	Successfully fetched 0 pending RRPs
+20250526	12:28:58	58e876d4-b65e-4fd0-be56-9e7bbd263c7b	Successfully fetched 0 pending RRPs
+20250526	12:28:58	b683bad1-b8d5-4973-ab54-1e9b58b5a75d	Successfully fetched 0 pending RRPs
+20250526	12:31:28	8c930b9a-1c66-4892-afdf-3f4c64ce7d6c	Successfully fetched 0 pending RRPs
+20250526	12:31:28	1e1f88a5-ac7d-410b-babf-2358cfb09792	Successfully fetched 0 pending RRPs
+20250526	12:31:39	83c2f312-09a7-4014-8817-87f1dd0a0f35	Successfully fetched 0 pending RRPs
+20250526	12:31:39	1ddba6d8-4512-4112-927a-6c65e795c913	Successfully fetched 0 pending RRPs
+20250526	12:32:06	7bcdfa18-051a-49cf-a181-34810c975005	Successfully fetched 0 pending RRPs
+20250526	12:32:06	1dbee0d2-5903-48cc-8196-ba743dd9beb0	Successfully fetched 0 pending RRPs
+20250526	12:34:51	2b9f8e56-9fa4-4c64-9811-1edc7c4a6357	Successfully fetched 0 pending RRPs
+20250526	12:34:51	17577e3e-cc53-493e-9fec-1be2807ab137	Successfully fetched 0 pending RRPs
+20250526	12:38:32	ef093e74-5ebd-4bf1-87be-677dbe48a77f	Successfully fetched 0 pending RRPs
+20250526	12:38:32	4e1b02c0-a19d-45af-b8a6-715e91164d86	Successfully fetched 0 pending RRPs
+20250526	12:44:30	d5b1f08a-0d0f-4edb-b664-9bb32c1a6940	Successfully fetched 0 pending RRPs
+20250526	12:44:31	8d356e2a-623d-42ea-b14c-479bf52fb96e	Successfully fetched 0 pending RRPs
+20250526	12:45:30	9de3c644-69ec-432e-a605-2a76a2a8afac	Successfully fetched 0 pending RRPs
+20250526	12:45:30	b27499e8-a3f3-49cc-a352-bbae83dde8ab	Successfully fetched 0 pending RRPs
+20250526	12:45:36	acf7cb7c-822f-427d-b4ec-2dc439157b38	Successfully fetched 0 pending RRPs
+20250526	12:45:36	fd9076d4-15a1-487f-b1f9-2a7683fc0f3b	Successfully fetched 0 pending RRPs
+20250526	12:45:39	3514b0f3-14ad-47c8-bbfc-84ec60328396	Successfully fetched 0 pending RRPs
+20250526	12:45:39	95ddb970-fc9a-4ce3-b680-45cf1c04b11c	Successfully fetched 0 pending RRPs
+20250526	12:52:39	902eea9d-aa8f-4f27-b72b-7780f6f9b51d	Successfully fetched RRP configuration with 6 settings
+20250526	12:52:39	0322af20-dd2f-4a72-9b74-1c7e1fa326b9	Successfully fetched RRP configuration with 6 settings
+20250526	12:52:40	adf9e0ef-1f7d-4295-9523-419527f6782b	Successfully fetched latest local RRP details: L001T1
+20250526	12:52:43	22573685-47e5-456e-8ad2-5fcb2807adc7	Successfully fetched RRP configuration with 6 settings
+20250526	12:52:43	47c00536-6b55-4c4b-bb1f-1beb3439b146	Successfully fetched latest local RRP details: L001T1
+20250526	12:52:43	b8b02f1a-505d-43a2-baed-b8221e0c5203	Successfully fetched RRP configuration with 6 settings
+20250526	12:52:43	98c57b28-c594-449d-9c3d-056733218365	Successfully fetched latest local RRP details: L001T1
+20250526	12:53:06	e0e5c917-e847-47c1-9895-d3ba51487cc7	Failed to verify RRP number - Duplicate in current FY: L001
+20250526	12:53:11	663c14a4-7682-43b4-a199-23746f841c1b	Successfully verified RRP number: L002
+20250526	12:53:39	9f3d9770-3c77-4daa-847b-ebe1acf468f2	Successfully fetched RRP configuration with 6 settings
+20250526	12:53:39	6293d8f1-c8f0-4608-82b5-2f932b7b1d84	Successfully fetched RRP configuration with 6 settings
+20250526	12:53:39	7a463937-790f-469e-a797-3c5ec4c06b40	Successfully fetched 1 RRP items
+20250526	12:53:39	82e1fbc2-5b17-4eee-842c-20583e929e88	Successfully fetched 1 RRP items
+20250526	12:54:00	76bbb39c-8164-4770-a1ad-f2efbe8c557a	Successfully fetched 0 pending RRPs
+20250526	12:54:00	b96dfd66-607d-454f-87cc-f3f104da2590	Successfully fetched 0 pending RRPs
+20250526	12:54:35	8eab3d62-e782-43ad-b008-24848447bf00	Successfully fetched 0 pending RRPs
+20250526	12:54:35	8cc7db34-7050-4a88-adcb-324b99dfb6fe	Successfully fetched 0 pending RRPs
+20250526	12:56:03	739ff509-bab5-4ee0-9ab4-d4dd1e8b3083	Successfully fetched RRP configuration with 6 settings
+20250526	12:56:03	b8c98d18-e567-45bc-ab8a-b8787e813b19	Successfully fetched RRP configuration with 6 settings
+20250526	12:56:04	f2d9f3d6-27cc-4ce6-9ac2-e574d8b759e6	Successfully fetched latest local RRP details: L001T1
+20250526	12:56:04	dfa22840-2ac2-4c58-97ec-c5e576951718	Successfully fetched RRP configuration with 6 settings
+20250526	12:56:04	6e3ba9dd-3a65-4a17-96c3-0d29ae05058d	Successfully fetched latest local RRP details: L001T1
+20250526	12:56:04	cb062020-1c21-48e6-89a3-caa818197c5e	Successfully fetched RRP configuration with 6 settings
+20250526	12:56:04	6810d9bf-c3c2-475d-a6e5-38aac9ee00dc	Successfully fetched latest local RRP details: L001T1
+20250526	12:58:46	f4f97c95-0b7a-4eb0-ba24-6a43206a0330	Successfully verified RRP number: L002
+20250526	12:58:47	1e02fc68-7c2a-4909-bbfb-5bfa2101b2e8	Successfully fetched RRP configuration with 6 settings
+20250526	12:58:47	000124e4-b2dd-4473-9f76-aed50608bce7	Successfully fetched 2 RRP items
+20250526	12:58:47	be8ecf9a-a99a-48ca-96ea-b9b4f29600b6	Successfully fetched RRP configuration with 6 settings
+20250526	12:58:47	d2e7fd2c-e769-487a-a0d2-60171e4ff7b0	Successfully fetched 2 RRP items
+20250526	12:59:05	274d68c2-20bd-4276-b7e7-6a78f5ad4a39	Successfully fetched 0 pending RRPs
+20250526	12:59:05	b339f9d3-fc3b-4f3f-8b87-39418477eec5	Successfully fetched 0 pending RRPs
+20250526	13:00:43	5a789918-85dd-4e41-a8f0-77244ba07796	Successfully fetched 0 pending RRPs
+20250526	13:00:43	87ecf416-d869-4e9b-b7c5-32c0d4aece43	Successfully fetched 0 pending RRPs
+20250526	13:10:58	c3a7d9ff-8ff6-4598-9ead-bdc4210b30cb	Successfully fetched 0 pending RRPs
+20250526	13:10:58	4b26c382-1c45-4ea2-a395-0e2feada54be	Successfully fetched 0 pending RRPs
+20250526	13:11:24	977f964e-36d0-454d-a90b-071cfa989a02	Successfully fetched 0 pending RRPs
+20250526	13:11:24	b2965cb3-6998-4594-957b-7d55c6661172	Successfully fetched 0 pending RRPs
+20250526	13:23:02	05504abe-edec-40eb-aee3-df2a069a6a62	Successfully fetched RRP configuration with 6 settings
+20250526	13:23:02	09fd3052-54d1-49d0-a62f-134945996458	Successfully fetched RRP configuration with 6 settings
+20250526	13:23:03	4b3111ed-c0bc-43b2-a48a-98a959e3dca4	Successfully fetched latest local RRP details: L001T1
+20250526	13:23:03	15446f92-31a4-4a81-b459-fb390296c127	Successfully fetched latest local RRP details: L001T1
+20250526	13:23:03	1f968271-793a-48dd-8664-c6abe8d8a1a7	Successfully fetched RRP configuration with 6 settings
+20250526	13:23:03	5f0740b3-6aad-46e8-a9b8-2199a6587b83	Successfully fetched latest local RRP details: L001T1
+20250526	13:23:03	43f68cb0-26ac-4e32-8b64-7a8fcdc8e142	Successfully fetched RRP configuration with 6 settings
+20250526	13:23:19	abebf34a-f678-40ef-9685-d6ac03190320	Successfully verified RRP number: L002
+20250526	13:23:27	4423ac74-fc30-484b-9f52-0fd1a6c5804c	Successfully verified RRP number: L002
+20250526	13:23:27	0bf1a779-71a2-401b-9c23-e48c4e1e233b	Successfully fetched RRP configuration with 6 settings
+20250526	13:23:27	aca6051d-ff25-463e-83e6-1da1929f2387	Successfully fetched 2 RRP items
+20250526	13:23:27	7868333a-8226-4b42-9fd8-94d6507de8e5	Successfully fetched RRP configuration with 6 settings
+20250526	13:23:27	39512490-f336-4dfb-9025-a38f387448ea	Successfully fetched 2 RRP items
+20250526	13:23:51	93488f62-b9ac-42fa-b6ce-2aa2b5f8ce37	Successfully fetched RRP configuration with 6 settings
+20250526	13:23:51	a540adae-83a7-454b-8279-72f330ef44ef	Successfully fetched RRP configuration with 6 settings
+20250526	13:23:51	a489d6f7-673f-4724-8f72-71dd157ac8cd	Successfully fetched RRP configuration with 6 settings
+20250526	13:23:51	ab0df1c9-01cc-4be2-85b5-913dde1937bb	Successfully fetched RRP configuration with 6 settings
+20250526	13:24:02	96f87677-3dee-442b-950b-e0bc0ca62401	Starting RRP creation transaction
+20250526	13:24:02	c99d18a6-0122-42c4-893a-0334a2aa1765	Generated new RRP number: L002T1
+20250526	13:24:02	88b613de-c638-42f9-9937-558173d6b4dc	Successfully created RRP L002T1 with 1 items by user: superadmin@god.com
+20250526	13:24:03	6927ca20-f7f3-407a-b7a7-8beac6a219b5	Successfully fetched 1 pending RRPs
+20250526	13:24:03	e2f33242-af30-43c9-a831-ecad73cc24d3	Successfully fetched 1 pending RRPs
+20250526	13:24:06	b1dbbf4c-a12d-42ef-aff0-b556e442f7df	Successfully fetched RRP configuration with 6 settings
+20250526	13:24:06	7813f211-29c8-4d75-97fb-f611ed38cc2d	Successfully fetched RRP configuration with 6 settings
+20250526	13:24:29	a00db846-7a84-4bdf-ae5e-38c9246dc811	Starting RRP update transaction for RRP: L002T1
+20250526	13:24:29	8fcbf0b3-2b01-4404-95e3-de2206e80852	Successfully updated RRP L002T1 with 1 items
+20250526	13:24:29	1c83ddbc-02c5-4935-807f-582cfd7acc46	Successfully fetched 1 pending RRPs
+20250526	13:24:29	784b1f5a-129d-48c0-b4e7-c94691445eb6	Successfully fetched RRP configuration with 6 settings
+20250526	13:24:29	4aa0dc08-f78c-4499-a42e-24e1423dc8f5	Successfully fetched RRP configuration with 6 settings
+20250526	13:28:36	491d9d0c-84a7-4559-b6db-a56bff87f9c9	Successfully fetched 1 pending RRPs
+20250526	13:28:36	0fb506ae-688c-4970-8d74-3ce0dc2d4233	Successfully fetched 1 pending RRPs
+20250526	13:28:37	68523446-7404-4f6a-8ef3-2a15e363704c	Successfully fetched RRP configuration with 6 settings
+20250526	13:28:37	6c724f74-23c3-414c-b93c-8b1f9d37c921	Successfully fetched RRP configuration with 6 settings
+20250526	13:36:13	fa16bc98-14ed-4c5a-b6d4-0b2a6ceef8c5	Successfully fetched RRP configuration with 6 settings
+20250526	13:36:13	1080d9fb-82d4-4256-ace2-db0e46c4eefb	Successfully fetched RRP configuration with 6 settings
+20250526	13:39:17	ecde008e-f114-4def-ab54-55be167a439f	Successfully fetched RRP configuration with 6 settings
+20250526	13:39:17	7192b6cf-17d6-409d-9b9f-fcd02c011296	Successfully fetched RRP configuration with 6 settings
+20250526	13:39:21	a5bbfdc5-de92-4952-a1ef-5a9c794bfaa4	Successfully fetched 1 pending RRPs
+20250526	13:39:21	bbf87006-ebee-405d-8731-36415746f922	Successfully fetched 1 pending RRPs
+20250526	13:39:24	0e2d38ed-3e09-4e7b-a1ff-ae6a8f0f4efd	Successfully fetched RRP configuration with 6 settings
+20250526	13:39:24	fadf2266-98d2-4269-8c97-c7936dcad088	Successfully fetched RRP configuration with 6 settings
+20250526	13:39:48	18d6901a-902b-4639-abf8-52877045c202	Successfully fetched RRP configuration with 6 settings
+20250526	13:39:48	aa0cbe35-77b9-42a0-921d-c989a403ebd7	Successfully fetched RRP configuration with 6 settings
+20250526	13:39:49	76f9af16-1f84-443d-ba43-b58fe3b3905e	Successfully fetched latest foreign RRP details: None found
+20250526	13:39:50	858d6176-1fb0-4c26-b0fe-db7e055ee005	Successfully fetched latest foreign RRP details: None found
+20250526	13:39:50	890c201c-0112-46e4-b294-a7ee5186965b	Successfully fetched RRP configuration with 6 settings
+20250526	13:39:50	3be8cc42-e9c1-42f8-8786-4ba7cfb04ee5	Successfully fetched latest foreign RRP details: None found
+20250526	13:39:50	504b6b83-a041-4a16-9852-d0fcd05dae63	Successfully fetched RRP configuration with 6 settings
+20250526	13:40:37	ce7bb839-4cd3-422d-89b5-0e015ba0cf53	Successfully fetched RRP configuration with 6 settings
+20250526	13:40:38	ef6420d2-4f47-4143-bfd7-29a78fd728d4	Successfully fetched latest foreign RRP details: None found
+20250526	13:40:38	073af5c9-0bbf-4b73-b3c1-6fc11b8faf4d	Successfully fetched RRP configuration with 6 settings
+20250526	13:40:38	0c66914a-b066-4700-8987-5de45d836963	Successfully fetched latest foreign RRP details: None found
+20250526	13:41:10	0e616ea8-9287-4d1b-808c-6c6775721252	Successfully fetched RRP configuration with 6 settings
+20250526	13:41:10	0d502626-d8fc-4943-a574-740ef2accb15	Successfully fetched RRP configuration with 6 settings
+20250526	13:41:11	24404536-9ffb-412a-aeae-dceba8268b73	Successfully fetched latest foreign RRP details: None found
+20250526	13:41:11	54635dc7-02eb-46c7-984b-a36a32245bf8	Successfully fetched RRP configuration with 6 settings
+20250526	13:41:11	917a3933-46cd-4b0b-aea8-c12e6176369a	Successfully fetched latest foreign RRP details: None found
+20250526	13:41:11	2683c727-3b30-40d3-9139-b60220d5ce4b	Successfully fetched RRP configuration with 6 settings
+20250526	13:41:11	9fa56691-2537-4377-958d-6318ad288f79	Successfully fetched latest foreign RRP details: None found
+20250526	13:42:33	12a92423-1eac-4870-ad2b-181657fe25e7	Successfully fetched RRP configuration with 6 settings
+20250526	13:42:33	3cd486c7-581c-443d-82ed-25a5b6405c70	Successfully fetched RRP configuration with 6 settings
+20250526	13:42:34	e88c2c74-1547-469c-b436-e349fab5e8ee	Successfully fetched latest local RRP details: L001T1
+20250526	13:42:34	8b287f99-79a8-487d-a9ec-b0172463f470	Successfully fetched latest local RRP details: L001T1
+20250526	13:42:34	98da811f-72d2-40df-92d8-9eb319258a6c	Successfully fetched RRP configuration with 6 settings
+20250526	13:42:35	fefa9e54-8654-4141-82d4-5ab9507ab5ab	Successfully fetched latest local RRP details: L001T1
+20250526	13:42:35	43a7acf6-21bd-4364-a84a-92d1cad9c277	Successfully fetched RRP configuration with 6 settings
+20250526	13:42:57	30ea44d5-3c79-4020-a573-1b57e48fb98c	Failed to verify RRP number - Duplicate in current FY: L001
+20250526	13:43:02	edb1ac59-bdea-4fd8-a36d-6565ba795978	Failed to verify RRP number - Duplicate in current FY: L002
+20250526	13:43:06	d6a75734-cc94-4961-bf1b-28d1ac58ea4b	Successfully verified RRP number: L003
+20250526	13:43:06	cdb3b829-297d-4ca3-85c9-c42873468565	Successfully fetched RRP configuration with 6 settings
+20250526	13:43:06	c48241db-752a-46dd-aced-2c74ba7ec4b9	Successfully fetched 1 RRP items
+20250526	13:43:06	4e9ab246-e488-469f-9a99-278efcddd4b4	Successfully fetched RRP configuration with 6 settings
+20250526	13:43:06	955745ba-0dea-47a0-8cb1-c46de0fed2f5	Successfully fetched 1 RRP items
+20250526	13:47:53	18cdedd9-4434-49ea-a28e-2d61be54defc	Successfully fetched 1 pending RRPs
+20250526	13:47:53	4546c119-5b76-4360-a1b3-9259df327b4b	Successfully fetched 1 pending RRPs
+20250526	13:50:15	fb8dfab2-9cec-4831-819c-cbbfbcdbb786	Successfully fetched RRP configuration with 6 settings
+20250526	13:50:15	6676469b-1824-489d-b216-fa76e02cdb3c	Successfully fetched RRP configuration with 6 settings
+20250526	13:50:16	2df26a99-47b6-4957-8b1d-c3530a01a5e2	Successfully fetched latest foreign RRP details: None found
+20250526	13:50:17	0b662554-c1f2-421d-a212-7f93ea1db863	Successfully fetched RRP configuration with 6 settings
+20250526	13:50:17	e5531139-f336-429d-81ce-221a26ac1aba	Successfully fetched latest foreign RRP details: None found
+20250526	13:50:17	e2204923-df44-43fe-a94b-5f668ab2d6a8	Successfully fetched RRP configuration with 6 settings
+20250526	13:50:17	c35d0930-3caf-4491-90f6-abb874846df7	Successfully fetched latest foreign RRP details: None found
+20250526	13:50:19	4269f51d-6471-4dc8-a713-96f506775791	Successfully fetched RRP configuration with 6 settings
+20250526	13:50:19	267ec36c-8a53-4858-94c3-62bf22f3ffbc	Successfully fetched latest foreign RRP details: None found
+20250526	13:53:57	8c666a9e-cd41-4b4d-a218-886e9da7a47d	Successfully verified RRP number: F001
+20250526	13:53:58	b9e513f5-83dd-4e82-99b6-afc81582b9d5	Successfully fetched RRP configuration with 6 settings
+20250526	13:53:58	6f0bc679-46d2-4ded-b6d9-b27954f3d27c	Successfully fetched 1 RRP items
+20250526	13:53:58	2579ad04-6e50-48a2-8cab-99e7f2d7ba38	Successfully fetched RRP configuration with 6 settings
+20250526	13:53:58	f811fb7e-859a-4451-b036-53664bac2cab	Successfully fetched 1 RRP items
+20250526	13:54:12	049f1f66-d066-4ca6-9ffd-c606ac467f02	Successfully fetched RRP configuration with 6 settings
+20250526	13:54:12	4f71805e-77bb-46a6-aa65-dae20ca2795f	Successfully fetched RRP configuration with 6 settings
+20250526	13:54:12	7dd018c3-3aeb-4907-ab22-9008042ddf41	Successfully fetched RRP configuration with 6 settings
+20250526	13:54:12	522236a3-6b51-44e1-8442-cd6eefa27ebc	Successfully fetched RRP configuration with 6 settings
+20250526	13:54:30	d080d79e-1ef8-48da-82dc-ac7756bc3dfd	Starting RRP creation transaction
+20250526	13:54:30	45fe839c-f098-439e-9465-ede80bc68b4a	Generated new RRP number: F001T1
+20250526	13:54:30	9397714e-2689-421b-8459-6d4f45ef2ddc	Successfully created RRP F001T1 with 1 items by user: superadmin@god.com
+20250526	13:54:31	27749ee6-bf63-4fda-a322-59bce2c55643	Successfully fetched 2 pending RRPs
+20250526	13:54:31	b4e6d321-c60b-4159-bf9e-86b0b4e45f25	Successfully fetched 2 pending RRPs
+20250526	13:54:35	9ddde1b8-6768-4767-821a-4900889fc8cb	Successfully fetched RRP configuration with 6 settings
+20250526	13:54:35	57bd84de-1c26-42c5-b2f1-99dd732c35af	Successfully fetched RRP configuration with 6 settings
+20250526	13:55:10	4d3a85b7-2eb4-4443-a895-fbcb8af6eb4f	Starting RRP update transaction for RRP: F001T1
+20250526	13:55:10	5b4d61d8-4e08-4e49-8b95-cc1f562f5be1	Successfully updated RRP F001T1 with 1 items
+20250526	13:55:10	1c90a963-1fd6-406e-9349-1d9293d50b09	Successfully fetched 2 pending RRPs
+20250526	13:55:10	ab73a598-dfa4-4e04-93f3-431728a6592f	Successfully fetched RRP configuration with 6 settings
+20250526	13:55:10	a239e125-01c7-489b-9891-ea8b2f566b82	Successfully fetched RRP configuration with 6 settings
+20250526	13:55:16	0a8376cc-c713-4197-b116-3abe175e5d3b	Starting RRP approval transaction for RRP: F001T1
+20250526	13:55:16	f5ea4e66-76cb-4a59-9548-176525ea614d	Successfully approved RRP F001T1 by user: superadmin@god.com
+20250526	13:55:16	eb48aa78-841b-4afb-9717-288a41c4dd71	Successfully fetched 1 pending RRPs
+20250526	13:55:16	246efce4-9d91-4392-ae96-d5f6a79fd441	Successfully fetched RRP configuration with 6 settings
+20250526	13:55:16	3c32e796-fe62-4a59-b1f3-410f28033232	Successfully fetched RRP configuration with 6 settings
+20250526	13:55:22	b025e620-a5c7-49e9-bdbc-347e8abf0295	Successfully searched RRPs with 2 results
+20250526	13:55:24	7396627c-24aa-4898-8001-d6fcb5026f9b	Successfully searched RRPs with 1 results
+20250526	13:55:49	297801fc-651c-4dbe-95e6-8922206e2cf1	Successfully fetched 1 pending RRPs
+20250526	13:55:49	19880e14-40ed-4b26-afe2-be4c007ad891	Successfully fetched 1 pending RRPs
+20250526	13:55:50	41b0699a-34f5-450b-a136-4915457a461b	Successfully fetched RRP configuration with 6 settings
+20250526	13:55:50	31a44e75-6a22-43b9-852f-dd915279ccc2	Successfully fetched RRP configuration with 6 settings
+20250526	13:55:56	6131dcc9-ec22-499f-867e-f26491b5880a	Successfully fetched 1 pending RRPs
+20250526	13:55:56	2fa989ec-ea0f-4d8c-8381-3271053586f3	Successfully fetched 1 pending RRPs
+20250526	13:56:05	bf139b05-9ab8-456b-8351-a3901b1e0fba	Successfully fetched 1 pending RRPs
+20250526	13:56:05	68165e61-ee1b-4354-89c0-91c536dce436	Successfully fetched 1 pending RRPs
+20250526	13:58:10	14beb635-d718-4ddf-b42d-79f196d0ae40	Successfully fetched 1 pending RRPs
+20250526	13:58:10	d26d7357-1860-4e14-9c92-8c69ba958e25	Successfully fetched 1 pending RRPs
+20250526	15:08:45	c44d434f-d6cc-4b6d-bb19-dff9ecb97009	Successfully fetched RRP configuration with 6 settings
+20250526	15:08:45	6ab813fc-fc14-47e3-98ea-acbc56a177e6	Successfully fetched latest local RRP details: L001T1
+20250526	15:08:46	d8d2c3b0-463f-45bb-8fc3-42e3ec215f06	Successfully fetched latest local RRP details: L001T1
+20250526	15:08:46	f932eb80-3e14-47e4-85c3-06b2683dda56	Successfully fetched latest local RRP details: L001T1
+20250526	15:08:53	16a26e2e-d831-49d7-ae55-2086b4bf7abe	Successfully fetched RRP configuration with 6 settings
+20250526	15:08:53	2e385643-a316-4b1d-b94d-3c4ed230b6f2	Successfully fetched latest foreign RRP details: F001T1
+20250526	15:08:53	676b74bc-0abb-4d05-865b-a1f7f2cdd413	Successfully fetched latest foreign RRP details: F001T1
+20250526	15:08:53	3830d618-875f-440c-93e4-0fd9fbdc12ba	Successfully fetched latest foreign RRP details: F001T1
+20250526	15:09:49	eb737527-f05c-42e0-b8c6-6ffb673cf254	Successfully fetched RRP configuration with 6 settings
+20250526	15:09:49	8f2fd403-a6f5-4090-bb01-e340eb970f1e	Successfully fetched latest local RRP details: L001T1
+20250526	15:09:49	48dc74ee-ed21-46e2-89e2-53e7af53fee6	Successfully fetched latest local RRP details: L001T1
+20250526	15:09:49	2c5b1620-11a1-423c-ad21-ae62aa1e1c76	Successfully fetched latest local RRP details: L001T1
+20250526	15:10:37	e5602dcf-ff31-402d-a612-996690175452	Successfully fetched RRP configuration with 6 settings
+20250526	15:10:37	1ba31d06-7c2b-4a26-9972-618b6705d552	Successfully fetched latest local RRP details: L001T1
+20250526	15:10:37	a30bc313-f821-46d8-8fea-b32a4a742031	Successfully fetched latest local RRP details: L001T1
+20250526	15:10:37	d8d5ce36-379d-4187-9722-94aee36ade62	Successfully fetched latest local RRP details: L001T1
+20250526	15:11:31	8b93d234-7250-45d8-9427-486b96493829	Successfully fetched RRP configuration with 6 settings
+20250526	15:11:31	07510739-35a9-41ff-ae26-2820c5732200	Successfully fetched latest local RRP details: L001T1
+20250526	15:11:31	ce371416-2678-4a4e-a9fa-18a262696270	Successfully fetched latest local RRP details: L001T1
+20250526	15:11:32	68ef6ce7-727d-407e-a20a-c1ac459ae0ee	Successfully fetched latest local RRP details: L001T1
+20250526	15:11:36	dc1251a1-2b6e-47f7-8589-ae343c4069f9	Successfully fetched latest local RRP details: L001T1
+20250526	15:11:57	e299c50b-555f-437e-9eee-75f2405e0fc7	Successfully fetched latest local RRP details: L001T1
+20250526	15:12:58	c2b0ca4a-ce88-4b0b-9725-4ceef274e8f2	Successfully fetched RRP configuration with 6 settings
+20250526	15:12:58	317791c0-35f6-4e89-9fdb-1e7bb5fd4572	Successfully fetched latest local RRP details: L001T1
+20250526	15:12:58	b9cc7919-addd-4af9-9545-e9b2a223d27c	Successfully fetched latest local RRP details: L001T1
+20250526	15:12:58	203294b1-6e8e-4279-9dfe-1ea4f06bd90c	Successfully fetched latest local RRP details: L001T1
+20250526	15:13:08	1caffe68-83f5-458a-88eb-063be00948ec	Successfully fetched 1 pending RRPs
+20250526	15:13:08	b1eddfea-be44-4dcc-89f9-44a787bbe12a	Successfully fetched 1 pending RRPs
+20250526	15:13:10	c44666c2-8536-4326-87df-9ae1e981e326	Successfully fetched RRP configuration with 6 settings
+20250526	15:13:10	126e5d75-ac30-4b82-8b95-c627aa841ca4	Successfully fetched latest local RRP details: L001T1
+20250526	15:13:11	42f69b17-e4f5-4202-a0b0-e661d6e0bd77	Successfully fetched latest local RRP details: L001T1
+20250526	15:13:11	774c19d2-ca3c-4539-872e-e0ec9a4f71f1	Successfully fetched latest local RRP details: L001T1
+20250526	15:13:33	e09e2ba5-fa76-4c3f-baa2-7aeb0ca76028	Successfully fetched RRP configuration with 6 settings
+20250526	15:13:33	a8d7965c-583e-49de-bdba-a8368073ef0d	Successfully fetched latest local RRP details: L001T1
+20250526	15:13:34	2ea7296c-d6e9-4314-8c55-9c5bdf3fee5f	Successfully fetched latest local RRP details: L001T1
+20250526	15:13:34	de830beb-a401-43b4-85d1-d68b02f6f82d	Successfully fetched latest local RRP details: L001T1
+20250526	15:13:35	dfc7bcc3-bc94-4412-9531-4b36142d1536	Successfully fetched RRP configuration with 6 settings
+20250526	15:13:35	55b29556-4fdd-441a-bce3-ba71d5c62b66	Successfully fetched latest foreign RRP details: F001T1
+20250526	15:13:36	87b6ded1-015f-4daa-9a0f-57985b278d48	Successfully fetched latest foreign RRP details: F001T1
+20250526	15:13:36	98165341-bfde-4998-bc06-aa37ffda7a38	Successfully fetched latest foreign RRP details: F001T1
+20250526	15:13:53	7bb58b61-2474-4fc1-a6af-b0eba580deeb	Successfully fetched latest foreign RRP details: F001T1
+20250526	15:13:53	575ab80b-1ed1-4329-bd44-c6e3c965b09e	Successfully fetched RRP configuration with 6 settings
+20250526	15:14:00	b4603a26-468c-4c1d-b38f-afdafe734fcc	Successfully fetched RRP configuration with 6 settings
+20250526	15:14:00	ab519240-cef4-4bc7-8ec3-b5a35861769e	Successfully fetched RRP configuration with 6 settings
+20250526	15:14:03	9a2b4473-8a97-45c8-bdb9-3c781af83daa	Successfully fetched RRP configuration with 6 settings
+20250526	15:14:03	c44fce69-b64d-45e6-a9cd-e6f778a659a0	Successfully fetched RRP configuration with 6 settings
+20250526	15:14:09	d7f23a44-6f39-44b7-a1e0-4124f619f360	Successfully fetched RRP configuration with 6 settings
+20250526	15:14:09	37c43d69-5015-49a9-abb1-4c090c2ef715	Successfully fetched RRP configuration with 6 settings
+20250526	15:14:10	b3e311d5-cf13-46fa-b39e-cf6e37afd28c	Successfully fetched RRP configuration with 6 settings
+20250526	15:14:10	6f0b70c8-e095-458f-952a-e3c3d5cebf99	Successfully fetched RRP configuration with 6 settings
+20250526	15:14:11	09d91a31-43fb-4632-8037-d1522f1719fb	Successfully fetched latest local RRP details: L001T1
+20250526	15:14:11	9dd9458c-36e6-4b1b-9d5b-a704fbf08074	Successfully fetched latest local RRP details: L001T1
+20250526	15:14:11	791f4793-a24c-4527-9fe7-ced083513494	Successfully fetched RRP configuration with 6 settings
+20250526	15:14:11	5d1433a6-0758-4af5-9a8c-bff4c66bf5f3	Successfully fetched latest local RRP details: L001T1
+20250526	15:14:11	e0d984f5-7d2c-4feb-af24-094f09babd3b	Successfully fetched RRP configuration with 6 settings
+20250526	15:14:13	7da31f3a-ede7-4f03-a980-f04b04f5cb34	Successfully fetched RRP configuration with 6 settings
+20250526	15:14:13	af8fda7b-298f-4d93-8c47-80c84703f4c3	Successfully fetched RRP configuration with 6 settings
+20250526	15:15:01	c633ea57-b668-4e46-8bb4-c8e3f2a00845	Successfully fetched latest local RRP details: L001T1
+20250526	15:15:01	2210a255-5188-4956-9859-6d26f4715a47	Successfully fetched latest local RRP details: L001T1
+20250526	15:15:01	acd99e98-8f4f-4599-a251-80411b340960	Successfully fetched RRP configuration with 6 settings
+20250526	15:15:01	9d4feb1e-a320-40f3-8874-1981a6b0262e	Successfully fetched latest local RRP details: L001T1
+20250526	15:15:01	fc07cf71-a8c0-486f-bb20-a0b78d5693a2	Successfully fetched RRP configuration with 6 settings
+20250526	15:15:25	7afe4a9f-9b89-40c9-96b6-05bed0af7da4	Failed to verify RRP number - Duplicate in current FY: L001
+20250526	15:15:31	90ea42c0-ed6a-421e-9627-b0b5785e8495	Successfully verified RRP number: L004
+20250526	15:15:32	e32bb836-f134-4d92-9fb7-7eb1779e6989	Successfully fetched RRP configuration with 6 settings
+20250526	15:15:32	695784a7-b0db-4bb5-831e-aca0a946e607	Successfully fetched 0 RRP items
+20250526	15:15:32	ad8e5c60-2df3-4b3f-8231-5b3923844a17	Successfully fetched RRP configuration with 6 settings
+20250526	15:15:32	d61cef4f-5c73-43f6-b96f-6a15d08c776f	Successfully fetched 0 RRP items
+20250526	15:15:40	e32984a2-f9eb-488c-b9ca-41af484a254f	Successfully fetched 1 pending RRPs
+20250526	15:15:40	6e60fcd4-bbf8-47d0-8ca1-09a857681b47	Successfully fetched 1 pending RRPs
+20250526	15:16:12	033b7b64-85d7-4ef7-bcfc-6e9ac6dee2af	Successfully fetched RRP configuration with 6 settings
+20250526	15:16:12	a3503a1c-c139-45b6-9757-abeaeba936ce	Successfully fetched RRP configuration with 6 settings
+20250526	15:16:14	b7a01e67-2bb7-497b-b722-d64e98a2f7c2	Starting RRP approval transaction for RRP: L002T1
+20250526	15:16:14	c411ecfe-f1fc-4042-b0f4-923ce82d7a55	Successfully approved RRP L002T1 by user: superadmin@god.com
+20250526	15:16:14	7daaf3c8-b4a4-43fe-b92f-d7a680f6e9f9	Successfully fetched 0 pending RRPs
+20250526	15:16:14	f94bc735-122f-46dd-a27e-e2ea18ab6814	Successfully fetched RRP configuration with 6 settings
+20250526	15:16:14	7797b007-6855-4e5f-a6a0-f76b5889dbe3	Successfully fetched RRP configuration with 6 settings
+20250526	15:16:19	4cff5afd-2904-4fe5-8888-da9d26cb7be8	Successfully fetched RRP configuration with 6 settings
+20250526	15:16:19	274258a9-ad17-494c-96db-884e25e29789	Successfully fetched RRP configuration with 6 settings
+20250526	15:16:21	4de156cf-c840-4e94-b4e3-f93bb78be6da	Successfully fetched latest foreign RRP details: F001T1
+20250526	15:16:21	0f0cc82d-e632-4771-bae6-eeeb04cecaaf	Successfully fetched RRP configuration with 6 settings
+20250526	15:16:21	84f5085b-776c-4c72-8539-f5cfe860fe14	Successfully fetched latest foreign RRP details: F001T1
+20250526	15:16:21	2add9024-45d5-400b-89d6-6d97d46bff7f	Successfully fetched RRP configuration with 6 settings
+20250526	15:16:21	44303ef8-8659-44d8-a67f-ce250aaeb047	Successfully fetched latest foreign RRP details: F001T1
+20250526	15:16:22	799026d5-cfe1-405d-afa3-2e4e6b5a333e	Successfully fetched RRP configuration with 6 settings
+20250526	15:16:22	c139f6bf-d8a4-4194-ab9d-0d147e983495	Successfully fetched RRP configuration with 6 settings
+20250526	15:16:23	1e31aabd-abf5-4246-9d5c-091175ca330a	Successfully fetched latest local RRP details: L001T1
+20250526	15:16:24	31bcdfc6-af81-4673-afed-095a17ef232b	Successfully fetched RRP configuration with 6 settings
+20250526	15:16:24	86f459a0-2b75-4b2b-8593-50b6fefd06fb	Successfully fetched latest local RRP details: L001T1
+20250526	15:16:24	47988a45-f748-43dc-8749-92255a877817	Successfully fetched RRP configuration with 6 settings
+20250526	15:16:24	e59288b0-18c3-40bd-a360-0c5da923f2e4	Successfully fetched latest local RRP details: L001T1
+20250526	15:16:25	7035e80e-8dce-4c1d-8830-92de5ab4d261	Successfully fetched RRP configuration with 6 settings
+20250526	15:16:25	38f45346-2970-4bc0-94eb-e30b4aa39d97	Successfully fetched RRP configuration with 6 settings
+20250526	15:16:26	4f5ab075-02f1-4286-84f1-a8adb5432ae7	Successfully fetched 0 pending RRPs
+20250526	15:16:26	7e9e9d31-2747-4856-82dd-a971c55d6943	Successfully fetched 0 pending RRPs
+20250526	15:16:45	0ed8c245-514d-4be3-a9fc-0139a50b5136	Successfully fetched RRP configuration with 6 settings
+20250526	15:16:45	f93fa315-6100-4026-982f-ac92406fb8c6	Successfully fetched RRP configuration with 6 settings
+20250526	15:19:37	e310a7bb-03ff-4eb2-bcd0-2caa19dca761	Successfully fetched 0 pending RRPs
+20250526	15:19:37	aed69bea-8a64-4f06-bc55-8108ea272975	Successfully fetched 0 pending RRPs
+20250526	15:19:39	135e0a0e-0044-4e04-abfc-9d9988a6d78a	Successfully fetched 0 pending RRPs
+20250526	15:19:39	1fdc7514-ff1d-4f4c-915a-0c678131d522	Successfully fetched 0 pending RRPs
+20250526	15:19:41	5ab93174-21a0-4bb7-becf-621c8f6075b7	Successfully fetched 0 pending RRPs
+20250526	15:19:41	48d6bfc2-5d6f-48db-ab0b-7e2dce091889	Successfully fetched 0 pending RRPs
+20250526	15:21:01	a1595d79-e779-4c6a-9884-297ae76ec8b3	Successfully fetched 0 pending RRPs
+20250526	15:21:01	ae60a912-d545-4bd6-a065-ab74ad3bcc4d	Successfully fetched 0 pending RRPs
+20250526	15:21:57	50458565-2e5d-490e-8abc-09dc50cb855a	Successfully fetched 0 pending RRPs
+20250526	15:21:57	0b3d47e8-d229-4f13-880c-bc668436f0f5	Successfully fetched 0 pending RRPs
+20250526	15:22:42	6e49d177-37fe-420b-808d-a0a4c21fa37d	Successfully fetched RRP configuration with 6 settings
+20250526	15:22:42	a19e7979-6c69-4b7c-b400-f4c719c53a27	Successfully fetched RRP configuration with 6 settings
+20250526	15:22:44	3d25a8e8-9b1c-4f42-9830-1843731a71a9	Successfully fetched RRP configuration with 6 settings
+20250526	15:22:44	363a160f-2cd8-446c-80ab-78051d8f3d35	Successfully fetched RRP configuration with 6 settings
+20250526	15:22:45	ed757106-ef79-4d31-8f8f-e318dfccecf4	Successfully fetched latest local RRP details: L001T1
+20250526	15:22:45	255283cd-d193-494b-af45-08f2aff63452	Successfully fetched latest local RRP details: L001T1
+20250526	15:22:45	88cb4abe-2f77-4197-8439-5596e1ee5168	Successfully fetched RRP configuration with 6 settings
+20250526	15:22:45	e0a67dbd-5b3f-477e-9f13-7891dde0e122	Successfully fetched latest local RRP details: L001T1
+20250526	15:22:45	abffcbe6-f1bd-4f62-b463-5ef6e1f2f531	Successfully fetched RRP configuration with 6 settings
+20250526	15:22:47	3cd9cec4-8779-45d7-bad3-07914066f842	Successfully fetched RRP configuration with 6 settings
+20250526	15:22:47	7b17aa08-103b-481e-a30a-7c3c3cb98a19	Successfully fetched RRP configuration with 6 settings
+20250526	15:22:47	c8d5055d-31e7-47d4-9862-edab77166a99	Successfully fetched latest foreign RRP details: F001T1
+20250526	15:22:48	c75d06a4-a299-4ad2-a49f-5a0566252b7f	Successfully fetched latest foreign RRP details: F001T1
+20250526	15:22:48	5cd4e8a4-eb93-4627-b3c8-7b61660a462f	Successfully fetched RRP configuration with 6 settings
+20250526	15:22:48	69de0016-8bfa-4e9c-9c9b-0539c57ecb83	Successfully fetched latest foreign RRP details: F001T1
+20250526	15:22:48	d14ed4fe-34b5-43a1-bcf1-3a7a4b6a7dc0	Successfully fetched RRP configuration with 6 settings
+20250526	15:22:49	7d25845b-ee8a-4179-96bb-8c36cfe6d9a7	Successfully fetched RRP configuration with 6 settings
+20250526	15:22:49	5caa542d-4dec-4f81-a4c2-3c9ba452b2de	Successfully fetched RRP configuration with 6 settings
+20250526	15:22:56	b0150cbc-dd60-437d-8567-a7ae0821c8b6	Successfully fetched 0 pending RRPs
+20250526	15:22:56	3ee90511-0d7c-4f51-bf2b-967da0fc5cf6	Successfully fetched 0 pending RRPs
+20250526	15:38:28	efc9e0b1-57e4-41ef-bd5b-9e579ad9f1bd	Successfully fetched 0 pending RRPs
+20250526	15:38:28	444173be-870c-4cc4-91de-baf071729da5	Successfully fetched 0 pending RRPs
+20250526	15:38:32	0d80ea96-bbf7-4744-9d74-cdae6e80e75c	Successfully fetched RRP configuration with 6 settings
+20250526	15:38:32	a34e3d74-d06b-467d-82b1-c174c31a6a58	Successfully fetched RRP configuration with 6 settings
+20250526	15:40:05	368e8e06-41aa-4286-9934-6cb5f8a15304	Successfully fetched 0 pending RRPs
+20250526	15:40:05	147f8d42-2a1a-450f-8ba3-57a39ded43a2	Successfully fetched 0 pending RRPs

@@ -1,11 +1,12 @@
 import { Request, Response } from 'express';
-import { RowDataPacket } from 'mysql2';
+import { RowDataPacket, ResultSetHeader } from 'mysql2';
 import pool from '../config/db';
+import { logEvents } from '../middlewares/logger';
 
 interface Notification extends RowDataPacket {
     id: number;
     reference_id: string;
-    referenceType:string;
+    reference_type: string;
     message: string;
     created_at: Date;
     is_read: boolean;
@@ -21,13 +22,13 @@ export const getUserNotifications = async (req: Request, res: Response): Promise
     try {
         const { username } = req.params;
 
-        // First get the user ID
         const [users] = await connection.query<User[]>(
             'SELECT id FROM users WHERE username = ?',
             [username]
         );
 
         if (users.length === 0) {
+            logEvents(`Failed to fetch notifications - User not found: ${username}`, "notificationLog.log");
             res.status(404).json({
                 error: 'Not Found',
                 message: 'User not found'
@@ -37,9 +38,8 @@ export const getUserNotifications = async (req: Request, res: Response): Promise
 
         const userId = users[0].id;
 
-        // Then get notifications for this user
         const [rows] = await connection.query<Notification[]>(
-            `SELECT id, reference_id,reference_type, message, created_at, is_read
+            `SELECT id, reference_id, reference_type, message, created_at, is_read
              FROM notifications
              WHERE user_id = ?
              ORDER BY created_at DESC`,
@@ -55,9 +55,11 @@ export const getUserNotifications = async (req: Request, res: Response): Promise
             isRead: row.is_read
         }));
         
+        logEvents(`Successfully fetched ${notifications.length} notifications for user: ${username}`, "notificationLog.log");
         res.status(200).json(notifications);
     } catch (error) {
-        console.error('Error fetching notifications:', error);
+        const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+        logEvents(`Error fetching notifications: ${errorMessage}`, "notificationLog.log");
         res.status(500).json({ 
             error: 'Internal Server Error',
             message: error instanceof Error ? error.message : 'An error occurred while fetching notifications'
@@ -73,12 +75,13 @@ export const markNotificationAsRead = async (req: Request, res: Response): Promi
     try {
         const { notificationId } = req.params;
 
-        const [result] = await connection.query(
+        const [result] = await connection.query<ResultSetHeader>(
             'UPDATE notifications SET is_read = TRUE WHERE id = ?',
             [notificationId]
         );
 
-        if ((result as any).affectedRows === 0) {
+        if (result.affectedRows === 0) {
+            logEvents(`Failed to mark notification as read - Notification not found: ${notificationId}`, "notificationLog.log");
             res.status(404).json({
                 error: 'Not Found',
                 message: 'Notification not found'
@@ -86,12 +89,14 @@ export const markNotificationAsRead = async (req: Request, res: Response): Promi
             return;
         }
         
+        logEvents(`Successfully marked notification as read: ${notificationId}`, "notificationLog.log");
         res.status(200).json({ 
             message: 'Notification marked as read successfully',
             notificationId
         });
     } catch (error) {
-        console.error('Error marking notification as read:', error);
+        const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+        logEvents(`Error marking notification as read: ${errorMessage} for notification: ${req.params.notificationId}`, "notificationLog.log");
         res.status(500).json({ 
             error: 'Internal Server Error',
             message: error instanceof Error ? error.message : 'An error occurred while marking notification as read'
@@ -107,12 +112,13 @@ export const deleteNotification = async (req: Request, res: Response): Promise<v
     try {
         const { notificationId } = req.params;
 
-        const [result] = await connection.query(
+        const [result] = await connection.query<ResultSetHeader>(
             'DELETE FROM notifications WHERE id = ?',
             [notificationId]
         );
 
-        if ((result as any).affectedRows === 0) {
+        if (result.affectedRows === 0) {
+            logEvents(`Failed to delete notification - Notification not found: ${notificationId}`, "notificationLog.log");
             res.status(404).json({
                 error: 'Not Found',
                 message: 'Notification not found'
@@ -120,12 +126,14 @@ export const deleteNotification = async (req: Request, res: Response): Promise<v
             return;
         }
         
+        logEvents(`Successfully deleted notification: ${notificationId}`, "notificationLog.log");
         res.status(200).json({ 
             message: 'Notification deleted successfully',
             notificationId
         });
     } catch (error) {
-        console.error('Error deleting notification:', error);
+        const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+        logEvents(`Error deleting notification: ${errorMessage} for notification: ${req.params.notificationId}`, "notificationLog.log");
         res.status(500).json({ 
             error: 'Internal Server Error',
             message: error instanceof Error ? error.message : 'An error occurred while deleting notification'

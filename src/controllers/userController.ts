@@ -2,18 +2,22 @@ import { Request, Response } from 'express';
 import pool from '../config/db';
 import { User, Role, UserWithRole } from '../interfaces/user';
 import bcrypt from 'bcryptjs';
+import { logEvents } from '../middlewares/logger';
 
 export const getUsers = async (req: Request, res: Response): Promise<void> => {
     try {
         const { currentUser } = req.query;
 
         if (!currentUser) {
+            logEvents(`Failed to fetch users - Missing currentUser parameter`, "userLog.log");
             res.status(400).json({
                 error: 'Bad Request',
                 message: 'Current user is required'
             });
             return;
         }
+
+        logEvents(`Fetching users for current user: ${currentUser}`, "userLog.log");
 
         // First get the current user's role hierarchy
         const [currentUserRole] = await pool.query<Role[]>(
@@ -25,6 +29,7 @@ export const getUsers = async (req: Request, res: Response): Promise<void> => {
         );
 
         if (currentUserRole.length === 0) {
+            logEvents(`Failed to fetch users - Current user role not found: ${currentUser}`, "userLog.log");
             res.status(404).json({
                 error: 'Not Found',
                 message: 'Current user role not found'
@@ -50,9 +55,11 @@ export const getUsers = async (req: Request, res: Response): Promise<void> => {
             return userWithoutPassword;
         });
 
+        logEvents(`Successfully fetched ${sanitizedUsers.length} users for current user: ${currentUser}`, "userLog.log");
         res.status(200).json(sanitizedUsers);
     } catch (error) {
-        console.error('Error fetching users:', error);
+        const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+        logEvents(`Error fetching users: ${errorMessage}`, "userLog.log");
         res.status(500).json({
             error: 'Internal Server Error',
             message: error instanceof Error ? error.message : 'An error occurred while fetching users'
@@ -64,6 +71,7 @@ export const createUser = async (req: Request, res: Response): Promise<void> => 
     const connection = await pool.getConnection();
     try {
         await connection.beginTransaction();
+        logEvents(`Starting user creation transaction`, "userLog.log");
 
         const {
             username,
@@ -77,6 +85,7 @@ export const createUser = async (req: Request, res: Response): Promise<void> => 
         } = req.body;
 
         const created_by = req.body.created_by;
+        logEvents(`Creating new user: ${username} by ${created_by}`, "userLog.log");
 
         // Check if username already exists
         const [existingUser] = await connection.query<User[]>(
@@ -86,6 +95,7 @@ export const createUser = async (req: Request, res: Response): Promise<void> => 
 
         if (existingUser.length > 0) {
             await connection.rollback();
+            logEvents(`Failed to create user - Username already exists: ${username}`, "userLog.log");
             res.status(400).json({
                 error: 'Bad Request',
                 message: 'Username already exists'
@@ -127,6 +137,7 @@ export const createUser = async (req: Request, res: Response): Promise<void> => 
 
         if (rolePermissions.length > 0) {
             const permissionIds = rolePermissions[0].permission_id.split(',');
+            logEvents(`Assigning ${permissionIds.length} permissions to user: ${username}`, "userLog.log");
 
             // Update allowed_user_ids for each permission
             for (const permissionId of permissionIds) {
@@ -142,13 +153,15 @@ export const createUser = async (req: Request, res: Response): Promise<void> => 
         }
 
         await connection.commit();
+        logEvents(`Successfully created user: ${username} with ID: ${userId}`, "userLog.log");
         res.status(201).json({
             message: 'User created successfully',
             userId
         });
     } catch (error) {
         await connection.rollback();
-        console.error('Error creating user:', error);
+        const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+        logEvents(`Error creating user: ${errorMessage}`, "userLog.log");
         res.status(500).json({
             error: 'Internal Server Error',
             message: error instanceof Error ? error.message : 'An error occurred while creating user'
@@ -164,12 +177,15 @@ export const getUserById = async (req: Request, res: Response): Promise<void> =>
         const { currentUser } = req.query;
 
         if (!currentUser) {
+            logEvents(`Failed to fetch user - Missing currentUser parameter`, "userLog.log");
             res.status(400).json({
                 error: 'Bad Request',
                 message: 'Current user is required'
             });
             return;
         }
+
+        logEvents(`Fetching user details for ID: ${id} by current user: ${currentUser}`, "userLog.log");
 
         // First get the current user's role hierarchy
         const [currentUserRole] = await pool.query<Role[]>(
@@ -181,6 +197,7 @@ export const getUserById = async (req: Request, res: Response): Promise<void> =>
         );
 
         if (currentUserRole.length === 0) {
+            logEvents(`Failed to fetch user - Current user role not found: ${currentUser}`, "userLog.log");
             res.status(404).json({
                 error: 'Not Found',
                 message: 'Current user role not found'
@@ -200,6 +217,7 @@ export const getUserById = async (req: Request, res: Response): Promise<void> =>
         );
 
         if (users.length === 0) {
+            logEvents(`Failed to fetch user - Not found or insufficient permissions: ${id}`, "userLog.log");
             res.status(404).json({
                 error: 'Not Found',
                 message: 'User not found or you do not have permission to view this user'
@@ -210,9 +228,11 @@ export const getUserById = async (req: Request, res: Response): Promise<void> =>
         // Remove sensitive information before sending response
         const { password, ...userWithoutPassword } = users[0];
 
+        logEvents(`Successfully fetched user details for ID: ${id}`, "userLog.log");
         res.status(200).json(userWithoutPassword);
     } catch (error) {
-        console.error('Error fetching user:', error);
+        const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+        logEvents(`Error fetching user: ${errorMessage}`, "userLog.log");
         res.status(500).json({
             error: 'Internal Server Error',
             message: error instanceof Error ? error.message : 'An error occurred while fetching user'
@@ -224,6 +244,7 @@ export const updateUser = async (req: Request, res: Response): Promise<void> => 
     const connection = await pool.getConnection();
     try {
         await connection.beginTransaction();
+        logEvents(`Starting user update transaction for ID: ${req.params.id}`, "userLog.log");
 
         const { id } = req.params;
         const {
@@ -238,6 +259,7 @@ export const updateUser = async (req: Request, res: Response): Promise<void> => 
         } = req.body;
 
         const updated_by = req.body.updated_by;
+        logEvents(`Updating user: ${username} by ${updated_by}`, "userLog.log");
 
         // Check if username already exists for other users
         const [existingUser] = await connection.query<User[]>(
@@ -247,6 +269,7 @@ export const updateUser = async (req: Request, res: Response): Promise<void> => 
 
         if (existingUser.length > 0) {
             await connection.rollback();
+            logEvents(`Failed to update user - Username already exists: ${username}`, "userLog.log");
             res.status(400).json({
                 error: 'Bad Request',
                 message: 'Username already exists'
@@ -262,6 +285,7 @@ export const updateUser = async (req: Request, res: Response): Promise<void> => 
 
         if (currentUserRole.length === 0) {
             await connection.rollback();
+            logEvents(`Failed to update user - User not found: ${id}`, "userLog.log");
             res.status(404).json({
                 error: 'Not Found',
                 message: 'User not found'
@@ -302,6 +326,8 @@ export const updateUser = async (req: Request, res: Response): Promise<void> => 
 
         // If role changed, update permissions
         if (roleChanged) {
+            logEvents(`Role changed for user ${username}, updating permissions`, "userLog.log");
+            
             // First, remove user from all permissions
             await connection.query(
                 `UPDATE user_permissions 
@@ -323,6 +349,7 @@ export const updateUser = async (req: Request, res: Response): Promise<void> => 
 
             if (rolePermissions.length > 0) {
                 const permissionIds = rolePermissions[0].permission_id.split(',');
+                logEvents(`Assigning ${permissionIds.length} new permissions to user: ${username}`, "userLog.log");
 
                 // Add user to new role's permissions
                 for (const permissionId of permissionIds) {
@@ -339,12 +366,14 @@ export const updateUser = async (req: Request, res: Response): Promise<void> => 
         }
 
         await connection.commit();
+        logEvents(`Successfully updated user: ${username}`, "userLog.log");
         res.status(200).json({
             message: 'User updated successfully'
         });
     } catch (error) {
         await connection.rollback();
-        console.error('Error updating user:', error);
+        const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+        logEvents(`Error updating user: ${errorMessage}`, "userLog.log");
         res.status(500).json({
             error: 'Internal Server Error',
             message: error instanceof Error ? error.message : 'An error occurred while updating user'
@@ -358,23 +387,27 @@ export const deleteUser = async (req: Request, res: Response): Promise<void> => 
     const connection = await pool.getConnection();
     try {
         await connection.beginTransaction();
+        logEvents(`Starting user deletion transaction for ID: ${req.params.id}`, "userLog.log");
 
         const { id } = req.params;
 
         // First check if user exists
         const [existingUser] = await connection.query<User[]>(
-            'SELECT id FROM users WHERE id = ?',
+            'SELECT id, username FROM users WHERE id = ?',
             [id]
         );
 
         if (existingUser.length === 0) {
             await connection.rollback();
+            logEvents(`Failed to delete user - User not found: ${id}`, "userLog.log");
             res.status(404).json({
                 error: 'Not Found',
                 message: 'User not found'
             });
             return;
         }
+
+        const username = existingUser[0].username;
 
         // Remove user from all permissions
         await connection.query(
@@ -396,12 +429,14 @@ export const deleteUser = async (req: Request, res: Response): Promise<void> => 
         );
 
         await connection.commit();
+        logEvents(`Successfully deleted user: ${username}`, "userLog.log");
         res.status(200).json({
             message: 'User deleted successfully'
         });
     } catch (error) {
         await connection.rollback();
-        console.error('Error deleting user:', error);
+        const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+        logEvents(`Error deleting user: ${errorMessage}`, "userLog.log");
         res.status(500).json({
             error: 'Internal Server Error',
             message: error instanceof Error ? error.message : 'An error occurred while deleting user'
@@ -415,24 +450,30 @@ export const updateUserPermissions = async (req: Request, res: Response): Promis
     const connection = await pool.getConnection();
     try {
         await connection.beginTransaction();
+        logEvents(`Starting user permissions update transaction for ID: ${req.params.id}`, "userLog.log");
 
         const { id: userId } = req.params;
         const { permissions, updated_by } = req.body;
 
+        logEvents(`Updating permissions for user ID: ${userId} by ${updated_by}`, "userLog.log");
+
         // Check if user exists
         const [existingUser] = await connection.query<User[]>(
-            'SELECT id FROM users WHERE id = ?',
+            'SELECT id, username FROM users WHERE id = ?',
             [userId]
         );
 
         if (existingUser.length === 0) {
             await connection.rollback();
+            logEvents(`Failed to update permissions - User not found: ${userId}`, "userLog.log");
             res.status(404).json({
                 error: 'Not Found',
                 message: 'User not found'
             });
             return;
         }
+
+        const username = existingUser[0].username;
 
         // Process each permission
         for (const permission of permissions) {
@@ -466,12 +507,14 @@ export const updateUserPermissions = async (req: Request, res: Response): Promis
         }
 
         await connection.commit();
+        logEvents(`Successfully updated permissions for user: ${username}`, "userLog.log");
         res.status(200).json({
             message: 'User permissions updated successfully'
         });
     } catch (error) {
         await connection.rollback();
-        console.error('Error updating user permissions:', error);
+        const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+        logEvents(`Error updating user permissions: ${errorMessage}`, "userLog.log");
         res.status(500).json({
             error: 'Internal Server Error',
             message: error instanceof Error ? error.message : 'An error occurred while updating user permissions'

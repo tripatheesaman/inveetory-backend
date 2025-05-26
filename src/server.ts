@@ -6,11 +6,11 @@ import cookieParser from "cookie-parser";
 import cors from "cors";
 import { logger, logEvents } from "./middlewares/logger";
 import errorHandler from "./middlewares/errorhandler";
+import verifyJWT from "./middlewares/verifyJWT";
 import pool from "./config/db";
 import authRoutes from "./routes/authRoutes";
 import issueRoutes from './routes/issueRoutes';
 import searchRoutes from './routes/searchRoutes';
-import transactionRoutes from './routes/transactionRoutes';
 import requestRoutes from './routes/requestRoutes';
 import notificationRoutes from './routes/notificationRoutes';
 import receiveRoutes from './routes/receiveRoutes';
@@ -22,7 +22,7 @@ import permissionRoutes from './routes/permissionRoutes';
 const app = express();
 const PORT = process.env.PORT || 3500;
 
-// Middleware
+
 app.use(logger);
 app.use(cors({
   origin: process.env.CORS_ORIGIN || 'http://localhost:3000',
@@ -31,45 +31,59 @@ app.use(cors({
 app.use(cookieParser());
 app.use(express.json());
 
-// Static Files
+
 app.use("/", express.static(path.join(__dirname, "../", "public")));
 app.use("/images", express.static(path.join(__dirname, "../", "frontend", "public", "images")));
 
-// Routes
-app.use("/api/auth", authRoutes);
-app.use('/api/issues', issueRoutes);
-app.use('/api/search', searchRoutes);
-app.use('/api/transactions', transactionRoutes);
-app.use('/api/request', requestRoutes);
-app.use('/api/notification', notificationRoutes);
-app.use('/api/receive', receiveRoutes);
-app.use('/api/rrp', rrpRoutes);
-app.use('/api/users', userRoutes);
-app.use('/api/roles', roleRoutes);
-app.use('/api/permissions', permissionRoutes);
 
-// 404 Handler - Catch all unmatched routes
+app.use("/api/auth", authRoutes);
+
+
+app.use('/api/issue', verifyJWT, issueRoutes);
+app.use('/api/search', verifyJWT, searchRoutes);
+app.use('/api/request', verifyJWT, requestRoutes);
+app.use('/api/notification', verifyJWT, notificationRoutes);
+app.use('/api/receive', verifyJWT, receiveRoutes);
+app.use('/api/rrp', verifyJWT, rrpRoutes);
+app.use('/api/user', verifyJWT, userRoutes);
+app.use('/api/role', verifyJWT, roleRoutes);
+app.use('/api/permission', verifyJWT, permissionRoutes);
+
+
+app.get('/health', (req: Request, res: Response) => {
+  res.status(200).json({ 
+    status: 'ok', 
+    timestamp: new Date().toISOString() 
+  });
+});
+
 app.use((req: Request, res: Response) => {
-  if (req.accepts("html")) {
-    res.sendFile(path.join(__dirname, "..", "views", "404.html"));
-  } else if (req.accepts("json")) {
-    res.status(404).json({ message: "404 Not Found" });
+  logEvents(`404 - Route not found: ${req.method} ${req.originalUrl}`, "serverLog.log");
+  
+  if (req.path.startsWith('/api/')) {
+    res.status(404).json({
+      error: 'Not Found',
+      message: 'The requested resource was not found',
+      path: req.originalUrl,
+      method: req.method,
+      timestamp: new Date().toISOString()
+    });
   } else {
-    res.type("txt").send("404 Not Found");
+    res.status(404).sendFile(path.join(__dirname, "..", "views", "404.html"));
   }
 });
 
-// Error Handler
 app.use(errorHandler);
 
-// Graceful shutdown
+
 const gracefulShutdown = async () => {
   try {
     await pool.end();
-    console.log('Database connection closed.');
+    logEvents('Database connection closed.', "serverLog.log");
     process.exit(0);
   } catch (err) {
-    console.error('Error during shutdown:', err);
+    const errorMessage = err instanceof Error ? err.message : 'Unknown error';
+    logEvents(`Error during shutdown: ${errorMessage}`, "serverLog.log");
     process.exit(1);
   }
 };
@@ -80,17 +94,19 @@ process.on('SIGINT', gracefulShutdown);
 const startServer = async () => {
   try {
     await pool.query("SELECT 1");
-    console.log("Connected to MySQL");
-    app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+    logEvents("Connected to MySQL", "serverLog.log");
+    app.listen(PORT, () => {
+      logEvents(`Server running on port ${PORT}`, "serverLog.log");
+      console.log(`Server running on port ${PORT}`);
+    });
   } catch (err) {
     if (err instanceof Error) {
-      console.error("MySQL connection error:", err);
       logEvents(
-        `${err.message ?? "N/A"}\t${err.stack ?? "N/A"}`,
+        `MySQL connection error: ${err.message}\n${err.stack}`,
         "MySQLErrLog.log"
       );
     } else {
-      logEvents(`${err}`, "MySQLErrLog.log");
+      logEvents(`MySQL connection error: ${err}`, "MySQLErrLog.log");
     }
     process.exit(1);
   }

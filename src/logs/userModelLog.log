@@ -1,0 +1,20 @@
+20250526	12:15:56	5d1fb354-325d-4db2-bcec-33870d440544	Searching for user with email: superadmin@god.com
+20250526	12:15:56	358d3386-e7fd-4bf0-8270-ad9e70777b47	Found user with email: superadmin@god.com
+20250526	12:22:11	180378c5-cffa-4ca4-999c-44bb727f5784	Searching for user with email: superadmin@god.com
+20250526	12:22:11	13797686-74b2-4ef3-8cda-2f000985ea62	Found user with email: superadmin@god.com
+20250526	12:27:29	948b9e0c-a32d-406a-9d19-3ac6372271ab	Searching for user with email: superadmin@god.com
+20250526	12:27:29	1462134d-8684-46c8-98a0-1743d62c4013	Error finding user with email superadmin@god.com: Unknown column 'r.id' in 'on clause'
+20250526	12:27:33	bd9a9311-6ed3-4aa2-9701-e2be1f628ca1	Searching for user with email: superadmin@god.com
+20250526	12:27:33	bf38d7a8-d462-4a27-b298-d9feaabc27b2	Error finding user with email superadmin@god.com: Unknown column 'r.id' in 'on clause'
+20250526	12:27:34	7ca3108b-0e0f-40f4-acc2-f54562ac4a5d	Searching for user with email: superadmin@god.com
+20250526	12:27:34	372cc267-24d0-4634-961b-bc1335100e19	Error finding user with email superadmin@god.com: Unknown column 'r.id' in 'on clause'
+20250526	12:27:39	27a091ce-dd78-4655-b251-c43959026b01	Searching for user with email: superadmin@god.com
+20250526	12:27:39	20140f71-55e0-440d-b621-5b49fc466b91	Error finding user with email superadmin@god.com: Unknown column 'r.id' in 'on clause'
+20250526	12:28:51	b452ee28-c87a-431f-97c4-eebb1b4db59e	Searching for user with email: superadmin@god.com
+20250526	12:28:51	1da8fac5-e1e5-4205-893f-5e563ac733df	Found user with email: superadmin@god.com
+20250526	15:13:07	7dc4b36e-78dd-4918-ac1f-f38eea8d4baa	Searching for user with email: superadmin@god.com
+20250526	15:13:07	92e4b9d5-d284-4cd4-8207-c6293bd3dd37	Found user with email: superadmin@god.com
+20250526	15:38:28	4b85761f-2474-49c1-86fc-1d81a60e84dc	Searching for user with email: superadmin@god.com
+20250526	15:38:28	51b9c273-c7de-4007-ae8b-14dbab0724ca	Found user with email: superadmin@god.com
+20250526	15:40:05	ee8621dc-4fb2-45c9-a473-d924e0083af5	Searching for user with email: superadmin@god.com
+20250526	15:40:05	418bba2e-d22b-4d07-b7ff-9bc5f0dab1c5	Found user with email: superadmin@god.com

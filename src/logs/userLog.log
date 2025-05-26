@@ -1,0 +1,65 @@
+20250526	13:36:14	b7a50a0b-ad29-4459-939e-4f19d7fe806b	Fetching users for current user: superadmin@god.com
+20250526	13:36:14	03230982-640d-4e4c-aff0-5a7a973a1a73	Successfully fetched 4 users for current user: superadmin@god.com
+20250526	13:36:14	e2588147-c651-4296-b5e3-f7f4178660f4	Fetching users for current user: superadmin@god.com
+20250526	13:36:14	2e0ffc32-74b0-41d9-b365-7d758caccdaf	Successfully fetched 4 users for current user: superadmin@god.com
+20250526	13:36:49	6ef11534-53ba-4757-9507-6f71f5494217	Fetching users for current user: superadmin@god.com
+20250526	13:36:49	c8f188d9-b8e3-49f2-91b6-4c75b8cbbc3c	Successfully fetched 4 users for current user: superadmin@god.com
+20250526	13:36:49	74587705-f16f-4063-809f-df37e3d55e4b	Fetching users for current user: superadmin@god.com
+20250526	13:36:49	a765bf50-561b-4cd5-a8b4-a37e789700f8	Successfully fetched 4 users for current user: superadmin@god.com
+20250526	13:36:52	77d6ae99-2798-445e-9444-3a1d5b3c62c1	Starting user deletion transaction for ID: 2
+20250526	13:36:52	c1ac993b-3d04-423a-8a5d-a79e821e1c69	Successfully deleted user: test@test.com
+20250526	13:36:54	8d8afa0d-3e2b-4782-a19a-674402f31576	Starting user deletion transaction for ID: 5
+20250526	13:36:54	f5f1bd40-5a46-4566-a3e5-25442c7b2e3a	Successfully deleted user: test2@test
+20250526	13:36:55	f66bf621-da3d-45a1-b340-ec710d173e2c	Starting user deletion transaction for ID: 3
+20250526	13:36:55	fa4aabec-3290-478a-b10f-bd1108a0c3f6	Successfully deleted user: test2@test.com
+20250526	13:37:26	9186e11e-3ff1-40c3-9260-48fd7dd3edf9	Fetching users for current user: superadmin@god.com
+20250526	13:37:26	8fac225d-e109-4b34-b11e-b0f9f7558a48	Successfully fetched 1 users for current user: superadmin@god.com
+20250526	13:37:26	122eec37-11c0-4337-98a9-97b48c152498	Fetching users for current user: superadmin@god.com
+20250526	13:37:26	7e118c12-8030-4605-9e36-bb4b6c4fc42e	Successfully fetched 1 users for current user: superadmin@god.com
+20250526	13:37:29	dba97879-e980-4b16-a671-b6aec0cd381f	Fetching users for current user: superadmin@god.com
+20250526	13:37:29	78397d5c-254f-4ffc-acdd-76d1a5685ce0	Successfully fetched 1 users for current user: superadmin@god.com
+20250526	13:37:29	49931e3f-3613-4c1d-9d41-3fcd390c7cde	Fetching users for current user: superadmin@god.com
+20250526	13:37:29	b55964c7-8977-4b63-a930-436103048401	Successfully fetched 1 users for current user: superadmin@god.com
+20250526	13:38:19	b564a2a9-56b9-41a1-b79d-9184de9cca7c	Fetching users for current user: superadmin@god.com
+20250526	13:38:19	9b639774-bc17-4c05-943d-e18f28c04d3c	Successfully fetched 1 users for current user: superadmin@god.com
+20250526	13:38:19	a7253352-d2f5-4f27-ae78-4d8872590f80	Fetching users for current user: superadmin@god.com
+20250526	13:38:19	0c0fb768-421d-4f60-a01a-5820589f679b	Successfully fetched 1 users for current user: superadmin@god.com
+20250526	13:38:52	84e1218f-79eb-4f28-929a-f4ee2450b44c	Starting user creation transaction
+20250526	13:38:52	1358f146-895a-41f3-ae3d-7993bbbfa4ba	Creating new user: admin@inventory.com by superadmin@god.com
+20250526	13:38:52	be4d8ca9-099c-4201-9e00-7c3152a40fa9	Assigning 4 permissions to user: admin@inventory.com
+20250526	13:38:52	04ff02cd-e180-47ee-9c22-0e61e5c1119e	Successfully created user: admin@inventory.com with ID: 7
+20250526	13:38:52	a961e0ba-6eb5-47b0-9143-446d483e888a	Fetching users for current user: superadmin@god.com
+20250526	13:38:52	08398bb6-fd27-4282-827d-96c81c8e4c41	Successfully fetched 2 users for current user: superadmin@god.com
+20250526	13:38:52	8da574fe-dcbc-4aef-9b62-93276deb8f6f	Fetching users for current user: superadmin@god.com
+20250526	13:38:52	aa22b3e8-af82-43f3-be37-834e8d7c24e0	Successfully fetched 2 users for current user: superadmin@god.com
+20250526	13:39:07	aea64f64-7325-47e6-b86f-1423cd6b7f8a	Starting user permissions update transaction for ID: 7
+20250526	13:39:07	9474041a-f230-4920-af76-af54b2f125f5	Updating permissions for user ID: 7 by superadmin@god.com
+20250526	13:39:07	53a2f999-4d7b-46fe-920c-d2b6c78720be	Successfully updated permissions for user: admin@inventory.com
+20250526	13:39:07	0ace4cf5-3667-4353-be73-0ebea770ce55	Fetching users for current user: superadmin@god.com
+20250526	13:39:07	f78d4bb9-8907-4ab7-b24d-ef1a17641d86	Successfully fetched 2 users for current user: superadmin@god.com
+20250526	13:39:07	3d469e79-d7a4-492a-a486-c4168a99b471	Fetching users for current user: superadmin@god.com
+20250526	13:39:07	5ad4a246-1f33-4347-b1b4-49884a130219	Successfully fetched 2 users for current user: superadmin@god.com
+20250526	15:14:03	45a246d6-9abe-4cd2-84d7-345d21b7ac8e	Fetching users for current user: superadmin@god.com
+20250526	15:14:03	38af9ea4-f6c6-4005-90bd-fd91d5f2c432	Successfully fetched 2 users for current user: superadmin@god.com
+20250526	15:14:03	04ef3f6a-0264-4708-8107-0bc511b03902	Fetching users for current user: superadmin@god.com
+20250526	15:14:03	0b89167b-0d8d-451d-ab37-2af04b57e80f	Successfully fetched 2 users for current user: superadmin@god.com
+20250526	15:14:10	306d5243-f343-4fbc-bbcd-6743b8c91eb8	Fetching users for current user: superadmin@god.com
+20250526	15:14:10	8b587689-36ec-42ad-944a-68ffec2005b3	Successfully fetched 2 users for current user: superadmin@god.com
+20250526	15:14:10	01065541-78df-4f7b-8120-8e3fb2271bf4	Fetching users for current user: superadmin@god.com
+20250526	15:14:10	ae396e35-71c2-4869-ad8e-e584af4649ad	Successfully fetched 2 users for current user: superadmin@god.com
+20250526	15:16:45	25758d6d-467e-4236-bfee-2aa3977839a6	Fetching users for current user: superadmin@god.com
+20250526	15:16:45	cf71782c-2b37-4fd4-8f98-a894e6b063cb	Successfully fetched 2 users for current user: superadmin@god.com
+20250526	15:16:45	b45f76f1-aed0-489e-9b28-b6bd018c0859	Fetching users for current user: superadmin@god.com
+20250526	15:16:45	137f4ec8-7408-45b9-a241-02b8bbc5c923	Successfully fetched 2 users for current user: superadmin@god.com
+20250526	15:22:42	a7024326-010c-4cb0-a1bf-c44080b1e0e5	Fetching users for current user: superadmin@god.com
+20250526	15:22:42	d83c0077-62b2-4320-aef6-54a04c66cc4c	Successfully fetched 2 users for current user: superadmin@god.com
+20250526	15:22:42	1821ce32-9100-4365-aaa3-8b90adda5547	Fetching users for current user: superadmin@god.com
+20250526	15:22:42	4aec6ceb-a459-4c02-a14a-2c5fd4533806	Successfully fetched 2 users for current user: superadmin@god.com
+20250526	15:22:51	539458c4-e5f2-43b9-8b36-12355088ee91	Fetching users for current user: superadmin@god.com
+20250526	15:22:51	f100ae71-8324-4a6c-b4f2-530e3b70a91d	Successfully fetched 2 users for current user: superadmin@god.com
+20250526	15:22:51	280a1266-7d4b-422d-ac27-f40d829ddf32	Fetching users for current user: superadmin@god.com
+20250526	15:22:51	2d10e1ae-d96d-45de-b4ee-1beaa7b20532	Successfully fetched 2 users for current user: superadmin@god.com
+20250526	15:38:32	5259c618-3ae0-427e-9c54-f2533ae0e921	Fetching users for current user: superadmin@god.com
+20250526	15:38:32	d39e812f-b34b-42e1-9669-255f008a77c5	Successfully fetched 2 users for current user: superadmin@god.com
+20250526	15:38:32	3c070272-8273-429c-bc9e-f16dccb847a7	Fetching users for current user: superadmin@god.com
+20250526	15:38:32	6c0c3310-374e-4507-8dce-a6a5d6e19235	Successfully fetched 2 users for current user: superadmin@god.com

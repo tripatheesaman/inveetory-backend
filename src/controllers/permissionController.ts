@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import pool from '../config/db';
 import { RowDataPacket } from 'mysql2';
+import { logEvents } from '../middlewares/logger';
 
 interface PermissionWithAccess extends RowDataPacket {
     id: number;
@@ -15,6 +16,7 @@ export const getPermissions = async (req: Request, res: Response): Promise<void>
         const { currentUser, userId } = req.query;
 
         if (!currentUser || !userId) {
+            logEvents(`Failed to fetch permissions - Missing required parameters: currentUser=${currentUser}, userId=${userId}`, "permissionLog.log");
             res.status(400).json({
                 error: 'Bad Request',
                 message: 'Current user and target user ID are required'
@@ -22,13 +24,13 @@ export const getPermissions = async (req: Request, res: Response): Promise<void>
             return;
         }
 
-        // Get current user's ID
         const [currentUserData] = await pool.query<RowDataPacket[]>(
             'SELECT id FROM users WHERE username = ?',
             [currentUser]
         );
 
         if (currentUserData.length === 0) {
+            logEvents(`Failed to fetch permissions - Current user not found: ${currentUser}`, "permissionLog.log");
             res.status(404).json({
                 error: 'Not Found',
                 message: 'Current user not found'
@@ -38,7 +40,6 @@ export const getPermissions = async (req: Request, res: Response): Promise<void>
 
         const currentUserId = currentUserData[0].id;
 
-        // Get all permissions that the current user has access to
         const [permissions] = await pool.query<PermissionWithAccess[]>(
             `SELECT p.id, p.permission_name, p.permission_readable, p.permission_type,
                     CASE WHEN FIND_IN_SET(?, p.allowed_user_ids) > 0 THEN 1 ELSE 0 END as hasAccess
@@ -48,9 +49,11 @@ export const getPermissions = async (req: Request, res: Response): Promise<void>
             [userId, currentUserId]
         );
 
+        logEvents(`Successfully fetched permissions for user: ${userId} by current user: ${currentUser}`, "permissionLog.log");
         res.status(200).json(permissions);
     } catch (error) {
-        console.error('Error fetching permissions:', error);
+        const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+        logEvents(`Error fetching permissions: ${errorMessage} for user: ${req.query.userId} by current user: ${req.query.currentUser}`, "permissionLog.log");
         res.status(500).json({
             error: 'Internal Server Error',
             message: error instanceof Error ? error.message : 'An error occurred while fetching permissions'

@@ -1,0 +1,13 @@
+20250526	12:35:43	bb3c0a42-1518-4c1e-b53e-1e45b509358d	Generating request Excel for request number: R004
+20250526	12:35:43	9d995a71-742e-43fb-a18e-df09048c495c	Fetching request details for request number: R004
+20250526	12:35:43	599013ee-ae4b-4fb0-9903-f5effe184a19	Found 1 items for request: R004
+20250526	12:35:43	4c12a9bf-3468-46c5-8c5b-72bf36963a28	Successfully fetched all details for request: R004
+20250526	12:35:43	0b1b8258-3b12-4ea7-82e7-99e616b58611	Resizing image: /images/request/730fd657-590f-4a6a-b551-d2bfb1022841.png
+20250526	12:35:43	b95ab45c-ad4e-4138-97c4-277e1638a120	Error resizing image /images/request/730fd657-590f-4a6a-b551-d2bfb1022841.png: Failed to fetch image from frontend: http://localhost:3000/images/request/730fd657-590f-4a6a-b551-d2bfb1022841.png
+20250526	12:35:43	65a355a5-f191-41bf-8dce-3412cc95f6e6	Resizing image: /images/request/730fd657-590f-4a6a-b551-d2bfb1022841.png
+20250526	12:35:44	4fc0b5fd-cac3-42c1-8c08-90c6957b268e	Successfully generated request Excel for: R004
+20250526	12:35:44	b6349b92-81ec-4092-b611-04c7ff27e167	Error resizing image /images/request/730fd657-590f-4a6a-b551-d2bfb1022841.png: Failed to fetch image from frontend: http://localhost:3000/images/request/730fd657-590f-4a6a-b551-d2bfb1022841.png
+20250526	13:55:26	2d9b6d0f-5d56-4909-8686-992cb895258f	Generating RRP Excel for RRP number: F001T1
+20250526	13:55:26	29e5cb13-a36b-4fca-ab94-8e667b8c2db8	Fetching RRP details for RRP number: F001T1
+20250526	13:55:26	e04ec882-5601-40a2-bdaf-c08db5d0fded	Successfully fetched all RRP details for: F001T1
+20250526	13:55:26	20ab4cf6-31c5-4f1a-82fd-20cae330ca8d	Successfully generated RRP Excel for: F001T1

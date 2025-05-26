@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { RowDataPacket } from 'mysql2';
 import pool from '../config/db';
 import { formatDate, formatDateForDB } from '../utils/dateUtils';
+import { logEvents } from '../middlewares/logger';
 
 interface ConfigRow extends RowDataPacket {
     config_name: string;
@@ -96,27 +97,25 @@ interface RRPType {
 
 export const getRRPConfig = async (req: Request, res: Response): Promise<void> => {
     try {
-        // Query to get all RRP configurations
         const [rows] = await pool.query<ConfigRow[]>(
             'SELECT config_name, config_value FROM app_config WHERE config_type = ?',
             ['rrp']
         );
 
-        // Convert rows to the desired format
         const config: Record<string, any> = {};
         rows.forEach(row => {
-            // Try to parse JSON strings
             try {
                 config[row.config_name] = JSON.parse(row.config_value);
             } catch {
-                // If parsing fails, use the original string value
                 config[row.config_name] = row.config_value;
             }
         });
 
+        logEvents(`Successfully fetched RRP configuration with ${Object.keys(config).length} settings`, "rrpLog.log");
         res.status(200).json(config);
     } catch (error) {
-        console.error('Error fetching RRP configuration:', error);
+        const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+        logEvents(`Error fetching RRP configuration: ${errorMessage}`, "rrpLog.log");
         res.status(500).json({ 
             error: 'Internal Server Error',
             message: error instanceof Error ? error.message : 'An error occurred while fetching RRP configuration'
@@ -147,16 +146,17 @@ export const getRRPItems = async (req: Request, res: Response): Promise<void> =>
             ORDER BY rd.receive_date DESC`
         );
 
-        // Format dates
         const formattedItems = rows.map(item => ({
             ...item,
             request_date: formatDate(item.request_date),
             receive_date: formatDate(item.receive_date)
         }));
 
+        logEvents(`Successfully fetched ${formattedItems.length} RRP items`, "rrpLog.log");
         res.status(200).json(formattedItems);
     } catch (error) {
-        console.error('Error fetching RRP items:', error);
+        const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+        logEvents(`Error fetching RRP items: ${errorMessage}`, "rrpLog.log");
         res.status(500).json({ 
             error: 'Internal Server Error',
             message: error instanceof Error ? error.message : 'An error occurred while fetching RRP items'
@@ -168,6 +168,7 @@ export const createRRP = async (req: Request, res: Response): Promise<void> => {
     const connection = await pool.getConnection();
     try {
         await connection.beginTransaction();
+        logEvents(`Starting RRP creation transaction`, "rrpLog.log");
         
         const submissionData: RRPSubmission = req.body;
         
@@ -186,10 +187,10 @@ export const createRRP = async (req: Request, res: Response): Promise<void> => {
             }
         });
 
-        // Get current FY from config
         const currentFY = config.current_fy;
         if (!currentFY) {
             await connection.rollback();
+            logEvents(`Failed to create RRP - Current FY configuration not found`, "rrpLog.log");
             res.status(500).json({
                 error: 'Internal Server Error',
                 message: 'Current FY configuration not found'
@@ -197,36 +198,31 @@ export const createRRP = async (req: Request, res: Response): Promise<void> => {
             return;
         }
 
-        // Get the RRP number from frontend
         const inputRRPNumber = submissionData.rrp_number;
         let rrpNumber = inputRRPNumber;
 
-        // Check if the RRP number already contains 'T'
         if (inputRRPNumber.includes('T')) {
-            // Search for existing RRP with this exact number
             const [existingRRP] = await connection.query<RowDataPacket[]>(
                 'SELECT approval_status FROM rrp_details WHERE rrp_number = ?',
                 [inputRRPNumber]
             );
 
-            if (existingRRP.length > 0) {
-                // Check if the existing RRP is rejected
-                if (existingRRP[0].approval_status !== 'REJECTED') {
-                    await connection.rollback();
-                    res.status(400).json({
-                        error: 'Bad Request',
-                        message: 'RRP number already exists and is not rejected'
-                    });
-                    return;
-                }
+            if (existingRRP.length > 0 && existingRRP[0].approval_status !== 'REJECTED') {
+                await connection.rollback();
+                logEvents(`Failed to create RRP - Number already exists: ${inputRRPNumber}`, "rrpLog.log");
+                res.status(400).json({
+                    error: 'Bad Request',
+                    message: 'RRP number already exists and is not rejected'
+                });
+                return;
+            }
 
-                // If rejected, delete the existing entries
+            if (existingRRP.length > 0) {
                 await connection.query(
                     'DELETE FROM rrp_details WHERE rrp_number = ?',
                     [inputRRPNumber]
                 );
 
-                // Reset rrp_fk in receive_details for the deleted items
                 await connection.query(
                     `UPDATE receive_details rd
                      SET rrp_fk = NULL
@@ -237,9 +233,9 @@ export const createRRP = async (req: Request, res: Response): Promise<void> => {
                      )`,
                     [inputRRPNumber]
                 );
+                logEvents(`Deleted existing rejected RRP: ${inputRRPNumber}`, "rrpLog.log");
             }
         } else {
-            // If no 'T' in the number, generate new RRP number as before
             const [lastRRP] = await connection.query<RowDataPacket[]>(
                 `SELECT rrp_number FROM rrp_details 
                 WHERE rrp_number LIKE ? 
@@ -248,19 +244,15 @@ export const createRRP = async (req: Request, res: Response): Promise<void> => {
             );
             
             if (lastRRP.length > 0) {
-                // Extract the T number from the last RRP number
                 const lastTNumber = parseInt(lastRRP[0].rrp_number.split('T')[1]);
-                // Increment the T number
                 rrpNumber = `${inputRRPNumber}T${lastTNumber + 1}`;
             } else {
-                // If no previous RRP exists for this base number, start with T1
                 rrpNumber = `${inputRRPNumber}T1`;
             }
+            logEvents(`Generated new RRP number: ${rrpNumber}`, "rrpLog.log");
         }
 
-        // Process each item
         for (const item of submissionData.items) {
-            // Get receive details
             const [receiveDetails] = await connection.query<RowDataPacket[]>(
                 'SELECT * FROM receive_details WHERE id = ?',
                 [item.receive_id]
@@ -271,40 +263,31 @@ export const createRRP = async (req: Request, res: Response): Promise<void> => {
             }
 
             const receive = receiveDetails[0];
-
-            // Calculate total amount for the item
             const itemPrice = item.price * (submissionData.type === 'foreign' && submissionData.forex_rate ? submissionData.forex_rate : 1);
-            
-            // Calculate total price of all items for proportion calculation
             const totalItemPrice = submissionData.items.reduce((sum: number, curr: RRPSubmissionItem) => 
                 sum + (curr.price * (submissionData.type === 'foreign' && submissionData.forex_rate ? submissionData.forex_rate : 1)), 0);
             
-            // Calculate proportional charges
             const freightCharge = (itemPrice / totalItemPrice) * (submissionData.freight_charge || 0) * 
                 (submissionData.type === 'foreign' && submissionData.forex_rate ? submissionData.forex_rate : 1);
             
             const customServiceCharge = (itemPrice / totalItemPrice) * (submissionData.custom_service_charge || 0);
 
-            // Calculate VAT if applicable
             let vatAmount = 0;
             if (item.vat_status) {
                 const vatBase = itemPrice + freightCharge + (item.customs_charge || 0) + customServiceCharge;
                 vatAmount = vatBase * ((submissionData.vat_rate || 0) / 100);
             }
 
-            // Calculate total amount
             const totalAmount = itemPrice + 
                               freightCharge + 
                               (item.customs_charge || 0) + 
                               customServiceCharge + 
                               vatAmount;
 
-            // Format dates for database
             const formattedRRPDate = formatDateForDB(submissionData.rrp_date);
             const formattedInvoiceDate = formatDateForDB(submissionData.invoice_date);
             const formattedCustomsDate = formatDateForDB(submissionData.customs_date);
 
-            // Insert into rrp_details
             const [result] = await connection.query(
                 `INSERT INTO rrp_details (
                     receive_fk, rrp_number, supplier_name, date, currency, forex_rate,
@@ -341,10 +324,8 @@ export const createRRP = async (req: Request, res: Response): Promise<void> => {
                 ]
             );
 
-            // Get the inserted RRP's ID
             const rrpId = (result as any).insertId;
 
-            // Update receive_details with rrp_fk using the ID
             await connection.query(
                 'UPDATE receive_details SET rrp_fk = ? WHERE id = ?',
                 [rrpId, item.receive_id]
@@ -352,13 +333,16 @@ export const createRRP = async (req: Request, res: Response): Promise<void> => {
         }
 
         await connection.commit();
+        logEvents(`Successfully created RRP ${rrpNumber} with ${submissionData.items.length} items by user: ${submissionData.created_by}`, "rrpLog.log");
+        
         res.status(201).json({ 
             message: 'RRP created successfully',
             rrp_number: rrpNumber
         });
     } catch (error) {
         await connection.rollback();
-        console.error('Error creating RRP:', error);
+        const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+        logEvents(`Error creating RRP: ${errorMessage} by user: ${req.body.created_by}`, "rrpLog.log");
         res.status(500).json({ 
             error: 'Internal Server Error',
             message: error instanceof Error ? error.message : 'An error occurred while creating RRP'
@@ -370,7 +354,6 @@ export const createRRP = async (req: Request, res: Response): Promise<void> => {
 
 export const getPendingRRPs = async (req: Request, res: Response): Promise<void> => {
     try {
-        // Get RRP configuration
         const [configRows] = await pool.query<ConfigRow[]>(
             'SELECT config_name, config_value FROM app_config WHERE config_type = ?',
             ['rrp']
@@ -385,7 +368,6 @@ export const getPendingRRPs = async (req: Request, res: Response): Promise<void>
             }
         });
 
-        // Get pending RRPs
         const [rows] = await pool.query<RowDataPacket[]>(
             `SELECT 
                 rd.id,
@@ -428,7 +410,6 @@ export const getPendingRRPs = async (req: Request, res: Response): Promise<void>
             ORDER BY rd.date DESC`
         );
 
-        // Format dates and parse JSON fields
         const formattedRows = rows.map(row => ({
             ...row,
             date: formatDate(row.date),
@@ -439,12 +420,14 @@ export const getPendingRRPs = async (req: Request, res: Response): Promise<void>
             inspection_details: JSON.parse(row.inspection_details)
         }));
 
+        logEvents(`Successfully fetched ${formattedRows.length} pending RRPs`, "rrpLog.log");
         res.status(200).json({
             config,
             pendingRRPs: formattedRows
         });
     } catch (error) {
-        console.error('Error fetching pending RRPs:', error);
+        const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+        logEvents(`Error fetching pending RRPs: ${errorMessage}`, "rrpLog.log");
         res.status(500).json({ 
             error: 'Internal Server Error',
             message: error instanceof Error ? error.message : 'An error occurred while fetching pending RRPs'
@@ -456,10 +439,11 @@ export const approveRRP = async (req: Request, res: Response): Promise<void> => 
     const connection = await pool.getConnection();
     try {
         await connection.beginTransaction();
+        logEvents(`Starting RRP approval transaction for RRP: ${req.params.rrpNumber}`, "rrpLog.log");
         
         const rrpNumber = req.params.rrpNumber;
         const { approved_by } = req.body;
-        // First check if RRP exists and is not already approved
+
         const [rrpCheck] = await connection.query<RowDataPacket[]>(
             'SELECT id, approval_status FROM rrp_details WHERE rrp_number = ?',
             [rrpNumber]
@@ -467,6 +451,7 @@ export const approveRRP = async (req: Request, res: Response): Promise<void> => 
 
         if (rrpCheck.length === 0) {
             await connection.rollback();
+            logEvents(`Failed to approve RRP - Not found: ${rrpNumber}`, "rrpLog.log");
             res.status(404).json({ 
                 error: 'Not Found',
                 message: 'RRP not found'
@@ -476,6 +461,7 @@ export const approveRRP = async (req: Request, res: Response): Promise<void> => 
 
         if (rrpCheck[0].approval_status === 'APPROVED') {
             await connection.rollback();
+            logEvents(`Failed to approve RRP - Already approved: ${rrpNumber}`, "rrpLog.log");
             res.status(400).json({ 
                 error: 'Bad Request',
                 message: 'RRP is already approved'
@@ -483,7 +469,6 @@ export const approveRRP = async (req: Request, res: Response): Promise<void> => 
             return;
         }
 
-        // Update all RRP records with the same RRP number
         const [result] = await connection.query(
             `UPDATE rrp_details 
             SET approval_status = 'APPROVED',
@@ -494,6 +479,7 @@ export const approveRRP = async (req: Request, res: Response): Promise<void> => 
 
         if ((result as any).affectedRows === 0) {
             await connection.rollback();
+            logEvents(`Failed to approve RRP - No rows affected: ${rrpNumber}`, "rrpLog.log");
             res.status(500).json({ 
                 error: 'Internal Server Error',
                 message: 'Failed to approve RRP'
@@ -502,10 +488,12 @@ export const approveRRP = async (req: Request, res: Response): Promise<void> => 
         }
 
         await connection.commit();
+        logEvents(`Successfully approved RRP ${rrpNumber} by user: ${approved_by}`, "rrpLog.log");
         res.status(200).json({ message: 'RRP approved successfully' });
     } catch (error) {
         await connection.rollback();
-        console.error('Error approving RRP:', error);
+        const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+        logEvents(`Error approving RRP ${req.params.rrpNumber}: ${errorMessage} by user: ${req.body.approved_by}`, "rrpLog.log");
         res.status(500).json({ 
             error: 'Internal Server Error',
             message: error instanceof Error ? error.message : 'An error occurred while approving RRP'
@@ -520,11 +508,11 @@ export const rejectRRP = async (req: Request, res: Response): Promise<void> => {
     
     try {
         await connection.beginTransaction();
+        logEvents(`Starting RRP rejection transaction for RRP: ${req.params.rrpNumber}`, "rrpLog.log");
         
         const rrpNumber = req.params.rrpNumber;
         const { rejected_by, rejection_reason } = req.body;
         
-        // First check if RRP exists and is not already rejected
         const [rrpCheck] = await connection.query<RowDataPacket[]>(
             'SELECT id, approval_status FROM rrp_details WHERE rrp_number = ?',
             [rrpNumber]
@@ -532,6 +520,7 @@ export const rejectRRP = async (req: Request, res: Response): Promise<void> => {
 
         if (rrpCheck.length === 0) {
             await connection.rollback();
+            logEvents(`Failed to reject RRP - Not found: ${rrpNumber}`, "rrpLog.log");
             res.status(404).json({ 
                 error: 'Not Found',
                 message: 'RRP not found'
@@ -541,6 +530,7 @@ export const rejectRRP = async (req: Request, res: Response): Promise<void> => {
 
         if (rrpCheck[0].approval_status === 'REJECTED') {
             await connection.rollback();
+            logEvents(`Failed to reject RRP - Already rejected: ${rrpNumber}`, "rrpLog.log");
             res.status(400).json({ 
                 error: 'Bad Request',
                 message: 'RRP is already rejected'
@@ -548,7 +538,6 @@ export const rejectRRP = async (req: Request, res: Response): Promise<void> => {
             return;
         }
 
-        // Get the first item's ID and the created_by username
         const [rrpDetails] = await connection.query<RowDataPacket[]>(
             `SELECT id, created_by 
              FROM rrp_details 
@@ -561,7 +550,6 @@ export const rejectRRP = async (req: Request, res: Response): Promise<void> => {
         const firstItemId = rrpDetails[0].id;
         const createdBy = rrpDetails[0].created_by;
 
-        // Get the user ID from the username
         const [users] = await connection.query<RowDataPacket[]>(
             'SELECT id FROM users WHERE username = ?',
             [createdBy]
@@ -569,6 +557,7 @@ export const rejectRRP = async (req: Request, res: Response): Promise<void> => {
 
         if (users.length === 0) {
             await connection.rollback();
+            logEvents(`Failed to reject RRP - User not found: ${createdBy}`, "rrpLog.log");
             res.status(404).json({
                 error: 'Not Found',
                 message: 'User not found'
@@ -578,7 +567,6 @@ export const rejectRRP = async (req: Request, res: Response): Promise<void> => {
 
         const userId = users[0].id;
 
-        // Update all RRP records with the same RRP number
         const [result] = await connection.query(
             `UPDATE rrp_details 
             SET approval_status = 'REJECTED',
@@ -590,6 +578,7 @@ export const rejectRRP = async (req: Request, res: Response): Promise<void> => {
 
         if ((result as any).affectedRows === 0) {
             await connection.rollback();
+            logEvents(`Failed to reject RRP - No rows affected: ${rrpNumber}`, "rrpLog.log");
             res.status(500).json({ 
                 error: 'Internal Server Error',
                 message: 'Failed to reject RRP'
@@ -597,7 +586,6 @@ export const rejectRRP = async (req: Request, res: Response): Promise<void> => {
             return;
         }
 
-        // Reset rrp_fk in receive_details for all items in this RRP
         await connection.query(
             `UPDATE receive_details rd
              SET rrp_fk = NULL
@@ -609,7 +597,6 @@ export const rejectRRP = async (req: Request, res: Response): Promise<void> => {
             [rrpNumber]
         );
 
-        // Create notification
         await connection.query(
             `INSERT INTO notifications 
              (user_id, reference_type, message, reference_id)
@@ -623,10 +610,12 @@ export const rejectRRP = async (req: Request, res: Response): Promise<void> => {
         );
 
         await connection.commit();
+        logEvents(`Successfully rejected RRP ${rrpNumber} by user: ${rejected_by} with reason: ${rejection_reason}`, "rrpLog.log");
         res.status(200).json({ message: 'RRP rejected successfully' });
     } catch (error) {
         await connection.rollback();
-        console.error('Error rejecting RRP:', error);
+        const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+        logEvents(`Error rejecting RRP ${req.params.rrpNumber}: ${errorMessage} by user: ${req.body.rejected_by}`, "rrpLog.log");
         res.status(500).json({ 
             error: 'Internal Server Error',
             message: error instanceof Error ? error.message : 'An error occurred while rejecting RRP'
@@ -640,6 +629,8 @@ export const updateRRP = async (req: Request, res: Response): Promise<void> => {
     const connection = await pool.getConnection();
     try {
         await connection.beginTransaction();
+        logEvents(`Starting RRP update transaction for RRP: ${req.params.rrpNumber}`, "rrpLog.log");
+        
         const rrpNumber = req.params.rrpNumber;
         const updateData: RRPUpdateData = req.body;
 
@@ -657,12 +648,10 @@ export const updateRRP = async (req: Request, res: Response): Promise<void> => {
             }
         });
 
-        // Format dates for database
         const formattedRRPDate = formatDateForDB(updateData.date);
         const formattedInvoiceDate = formatDateForDB(updateData.invoice_date);
         const formattedCustomsDate = formatDateForDB(updateData.customs_date);
 
-        // Get existing items for this RRP
         const [existingItems] = await connection.query<RowDataPacket[]>(
             'SELECT id, receive_fk FROM rrp_details WHERE rrp_number = ?',
             [rrpNumber]
@@ -671,16 +660,13 @@ export const updateRRP = async (req: Request, res: Response): Promise<void> => {
         const existingItemIds = existingItems.map(item => item.id);
         const updatedItemIds = updateData.items.filter((item: RRPUpdateItem) => item.id).map((item: RRPUpdateItem) => item.id);
 
-        // Delete items that are no longer in the RRP
         const itemsToDelete = existingItemIds.filter(id => !updatedItemIds.includes(id));
         if (itemsToDelete.length > 0) {
-            // Get receive_fk for items being deleted
             const [itemsToDeleteDetails] = await connection.query<RowDataPacket[]>(
                 'SELECT receive_fk FROM rrp_details WHERE id IN (?)',
                 [itemsToDelete]
             );
 
-            // Reset rrp_fk in receive_details for deleted items using receive_fk
             const receiveFks = itemsToDeleteDetails.map(item => item.receive_fk);
             if (receiveFks.length > 0) {
                 await connection.query(
@@ -689,19 +675,17 @@ export const updateRRP = async (req: Request, res: Response): Promise<void> => {
                 );
             }
 
-            // Then delete the RRP items
             await connection.query(
                 'DELETE FROM rrp_details WHERE id IN (?)',
                 [itemsToDelete]
             );
+            logEvents(`Deleted ${itemsToDelete.length} items from RRP ${rrpNumber}`, "rrpLog.log");
         }
 
         let updateSuccess = false;
 
-        // Process each item
         for (const item of updateData.items) {
             if (item.id) {
-                // Update existing item
                 const updateFields = [
                     'rrp_number = ?',
                     'supplier_name = ?',
@@ -747,13 +731,12 @@ export const updateRRP = async (req: Request, res: Response): Promise<void> => {
                     updateData.customs_number || null
                 ];
 
-                // Only update approval_status if it's provided in the request
                 if (item.approval_status) {
                     updateFields.push('approval_status = ?');
                     updateValues.push(item.approval_status);
                 }
 
-                updateValues.push(item.id); // Add the ID for WHERE clause
+                updateValues.push(item.id);
 
                 const [result] = await connection.query(
                     `UPDATE rrp_details 
@@ -766,7 +749,6 @@ export const updateRRP = async (req: Request, res: Response): Promise<void> => {
                     updateSuccess = true;
                 }
             } else {
-                // Insert new item
                 const [result] = await connection.query(
                     `INSERT INTO rrp_details (
                         receive_fk, rrp_number, supplier_name, date, currency, forex_rate,
@@ -794,7 +776,7 @@ export const updateRRP = async (req: Request, res: Response): Promise<void> => {
                             inspection_user: updateData.inspection_user,
                             inspection_details: config.inspection_details || {}
                         }),
-                        item.approval_status || 'PENDING', // Use provided status or default to PENDING
+                        item.approval_status || 'PENDING',
                         updateData.created_by,
                         item.total_amount,
                         item.freight_charge,
@@ -805,7 +787,6 @@ export const updateRRP = async (req: Request, res: Response): Promise<void> => {
 
                 const rrpId = (result as any).insertId;
 
-                // Update receive_details with rrp_fk
                 await connection.query(
                     'UPDATE receive_details SET rrp_fk = ? WHERE id = ?',
                     [rrpId, item.receive_id]
@@ -817,6 +798,7 @@ export const updateRRP = async (req: Request, res: Response): Promise<void> => {
 
         if (!updateSuccess) {
             await connection.rollback();
+            logEvents(`Failed to update RRP - No matching items found: ${rrpNumber}`, "rrpLog.log");
             res.status(404).json({ 
                 error: 'Not Found',
                 message: 'No matching RRP items were found to update'
@@ -825,10 +807,12 @@ export const updateRRP = async (req: Request, res: Response): Promise<void> => {
         }
 
         await connection.commit();
+        logEvents(`Successfully updated RRP ${rrpNumber} with ${updateData.items.length} items`, "rrpLog.log");
         res.status(200).json({ message: 'RRP updated successfully' });
     } catch (error) {
         await connection.rollback();
-        console.error('Error updating RRP:', error);
+        const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+        logEvents(`Error updating RRP ${req.params.rrpNumber}: ${errorMessage}`, "rrpLog.log");
         res.status(500).json({ 
             error: 'Internal Server Error',
             message: error instanceof Error ? error.message : 'An error occurred while updating RRP'
@@ -849,8 +833,6 @@ const getRRPType = (rrpNumber: string): RRPType => {
 export const getRRPById = async (req: Request, res: Response): Promise<void> => {
     try {
         const id = req.params.id;
-
-        // First get the RRP number for the given ID
         const [rrpNumberResult] = await pool.query<RowDataPacket[]>(
             'SELECT rrp_number FROM rrp_details WHERE id = ?',
             [id]
@@ -926,7 +908,7 @@ export const getRRPById = async (req: Request, res: Response): Promise<void> => 
             [rrpNumber]
         );
 
-        // Format dates and parse JSON fields
+
         const formattedRows = rows.map(row => ({
             ...row,
             date: formatDate(row.date),
@@ -954,8 +936,8 @@ export const getRRPById = async (req: Request, res: Response): Promise<void> => 
 export const searchRRP = async (req: Request, res: Response): Promise<void> => {
     const { universal, equipmentNumber, partNumber } = req.query;
     
-    // Input validation
     if (!universal && !equipmentNumber && !partNumber) {
+        logEvents(`Failed to search RRP - No search parameters provided`, "rrpLog.log");
         res.status(400).json({ 
             error: 'Bad Request',
             message: 'At least one search parameter is required'
@@ -964,7 +946,6 @@ export const searchRRP = async (req: Request, res: Response): Promise<void> => {
     }
 
     try {
-        // Build the base query
         let query = `
             SELECT DISTINCT
                 rrp.id,
@@ -999,7 +980,6 @@ export const searchRRP = async (req: Request, res: Response): Promise<void> => {
         `;
         const params: (string | number)[] = [];
 
-        // Add search conditions with AND logic
         if (universal) {
             query += ` AND (
                 rrp.rrp_number LIKE ? OR
@@ -1020,12 +1000,10 @@ export const searchRRP = async (req: Request, res: Response): Promise<void> => {
             params.push(`%${partNumber}%`);
         }
 
-        // Add LIMIT to prevent overwhelming results
         query += ' ORDER BY rrp.date DESC LIMIT 50';
 
         const [results] = await pool.execute<RowDataPacket[]>(query, params);
         
-        // Group results by RRP number
         const groupedResults = results.reduce((acc, result) => {
             if (!acc[result.rrp_number]) {
                 acc[result.rrp_number] = {
@@ -1064,12 +1042,158 @@ export const searchRRP = async (req: Request, res: Response): Promise<void> => {
         }, {} as Record<string, any>);
 
         const response = Object.values(groupedResults);
+        logEvents(`Successfully searched RRPs with ${response.length} results`, "rrpLog.log");
         res.json(response);
     } catch (error) {
-        console.error('Error searching RRP:', error);
+        const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+        logEvents(`Error searching RRPs: ${errorMessage}`, "rrpLog.log");
         res.status(500).json({ 
             error: 'Internal Server Error',
             message: error instanceof Error ? error.message : 'An error occurred while searching RRP'
+        });
+    }
+};
+
+export const verifyRRPNumber = async (req: Request, res: Response): Promise<void> => {
+    try {
+        const { rrpNumber } = req.params;
+        const { date } = req.query;
+
+        if (!rrpNumber || !rrpNumber.match(/^[LF]\d{3}(T\d+)?$/)) {
+            logEvents(`Failed to verify RRP number - Invalid format: ${rrpNumber}`, "rrpLog.log");
+            res.status(400).json({
+                error: 'Bad Request',
+                message: 'Invalid RRP number format. Must be in format L001 or L001T1'
+            });
+            return;
+        }
+
+        if (!date) {
+            logEvents(`Failed to verify RRP number - Missing date parameter`, "rrpLog.log");
+            res.status(400).json({
+                error: 'Bad Request',
+                message: 'RRP date is required'
+            });
+            return;
+        }
+
+        if (rrpNumber.includes('T')) {
+            const [rejectedRecord] = await pool.query<RowDataPacket[]>(
+                `SELECT rrp_number, date 
+                 FROM rrp_details 
+                 WHERE rrp_number = ? AND approval_status = 'REJECTED'`,
+                [rrpNumber]
+            );
+
+            if (rejectedRecord.length === 0) {
+                logEvents(`Failed to verify RRP number - Not found or not rejected: ${rrpNumber}`, "rrpLog.log");
+                res.status(400).json({
+                    error: 'Bad Request',
+                    message: 'Invalid RRP Number'
+                });
+                return;
+            }
+
+            const baseNumber = rrpNumber.split('T')[0];
+            const currentTNumber = parseInt(rrpNumber.split('T')[1]);
+
+            const [previousRecord] = await pool.query<RowDataPacket[]>(
+                `SELECT rrp_number, date 
+                 FROM rrp_details 
+                 WHERE rrp_number LIKE ? 
+                 AND CAST(SUBSTRING_INDEX(rrp_number, 'T', -1) AS UNSIGNED) < ?
+                 ORDER BY CAST(SUBSTRING_INDEX(rrp_number, 'T', -1) AS UNSIGNED) DESC
+                 LIMIT 1`,
+                [`${baseNumber}T%`, currentTNumber]
+            );
+
+            const [nextRecord] = await pool.query<RowDataPacket[]>(
+                `SELECT rrp_number, date 
+                 FROM rrp_details 
+                 WHERE rrp_number LIKE ? 
+                 AND CAST(SUBSTRING_INDEX(rrp_number, 'T', -1) AS UNSIGNED) > ?
+                 ORDER BY CAST(SUBSTRING_INDEX(rrp_number, 'T', -1) AS UNSIGNED) ASC
+                 LIMIT 1`,
+                [`${baseNumber}T%`, currentTNumber]
+            );
+
+            const inputDate = new Date(date as string);
+            
+            if (previousRecord.length > 0) {
+                const previousDate = new Date(previousRecord[0].date);
+                if (inputDate < previousDate) {
+                    logEvents(`Failed to verify RRP number - Date before previous RRP: ${rrpNumber}`, "rrpLog.log");
+                    res.status(400).json({
+                        error: 'Bad Request',
+                        message: 'RRP date cannot be before the previous RRP date'
+                    });
+                    return;
+                }
+            }
+
+            if (nextRecord.length > 0) {
+                const nextDate = new Date(nextRecord[0].date);
+                if (inputDate > nextDate) {
+                    logEvents(`Failed to verify RRP number - Date after next RRP: ${rrpNumber}`, "rrpLog.log");
+                    res.status(400).json({
+                        error: 'Bad Request',
+                        message: 'RRP date cannot be greater than the next RRP date'
+                    });
+                    return;
+                }
+            }
+
+            logEvents(`Successfully verified RRP number: ${rrpNumber}`, "rrpLog.log");
+            res.status(200).json({
+                rrpNumber: rrpNumber
+            });
+        } else {
+            const [configRows] = await pool.query<RowDataPacket[]>(
+                'SELECT config_value FROM app_config WHERE config_type = ? AND config_name = ?',
+                ['rrp', 'current_fy']
+            );
+
+            if (configRows.length === 0) {
+                logEvents(`Failed to verify RRP number - Current FY configuration not found`, "rrpLog.log");
+                res.status(500).json({
+                    error: 'Internal Server Error',
+                    message: 'Current FY configuration not found'
+                });
+                return;
+            }
+
+            const currentFY = configRows[0].config_value;
+
+            const [rows] = await pool.query<RowDataPacket[]>(
+                `SELECT rrp_number, approval_status, current_fy
+                 FROM rrp_details 
+                 WHERE rrp_number LIKE ?
+                 ORDER BY CAST(SUBSTRING_INDEX(rrp_number, 'T', -1) AS UNSIGNED) DESC
+                 LIMIT 1`,
+                [`${rrpNumber}T%`]
+            );
+
+            if (rows.length > 0) {
+                const recordFY = rows[0].current_fy;
+                if (recordFY === currentFY) {
+                    logEvents(`Failed to verify RRP number - Duplicate in current FY: ${rrpNumber}`, "rrpLog.log");
+                    res.status(400).json({
+                        error: 'Bad Request',
+                        message: 'Duplicate RRP number in current fiscal year'
+                    });
+                    return;
+                }
+            }
+
+            logEvents(`Successfully verified RRP number: ${rrpNumber}`, "rrpLog.log");
+            res.status(200).json({});
+        }
+    } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+        logEvents(`Error verifying RRP number ${req.params.rrpNumber}: ${errorMessage}`, "rrpLog.log");
+        res.status(500).json({ 
+            error: 'Internal Server Error',
+            message: error instanceof Error ? error.message : 'An error occurred while verifying RRP number'
         });
     }
 };
@@ -1079,6 +1203,7 @@ export const getLatestRRPDetails = async (req: Request, res: Response): Promise<
         const { type } = req.params;
 
         if (!type || (type !== 'local' && type !== 'foreign')) {
+            logEvents(`Failed to fetch latest RRP details - Invalid type: ${type}`, "rrpLog.log");
             res.status(400).json({
                 error: 'Bad Request',
                 message: 'Invalid RRP type. Must be either "local" or "foreign"'
@@ -1104,160 +1229,14 @@ export const getLatestRRPDetails = async (req: Request, res: Response): Promise<
             rrpDate: rows[0].rrp_date
         } : {};
 
+        logEvents(`Successfully fetched latest ${type} RRP details: ${latestRRP.rrpNumber || 'None found'}`, "rrpLog.log");
         res.status(200).json(latestRRP);
     } catch (error) {
-        console.error('Error fetching latest RRP details:', error);
+        const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+        logEvents(`Error fetching latest RRP details for type ${req.params.type}: ${errorMessage}`, "rrpLog.log");
         res.status(500).json({ 
             error: 'Internal Server Error',
             message: error instanceof Error ? error.message : 'An error occurred while fetching latest RRP details'
-        });
-    }
-};
-
-export const verifyRRPNumber = async (req: Request, res: Response): Promise<void> => {
-    try {
-        const { rrpNumber } = req.params;
-        const { date } = req.query;
-
-        if (!rrpNumber || !rrpNumber.match(/^[LF]\d{3}(T\d+)?$/)) {
-            res.status(400).json({
-                error: 'Bad Request',
-                message: 'Invalid RRP number format. Must be in format L001 or L001T1'
-            });
-            return;
-        }
-
-        if (!date) {
-            res.status(400).json({
-                error: 'Bad Request',
-                message: 'RRP date is required'
-            });
-            return;
-        }
-
-        // If RRP number contains T
-        if (rrpNumber.includes('T')) {
-            // First check if there's a rejected record with this exact number
-            const [rejectedRecord] = await pool.query<RowDataPacket[]>(
-                `SELECT rrp_number, date 
-                 FROM rrp_details 
-                 WHERE rrp_number = ? AND approval_status = 'REJECTED'`,
-                [rrpNumber]
-            );
-
-            if (rejectedRecord.length === 0) {
-                res.status(400).json({
-                    error: 'Bad Request',
-                    message: 'Invalid RRP Number'
-                });
-                return;
-            }
-
-            // Get the base number (part before T)
-            const baseNumber = rrpNumber.split('T')[0];
-            const currentTNumber = parseInt(rrpNumber.split('T')[1]);
-
-            // Get the previous T record
-            const [previousRecord] = await pool.query<RowDataPacket[]>(
-                `SELECT rrp_number, date 
-                 FROM rrp_details 
-                 WHERE rrp_number LIKE ? 
-                 AND CAST(SUBSTRING_INDEX(rrp_number, 'T', -1) AS UNSIGNED) < ?
-                 ORDER BY CAST(SUBSTRING_INDEX(rrp_number, 'T', -1) AS UNSIGNED) DESC
-                 LIMIT 1`,
-                [`${baseNumber}T%`, currentTNumber]
-            );
-
-            // Get the next T record
-            const [nextRecord] = await pool.query<RowDataPacket[]>(
-                `SELECT rrp_number, date 
-                 FROM rrp_details 
-                 WHERE rrp_number LIKE ? 
-                 AND CAST(SUBSTRING_INDEX(rrp_number, 'T', -1) AS UNSIGNED) > ?
-                 ORDER BY CAST(SUBSTRING_INDEX(rrp_number, 'T', -1) AS UNSIGNED) ASC
-                 LIMIT 1`,
-                [`${baseNumber}T%`, currentTNumber]
-            );
-
-            // Convert dates to Date objects for comparison
-            const inputDate = new Date(date as string);
-            
-            // Check against previous record if it exists
-            if (previousRecord.length > 0) {
-                const previousDate = new Date(previousRecord[0].date);
-                if (inputDate < previousDate) {
-                    res.status(400).json({
-                        error: 'Bad Request',
-                        message: 'RRP date cannot be before the previous RRP date'
-                    });
-                    return;
-                }
-            }
-
-            // Check against next record if it exists
-            if (nextRecord.length > 0) {
-                const nextDate = new Date(nextRecord[0].date);
-                if (inputDate > nextDate) {
-                    res.status(400).json({
-                        error: 'Bad Request',
-                        message: 'RRP date cannot be greater than the next RRP date'
-                    });
-                    return;
-                }
-            }
-
-            // If all validations pass, return the RRP number
-            res.status(200).json({
-                rrpNumber: rrpNumber
-            });
-        } else {
-            // Get current FY from RRP config
-            const [configRows] = await pool.query<RowDataPacket[]>(
-                'SELECT config_value FROM app_config WHERE config_type = ? AND config_name = ?',
-                ['rrp', 'current_fy']
-            );
-
-            if (configRows.length === 0) {
-                res.status(500).json({
-                    error: 'Internal Server Error',
-                    message: 'Current FY configuration not found'
-                });
-                return;
-            }
-
-            const currentFY = configRows[0].config_value;
-
-            // Get the latest record with this base RRP number
-            const [rows] = await pool.query<RowDataPacket[]>(
-                `SELECT rrp_number, approval_status, current_fy
-                 FROM rrp_details 
-                 WHERE rrp_number LIKE ?
-                 ORDER BY CAST(SUBSTRING_INDEX(rrp_number, 'T', -1) AS UNSIGNED) DESC
-                 LIMIT 1`,
-                [`${rrpNumber}T%`]
-            );
-
-            if (rows.length > 0) {
-
-                const recordFY = rows[0].current_fy;
-                // Check if the record's FY matches current FY
-                if (recordFY === currentFY) {
-                    res.status(400).json({
-                        error: 'Bad Request',
-                        message: 'Duplicate RRP number in current fiscal year'
-                    });
-                    return;
-                }
-            }
-
-            // If no records found or FY doesn't match, return empty
-            res.status(200).json({});
-        }
-    } catch (error) {
-        console.error('Error verifying RRP number:', error);
-        res.status(500).json({ 
-            error: 'Internal Server Error',
-            message: error instanceof Error ? error.message : 'An error occurred while verifying RRP number'
         });
     }
 }; 

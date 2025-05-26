@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import pool from '../config/db';
 import { RowDataPacket } from 'mysql2';
+import { logEvents } from '../middlewares/logger';
 
 interface SearchResult extends RowDataPacket {
   id: number;
@@ -42,6 +43,7 @@ export const getItemDetails = async (req: Request, res: Response): Promise<void>
   const { id } = req.params;
 
   if (!id) {
+    logEvents(`Failed to fetch item details - Missing ID parameter`, "searchLog.log");
     res.status(400).json({
       error: 'Bad Request',
       message: 'Item ID is required'
@@ -50,6 +52,7 @@ export const getItemDetails = async (req: Request, res: Response): Promise<void>
   }
 
   try {
+    logEvents(`Fetching item details for ID: ${id}`, "searchLog.log");
     const query = `
       WITH stock_info AS (
         SELECT 
@@ -122,6 +125,7 @@ export const getItemDetails = async (req: Request, res: Response): Promise<void>
     const [results] = await pool.execute<ItemDetails[]>(query, [id]);
 
     if (results.length === 0) {
+      logEvents(`Item not found for ID: ${id}`, "searchLog.log");
       res.status(404).json({
         error: 'Not Found',
         message: 'Item not found'
@@ -129,15 +133,17 @@ export const getItemDetails = async (req: Request, res: Response): Promise<void>
       return;
     }
 
+    logEvents(`Successfully fetched item details for ID: ${id}`, "searchLog.log");
     res.json(results[0]);
   } catch (error) {
     const searchError = error as SearchError;
-    console.error('Error fetching item details:', searchError);
+    const errorMessage = searchError.message || 'Unknown error occurred';
+    logEvents(`Error fetching item details for ID ${id}: ${errorMessage}`, "searchLog.log");
 
     res.status(500).json({
       error: 'Internal Server Error',
       message: 'An error occurred while fetching item details',
-      details: searchError.message
+      details: errorMessage
     });
   }
 };
@@ -147,6 +153,7 @@ export const searchStockDetails = async (req: Request, res: Response): Promise<v
 
   // Input validation
   if (!universal && !equipmentNumber && !partNumber) {
+    logEvents(`Failed to search stock details - No search parameters provided`, "searchLog.log");
     res.status(400).json({ 
       error: 'Bad Request',
       message: 'At least one search parameter is required'
@@ -155,6 +162,8 @@ export const searchStockDetails = async (req: Request, res: Response): Promise<v
   }
 
   try {
+    logEvents(`Starting stock search with parameters: universal=${universal}, equipmentNumber=${equipmentNumber}, partNumber=${partNumber}`, "searchLog.log");
+    
     // Build the base query
     let query = `
       SELECT 
@@ -179,6 +188,7 @@ export const searchStockDetails = async (req: Request, res: Response): Promise<v
           MATCH(nac_code, item_name, part_numbers, applicable_equipments) AGAINST(? IN BOOLEAN MODE)
         )`;
         params.push(`${universal}*`);
+        logEvents(`Using FULLTEXT search for universal parameter: ${universal}`, "searchLog.log");
       } catch (error) {
         const searchError = error as SearchError;
         if (searchError.code === 'ER_FT_MATCHING_KEY_NOT_FOUND') {
@@ -190,6 +200,7 @@ export const searchStockDetails = async (req: Request, res: Response): Promise<v
             applicable_equipments LIKE ?
           )`;
           params.push(`%${universal}%`, `%${universal}%`, `%${universal}%`, `%${universal}%`);
+          logEvents(`Falling back to LIKE search for universal parameter: ${universal}`, "searchLog.log");
         } else {
           throw error;
         }
@@ -210,13 +221,22 @@ export const searchStockDetails = async (req: Request, res: Response): Promise<v
     query += ' LIMIT 50';
 
     const [results] = await pool.execute<SearchResult[]>(query, params);
-    res.json(results.length === 0 ? null : results);
+    
+    if (results.length === 0) {
+      logEvents(`No results found for search parameters`, "searchLog.log");
+      res.json(null);
+    } else {
+      logEvents(`Successfully found ${results.length} results for search parameters`, "searchLog.log");
+      res.json(results);
+    }
   } catch (error) {
     const searchError = error as SearchError;
-    console.error('Search error:', searchError);
+    const errorMessage = searchError.message || 'Unknown error occurred';
+    logEvents(`Search error: ${errorMessage}`, "searchLog.log");
 
     // Handle specific MySQL errors
     if (searchError.code === 'ER_FT_MATCHING_KEY_NOT_FOUND') {
+      logEvents(`Full-text search configuration error`, "searchLog.log");
       res.status(400).json({
         error: 'Search Configuration Error',
         message: 'Full-text search is not properly configured',
@@ -228,6 +248,7 @@ export const searchStockDetails = async (req: Request, res: Response): Promise<v
 
     // Handle other database errors
     if (searchError.code?.startsWith('ER_')) {
+      logEvents(`Database error during search: ${searchError.sqlMessage}`, "searchLog.log");
       res.status(500).json({
         error: 'Database Error',
         message: 'An error occurred while searching',
@@ -237,10 +258,11 @@ export const searchStockDetails = async (req: Request, res: Response): Promise<v
     }
 
     // Handle general errors
+    logEvents(`Unexpected error during search: ${errorMessage}`, "searchLog.log");
     res.status(500).json({
       error: 'Internal Server Error',
       message: 'An unexpected error occurred',
-      details: searchError.message
+      details: errorMessage
     });
   }
 }; 

@@ -3,6 +3,7 @@ import { RowDataPacket } from 'mysql2';
 import pool from '../config/db';
 import { CreateRequestDTO, RequestDetail } from '../types/request';
 import { formatDate, formatDateForDB } from '../utils/dateUtils';
+import { logEvents } from '../middlewares/logger';
 
 interface StockDetail extends RowDataPacket {
     current_balance: number;
@@ -89,70 +90,86 @@ interface SearchRequestResult extends RowDataPacket {
     approval_status: string;
 }
 
-// Function to get stock details
 const getStockDetails = async (nacCode: string): Promise<StockDetail | null> => {
-    const [rows] = await pool.query<StockDetail[]>(
-        'SELECT current_balance, unit FROM stock_details WHERE nac_code = ?',
-        [nacCode]
-    );
-    return rows[0] || null;
-};
-
-// Function to get previous rate
-const getPreviousRate = async (nacCode: string): Promise<string | number> => {
-    const [rows] = await pool.query<ReceiveDetail[]>(
-        `SELECT rd.received_quantity, rrp.total_amount
-         FROM rrp_details rrp
-         JOIN receive_details rd ON rrp.receive_fk = rd.id
-         WHERE rd.nac_code = ?
-         AND rd.rrp_fk is NOT NULL
-         ORDER BY rd.receive_date DESC 
-         LIMIT 1`,
-        [nacCode]
-    );
-    if (rows[0]) {
-        return Number((Number(rows[0].total_amount) / Number(rows[0].received_quantity)).toFixed(2));
+    try {
+        const [rows] = await pool.query<StockDetail[]>(
+            'SELECT current_balance, unit FROM stock_details WHERE nac_code = ?',
+            [nacCode]
+        );
+        return rows[0] || null;
+    } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+        logEvents(`Error fetching stock details for NAC code ${nacCode}: ${errorMessage}`, "requestLog.log");
+        throw error;
     }
-    return 'N/A';
 };
 
-// Function to process request item
+const getPreviousRate = async (nacCode: string): Promise<string | number> => {
+    try {
+        const [rows] = await pool.query<ReceiveDetail[]>(
+            `SELECT rd.received_quantity, rrp.total_amount
+             FROM rrp_details rrp
+             JOIN receive_details rd ON rrp.receive_fk = rd.id
+             WHERE rd.nac_code = ?
+             AND rd.rrp_fk is NOT NULL
+             ORDER BY rd.receive_date DESC 
+             LIMIT 1`,
+            [nacCode]
+        );
+        if (rows[0]) {
+            return Number((Number(rows[0].total_amount) / Number(rows[0].received_quantity)).toFixed(2));
+        }
+        return 'N/A';
+    } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+        logEvents(`Error fetching previous rate for NAC code ${nacCode}: ${errorMessage}`, "requestLog.log");
+        throw error;
+    }
+};
+
+
 const processRequestItem = async (
     item: CreateRequestDTO['items'][0],
     requestData: CreateRequestDTO
 ): Promise<RequestDetail> => {
-    let currentBalance: number | string = 'N/A';
-    let unit = item.unit || 'N/A';
+    try {
+        let currentBalance: number | string = 'N/A';
+        let unit = item.unit || 'N/A';
 
-    if (item.nacCode !== 'N/A') {
-        const stockDetail = await getStockDetails(item.nacCode);
-        if (stockDetail) {
-            currentBalance = stockDetail.current_balance;
-            unit = stockDetail.unit;
+        if (item.nacCode !== 'N/A') {
+            const stockDetail = await getStockDetails(item.nacCode);
+            if (stockDetail) {
+                currentBalance = stockDetail.current_balance;
+                unit = stockDetail.unit;
+            }
+        } else {
+            currentBalance = 0;
         }
-    }else{
-        currentBalance = 0;
+
+        const previousRate = await getPreviousRate(item.nacCode);
+
+        return {
+            request_number: requestData.requestNumber,
+            request_date: new Date(requestData.requestDate),
+            part_number: item.partNumber,
+            item_name: item.itemName,
+            unit,
+            requested_quantity: item.requestQuantity,
+            current_balance: currentBalance,
+            previous_rate: previousRate,
+            equipment_number: item.equipmentNumber,
+            image_path: item.imagePath,
+            specifications: item.specifications,
+            remarks: requestData.remarks,
+            requested_by: requestData.requestedBy,
+            approval_status: 'PENDING',
+            nac_code: item.nacCode
+        };
+    } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+        logEvents(`Error processing request item for ${item.itemName}: ${errorMessage}`, "requestLog.log");
+        throw error;
     }
-
-    const previousRate = await getPreviousRate(item.nacCode);
-
-    return {
-        request_number: requestData.requestNumber,
-        request_date: new Date(requestData.requestDate),
-        part_number: item.partNumber,
-        item_name: item.itemName,
-        unit,
-        requested_quantity: item.requestQuantity,
-        current_balance: currentBalance,
-        previous_rate: previousRate,
-        equipment_number: item.equipmentNumber,
-        image_path: item.imagePath,
-        specifications: item.specifications,
-        remarks: requestData.remarks,
-        requested_by: requestData.requestedBy,
-        approval_status: 'PENDING',
-        nac_code: item.nacCode
-    };
 };
 
 export const createRequest = async (req: Request, res: Response): Promise<void> => {
@@ -163,7 +180,7 @@ export const createRequest = async (req: Request, res: Response): Promise<void> 
         
         const requestData: CreateRequestDTO = req.body;
         
-        // Process each item
+       
         const requestDetails = await Promise.all(
             requestData.items.map(item => processRequestItem(item, requestData))
         );
@@ -196,6 +213,7 @@ export const createRequest = async (req: Request, res: Response): Promise<void> 
         }
 
         await connection.commit();
+        logEvents(`Successfully created request ${requestData.requestNumber} with ${requestDetails.length} items by user: ${requestData.requestedBy}`, "requestLog.log");
         
         res.status(201).json({ 
             message: 'Request created successfully',
@@ -204,7 +222,8 @@ export const createRequest = async (req: Request, res: Response): Promise<void> 
         });
     } catch (error) {
         await connection.rollback();
-        console.error('Error creating request:', error);
+        const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+        logEvents(`Error creating request: ${errorMessage} by user: ${req.body.requestedBy}`, "requestLog.log");
         res.status(500).json({ 
             error: 'Internal Server Error',
             message: error instanceof Error ? error.message : 'An error occurred while creating the request'
@@ -223,15 +242,17 @@ export const getPendingRequests = async (req: Request, res: Response): Promise<v
         );
 
         const pendingRequests = rows.map(row => ({
-            requestId:row.id,
+            requestId: row.id,
             requestNumber: row.request_number,
             requestDate: row.request_date,
             requestedBy: row.requested_by
         }));
         
+        logEvents(`Successfully fetched ${pendingRequests.length} pending requests`, "requestLog.log");
         res.status(200).json(pendingRequests);
     } catch (error) {
-        console.error('Error fetching pending requests:', error);
+        const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+        logEvents(`Error fetching pending requests: ${errorMessage}`, "requestLog.log");
         res.status(500).json({ 
             error: 'Internal Server Error',
             message: error instanceof Error ? error.message : 'An error occurred while fetching pending requests'
@@ -263,9 +284,11 @@ export const getRequestItems = async (req: Request, res: Response): Promise<void
             remarks: row.remarks
         }));
         
+        logEvents(`Successfully fetched ${requestItems.length} items for request ${requestNumber}`, "requestLog.log");
         res.status(200).json(requestItems);
     } catch (error) {
-        console.error('Error fetching request items:', error);
+        const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+        logEvents(`Error fetching request items for ${req.params.requestNumber}: ${errorMessage}`, "requestLog.log");
         res.status(500).json({ 
             error: 'Internal Server Error',
             message: error instanceof Error ? error.message : 'An error occurred while fetching request items'
@@ -281,7 +304,7 @@ export const updateRequest = async (req: Request, res: Response): Promise<void> 
         const { requestNumber: oldRequestNumber } = req.params;
         await connection.beginTransaction();
 
-        // Get existing items for this request
+
         const [existingItems] = await connection.query<RowDataPacket[]>(
             'SELECT id FROM request_details WHERE request_number = ?',
             [oldRequestNumber]
@@ -290,19 +313,18 @@ export const updateRequest = async (req: Request, res: Response): Promise<void> 
         const existingItemIds = existingItems.map(item => item.id);
         const updatedItemIds = items.filter(item => item.id).map(item => item.id);
 
-        // Delete items that are no longer in the request
         const itemsToDelete = existingItemIds.filter(id => !updatedItemIds.includes(id));
         if (itemsToDelete.length > 0) {
             await connection.query(
                 'DELETE FROM request_details WHERE id IN (?)',
                 [itemsToDelete]
             );
+            logEvents(`Deleted ${itemsToDelete.length} items from request ${oldRequestNumber}`, "requestLog.log");
         }
 
-        // Update or insert items
         for (const item of items) {
             if (item.id) {
-                // Update existing item
+
                 const updateFields = [
                     'request_number = ?',
                     'request_date = ?',
@@ -326,7 +348,6 @@ export const updateRequest = async (req: Request, res: Response): Promise<void> 
                     remarks
                 ];
 
-                // Add approval_status to update if provided
                 if (item.approvalStatus) {
                     updateFields.push('approval_status = ?');
                     updateValues.push(item.approvalStatus);
@@ -339,7 +360,7 @@ export const updateRequest = async (req: Request, res: Response): Promise<void> 
                     [...updateValues, item.id]
                 );
             } else {
-                // Insert new item
+
                 const insertFields = [
                     'request_number',
                     'request_date',
@@ -375,6 +396,7 @@ export const updateRequest = async (req: Request, res: Response): Promise<void> 
         }
 
         await connection.commit();
+        logEvents(`Successfully updated request ${oldRequestNumber} to ${newRequestNumber} with ${items.length} items`, "requestLog.log");
         
         res.status(200).json({ 
             message: 'Request updated successfully',
@@ -382,7 +404,8 @@ export const updateRequest = async (req: Request, res: Response): Promise<void> 
         });
     } catch (error) {
         await connection.rollback();
-        console.error('Error updating request:', error);
+        const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+        logEvents(`Error updating request ${req.params.requestNumber}: ${errorMessage}`, "requestLog.log");
         res.status(500).json({ 
             error: 'Internal Server Error',
             message: error instanceof Error ? error.message : 'An error occurred while updating the request'
@@ -401,7 +424,6 @@ export const approveRequest = async (req: Request, res: Response): Promise<void>
 
         await connection.beginTransaction();
 
-        // Update all items for this request
         await connection.query(
             `UPDATE request_details 
              SET approval_status = 'APPROVED',
@@ -411,6 +433,7 @@ export const approveRequest = async (req: Request, res: Response): Promise<void>
         );
 
         await connection.commit();
+        logEvents(`Successfully approved request ${requestNumber} by user: ${approvedBy}`, "requestLog.log");
         
         res.status(200).json({ 
             message: 'Request approved successfully',
@@ -418,7 +441,8 @@ export const approveRequest = async (req: Request, res: Response): Promise<void>
         });
     } catch (error) {
         await connection.rollback();
-        console.error('Error approving request:', error);
+        const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+        logEvents(`Error approving request ${req.params.requestNumber}: ${errorMessage} by user: ${req.body.approvedBy}`, "requestLog.log");
         res.status(500).json({ 
             error: 'Internal Server Error',
             message: error instanceof Error ? error.message : 'An error occurred while approving the request'
@@ -437,7 +461,6 @@ export const rejectRequest = async (req: Request, res: Response): Promise<void> 
 
         await connection.beginTransaction();
 
-        // Get the first item's ID and the requested_by username
         const [requestDetails] = await connection.query<RowDataPacket[]>(
             `SELECT id, requested_by 
              FROM request_details 
@@ -448,6 +471,7 @@ export const rejectRequest = async (req: Request, res: Response): Promise<void> 
         );
 
         if (requestDetails.length === 0) {
+            logEvents(`Failed to reject request - Request not found: ${requestNumber}`, "requestLog.log");
             res.status(404).json({
                 error: 'Not Found',
                 message: 'Request not found'
@@ -458,13 +482,13 @@ export const rejectRequest = async (req: Request, res: Response): Promise<void> 
         const firstItemId = requestDetails[0].id;
         const requestedBy = requestDetails[0].requested_by;
 
-        // Get the user ID from the username
         const [users] = await connection.query<RowDataPacket[]>(
             'SELECT id FROM users WHERE username = ?',
             [requestedBy]
         );
 
         if (users.length === 0) {
+            logEvents(`Failed to reject request - User not found: ${requestedBy}`, "requestLog.log");
             res.status(404).json({
                 error: 'Not Found',
                 message: 'User not found'
@@ -474,7 +498,6 @@ export const rejectRequest = async (req: Request, res: Response): Promise<void> 
 
         const userId = users[0].id;
 
-        // Update all items for this request
         await connection.query(
             `UPDATE request_details 
              SET approval_status = 'REJECTED',
@@ -484,7 +507,6 @@ export const rejectRequest = async (req: Request, res: Response): Promise<void> 
             [rejectedBy, rejectionReason, requestNumber]
         );
 
-        // Create notification
         await connection.query(
             `INSERT INTO notifications 
              (user_id, reference_type, message, reference_id)
@@ -498,6 +520,7 @@ export const rejectRequest = async (req: Request, res: Response): Promise<void> 
         );
 
         await connection.commit();
+        logEvents(`Successfully rejected request ${requestNumber} by user: ${rejectedBy}`, "requestLog.log");
         
         res.status(200).json({ 
             message: 'Request rejected successfully',
@@ -505,7 +528,8 @@ export const rejectRequest = async (req: Request, res: Response): Promise<void> 
         });
     } catch (error) {
         await connection.rollback();
-        console.error('Error rejecting request:', error);
+        const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+        logEvents(`Error rejecting request ${req.params.requestNumber}: ${errorMessage} by user: ${req.body.rejectedBy}`, "requestLog.log");
         res.status(500).json({ 
             error: 'Internal Server Error',
             message: error instanceof Error ? error.message : 'An error occurred while rejecting the request'
@@ -521,13 +545,13 @@ export const getRequestById = async (req: Request, res: Response): Promise<void>
     try {
         const { id } = req.params;
 
-        // First get the request number for this ID
         const [requestRows] = await connection.query<RowDataPacket[]>(
             'SELECT request_number FROM request_details WHERE id = ?',
             [id]
         );
 
         if (requestRows.length === 0) {
+            logEvents(`Failed to fetch request - Request not found: ${id}`, "requestLog.log");
             res.status(404).json({
                 error: 'Not Found',
                 message: 'Request not found'
@@ -537,7 +561,6 @@ export const getRequestById = async (req: Request, res: Response): Promise<void>
 
         const requestNumber = requestRows[0].request_number;
 
-        // Then get all items for this request number
         const [items] = await connection.query<RequestWithItems[]>(
             `SELECT id, request_number, request_date, part_number, item_name, unit,
                     requested_quantity, current_balance, previous_rate, equipment_number,
@@ -549,6 +572,7 @@ export const getRequestById = async (req: Request, res: Response): Promise<void>
         );
 
         if (items.length === 0) {
+            logEvents(`Failed to fetch request items - No items found for request: ${requestNumber}`, "requestLog.log");
             res.status(404).json({
                 error: 'Not Found',
                 message: 'Request items not found'
@@ -577,9 +601,11 @@ export const getRequestById = async (req: Request, res: Response): Promise<void>
             }))
         };
         
+        logEvents(`Successfully fetched request ${requestNumber} with ${items.length} items`, "requestLog.log");
         res.status(200).json(requestDetails);
     } catch (error) {
-        console.error('Error fetching request:', error);
+        const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+        logEvents(`Error fetching request ${req.params.id}: ${errorMessage}`, "requestLog.log");
         res.status(500).json({ 
             error: 'Internal Server Error',
             message: error instanceof Error ? error.message : 'An error occurred while fetching the request'
@@ -591,16 +617,17 @@ export const getRequestById = async (req: Request, res: Response): Promise<void>
 
 export const searchRequests = async (req: Request, res: Response): Promise<void> => {
     const { universal, equipmentNumber, partNumber } = req.query;
-    // Input validation
+    
     if (!universal && !equipmentNumber && !partNumber) {
+        logEvents(`Failed to search requests - No search parameters provided`, "requestLog.log");
         res.status(400).json({ 
             error: 'Bad Request',
             message: 'At least one search parameter is required'
         });
         return;
     }
+
     try {
-        // Build the base query
         let query = `
             SELECT DISTINCT
                 rd.id,
@@ -618,7 +645,6 @@ export const searchRequests = async (req: Request, res: Response): Promise<void>
         `;
         const params: (string | number)[] = [];
 
-        // Add search conditions with AND logic
         if (universal) {
             query += ` AND (
                 rd.request_number LIKE ? OR
@@ -640,12 +666,10 @@ export const searchRequests = async (req: Request, res: Response): Promise<void>
             params.push(`%${partNumber}%`);
         }
 
-        // Add LIMIT to prevent overwhelming results
         query += ' ORDER BY rd.request_date DESC LIMIT 50';
 
         const [results] = await pool.execute<SearchRequestResult[]>(query, params);
         
-        // Group results by request number
         const groupedResults = results.reduce((acc, result) => {
             if (!acc[result.request_number]) {
                 acc[result.request_number] = {
@@ -668,9 +692,11 @@ export const searchRequests = async (req: Request, res: Response): Promise<void>
         }, {} as Record<string, any>);
 
         const response = Object.values(groupedResults);
+        logEvents(`Successfully searched requests with ${response.length} results`, "requestLog.log");
         res.json(response);
     } catch (error) {
-        console.error('Error searching requests:', error);
+        const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+        logEvents(`Error searching requests: ${errorMessage}`, "requestLog.log");
         res.status(500).json({ 
             error: 'Internal Server Error',
             message: error instanceof Error ? error.message : 'An error occurred while searching requests'
@@ -692,6 +718,7 @@ export const getLastRequestInfo = async (req: Request, res: Response): Promise<v
         );
 
         if (rows.length === 0) {
+            logEvents(`Failed to fetch last request info - No requests found`, "requestLog.log");
             res.status(404).json({
                 error: 'Not Found',
                 message: 'No requests found'
@@ -705,9 +732,11 @@ export const getLastRequestInfo = async (req: Request, res: Response): Promise<v
             numberOfItems: rows[0].number_of_items
         };
 
+        logEvents(`Successfully fetched last request info: ${lastRequest.requestNumber}`, "requestLog.log");
         res.status(200).json(lastRequest);
     } catch (error) {
-        console.error('Error fetching last request info:', error);
+        const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+        logEvents(`Error fetching last request info: ${errorMessage}`, "requestLog.log");
         res.status(500).json({ 
             error: 'Internal Server Error',
             message: error instanceof Error ? error.message : 'An error occurred while fetching last request info'

@@ -1,16 +1,18 @@
 import express from 'express';
-import { createIssue, approveIssue, rejectIssue } from '../controllers/issueController';
-import verifyJWT from '../middlewares/verifyJWT';
+import { createIssue, approveIssue, rejectIssue, getPendingIssues, updateIssueItem,deleteIssueItem } from '../controllers/issueController';
 
 const router = express.Router();
 
-// Create new issue
-router.post('/create', verifyJWT, createIssue);
 
-// Approve issue
-router.post('/:issueId/approve', verifyJWT, approveIssue);
 
-// Reject issue
-router.post('/:issueId/reject', verifyJWT, rejectIssue);
+
+router.get('/pending',getPendingIssues )
+router.put('/item/:id',updateIssueItem )
+router.post('/create', createIssue);
+
+router.put('/approve', approveIssue);
+
+router.put('/reject', rejectIssue);
+router.delete('/item/:id', deleteIssueItem)
 
 export default router; 

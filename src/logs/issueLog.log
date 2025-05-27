@@ -1,0 +1,121 @@
+20250527	10:35:58	4efbd62d-461a-499d-84fe-28a3165f043b	Error retrieving pending issues: Illegal mix of collations (utf8mb4_0900_ai_ci,IMPLICIT) and (utf8mb4_unicode_ci,IMPLICIT) for operation '='
+20250527	10:35:58	149734a9-0c48-412a-b2ff-0e5c57f703ba	Error retrieving pending issues: Illegal mix of collations (utf8mb4_0900_ai_ci,IMPLICIT) and (utf8mb4_unicode_ci,IMPLICIT) for operation '='
+20250527	10:37:17	cbe897a0-e7b6-45de-b9e8-a2988cc4dde3	Error retrieving pending issues: Illegal mix of collations (utf8mb4_0900_ai_ci,IMPLICIT) and (utf8mb4_unicode_ci,IMPLICIT) for operation '='
+20250527	10:37:17	779528ab-467d-4821-bf9d-95b8271313e0	Error retrieving pending issues: Illegal mix of collations (utf8mb4_0900_ai_ci,IMPLICIT) and (utf8mb4_unicode_ci,IMPLICIT) for operation '='
+20250527	10:42:15	caac9226-ae1d-4548-ad1d-60a3caead61d	Item issued successfully - NAC: GT 04552, Quantity: 10 by user: Saman Tripathee
+20250527	10:42:15	6bb8dd74-1d0b-42c4-a581-5d798e16aaef	Item issued successfully - NAC: GT 04552, Quantity: 10 by user: Saman Tripathee
+20250527	10:42:15	7f7356b1-bc0a-48a4-b797-b29a0a3f99d1	Item issued successfully - NAC: GT 19080, Quantity: 100 by user: Saman Tripathee
+20250527	10:42:15	37b9dba4-0c6d-4535-8541-a7997c426108	Issue created successfully for date: 2025/05/26 by user: Saman Tripathee
+20250527	10:42:18	66d7a988-fdbb-43f4-ba0a-31ad61a8e896	Error retrieving pending issues: Illegal mix of collations (utf8mb4_0900_ai_ci,IMPLICIT) and (utf8mb4_unicode_ci,IMPLICIT) for operation '='
+20250527	10:42:18	3b1607c0-f0ac-40f4-bdbb-ce34ff3c5089	Error retrieving pending issues: Illegal mix of collations (utf8mb4_0900_ai_ci,IMPLICIT) and (utf8mb4_unicode_ci,IMPLICIT) for operation '='
+20250527	10:45:55	21a303af-eafc-4018-b163-a8e4c2719da7	Successfully retrieved 3 pending issues
+20250527	10:45:55	2e19d924-1ece-4942-99ad-bdcac08e7a82	Successfully retrieved 3 pending issues
+20250527	10:46:22	157fc5a6-8e21-4637-bbe5-d9385be878dc	Successfully retrieved 3 pending issues
+20250527	10:46:22	3000efff-b402-4b39-a6c6-2a26a5575a57	Successfully retrieved 3 pending issues
+20250527	10:57:17	e9726030-5b99-45aa-9e80-06d521cd0fc1	Successfully retrieved 3 pending issues
+20250527	10:57:17	0c955389-7757-489a-93e5-f0a30f9e0002	Successfully retrieved 3 pending issues
+20250527	10:58:49	330e345e-696b-4f57-a249-2df7d3af4d5b	Successfully retrieved 3 pending issues
+20250527	10:58:49	bd23e48f-42b4-45c6-9371-d3ef64a8ee6a	Successfully retrieved 3 pending issues
+20250527	11:11:58	cbb11a51-9c95-46ae-a688-9912785176e5	Successfully retrieved 3 pending issues
+20250527	11:11:58	f198bb99-be57-4f8a-9c36-43211aee6b42	Successfully retrieved 3 pending issues
+20250527	11:14:40	1219f21b-eb1f-401e-b88c-8a878b72a29f	Successfully retrieved 3 pending issues
+20250527	11:14:40	ca0b6905-37ec-4fd9-ad0c-9fcd124026f7	Successfully retrieved 3 pending issues
+20250527	11:15:18	c0148b03-eaed-4b17-b476-fd7885bb3a19	Successfully retrieved 3 pending issues
+20250527	11:15:18	a7086e12-f9ae-4134-ab72-1df17902802f	Successfully retrieved 3 pending issues
+20250527	11:15:44	c5876343-15de-4587-ba03-e345a5c9ab1f	Successfully retrieved 3 pending issues
+20250527	11:15:44	c8a8e734-1ea6-4869-874e-33b57d8f261d	Successfully retrieved 3 pending issues
+20250527	11:17:08	8807210e-2763-4292-a670-577f6507c4ea	Successfully retrieved 3 pending issues
+20250527	11:17:08	e64d19e4-d576-4cff-8b46-3ece59b06301	Successfully retrieved 3 pending issues
+20250527	11:18:32	d2e232a1-d8a9-41c2-94f2-c5547e350588	Successfully retrieved 3 pending issues
+20250527	11:18:32	b5258e1d-ed13-4225-ba57-2c47768abd0d	Successfully retrieved 3 pending issues
+20250527	11:18:53	13889456-37c7-439b-8405-099c2b83bfbd	Successfully retrieved 3 pending issues
+20250527	11:18:53	088b55f7-9b9b-4d48-b1a8-38ac6a890703	Successfully retrieved 3 pending issues
+20250527	11:20:25	612f6dd9-2ff2-48e7-8daf-9dc372e81765	Successfully retrieved 3 pending issues
+20250527	11:20:25	2660bda6-762c-49cb-8092-cf79c327fdff	Successfully retrieved 3 pending issues
+20250527	11:21:21	88627914-6aba-43f6-b2ea-bdc8772c22c0	Successfully retrieved 3 pending issues
+20250527	11:21:21	2eb644c0-1895-4760-9267-e71abd2a4adc	Successfully retrieved 3 pending issues
+20250527	11:29:01	fb050cf3-89f7-4ecf-91c4-52412ca6a977	Successfully retrieved 3 pending issues
+20250527	11:29:01	6f9731d3-59d7-4366-abce-e3f34e8e13cc	Successfully retrieved 3 pending issues
+20250527	11:32:45	788dc396-56a8-4ec3-a908-66fe76c4af3b	Successfully retrieved 3 pending issues
+20250527	11:32:45	3cadc04e-825e-494e-b839-014ec71982ee	Successfully retrieved 3 pending issues
+20250527	11:36:23	e354d1e5-beb4-43e6-bd29-afd270bfd581	Successfully retrieved 3 pending issues
+20250527	11:59:18	c24e6835-4e71-49a1-b55b-8f99c77303f9	Successfully updated issue item ID: 13 with new quantity: 15
+20250527	11:59:43	5cbf93b4-7172-415a-a3f4-26e9581d8a48	Successfully retrieved 3 pending issues
+20250527	11:59:43	16a13cdc-b08c-4d9c-8177-c232f98113d5	Successfully retrieved 3 pending issues
+20250527	12:01:11	990be418-5cdb-4ee7-98d5-8c8e6e3f657a	Successfully updated issue item ID: 13 with new quantity: 20
+20250527	12:02:16	29d0ace2-750a-47c5-9424-03a753744fcc	Successfully deleted issue item ID: 13
+20250527	12:17:43	7660a1d1-cfdd-4fa4-85a1-52fcd203c6f3	Failed to reject issues - No issues found with IDs: 14, 15
+20250527	12:17:43	534764d5-e13a-41f3-8689-c65b47f4ca14	Error rejecting issues: Issue records not found for IDs: 14, 15
+20250527	12:18:57	e977a85c-48f1-4ab0-a739-53a37f199a7f	Successfully rejected issues with IDs: 14, 15 by user: superadmin@god.com
+20250527	12:18:57	8d7fb3eb-f6d9-4a32-95b1-842f265f1fcd	Successfully retrieved 0 pending issues
+20250527	12:19:06	5bd25a88-a227-46be-bfce-5b7565a035cf	Successfully retrieved 0 pending issues
+20250527	12:19:06	011b6500-7c38-4288-8e45-b03970811656	Successfully retrieved 0 pending issues
+20250527	12:20:37	6dd603f6-361b-4f26-be65-94ac256e3f90	Item issued successfully - NAC: GT 22336, Quantity: 1 by user: Saman Tripathee
+20250527	12:20:37	d009562c-48fc-43e2-9d67-6a799f9e2375	Issue created successfully for date: 2025/05/20 by user: Saman Tripathee
+20250527	12:21:13	87c0db84-49f7-44f6-b24b-a96c32640a1e	Successfully retrieved 1 pending issues
+20250527	12:21:13	61f65c2e-ef5d-42c8-822f-0996a546e925	Successfully retrieved 1 pending issues
+20250527	12:21:17	eb481a6e-105e-403f-875d-af894d290f05	Successfully rejected issues with IDs: 16 by user: superadmin@god.com
+20250527	12:21:17	c2ba355a-4915-4629-aa4d-6f01620e58d2	Successfully retrieved 0 pending issues
+20250527	12:21:20	9c918a9b-f6d2-42b2-899c-d46b6c6aa097	Successfully retrieved 0 pending issues
+20250527	12:21:20	1feb1695-dbbd-4d3c-8690-bd15fa5203a0	Successfully retrieved 0 pending issues
+20250527	12:21:35	5a1111be-724a-4353-bcd9-5b8cf85ac214	Successfully retrieved 0 pending issues
+20250527	12:21:35	b504e417-2176-4512-ba58-128e7466aa23	Successfully retrieved 0 pending issues
+20250527	12:21:50	279adac8-3914-47b8-a3f2-d4bb16b0ce66	Successfully retrieved 0 pending issues
+20250527	12:21:50	aaab324f-680d-4406-89d1-138d2b41993f	Successfully retrieved 0 pending issues
+20250527	12:23:00	8e799cf0-b038-4d03-a080-8607ea2c1ab5	Successfully retrieved 0 pending issues
+20250527	12:23:00	ea94fc48-473a-4e95-91d4-be2f571594d0	Successfully retrieved 0 pending issues
+20250527	12:24:44	eeead4fa-25b5-49c8-8c64-e202f20e7656	Successfully retrieved 0 pending issues
+20250527	12:24:44	37e3a305-ebe7-4e24-bd97-eef665f9be9b	Successfully retrieved 0 pending issues
+20250527	12:35:38	753da10b-71aa-44bc-9d75-db5ead6cc2d7	Successfully retrieved 0 pending issues
+20250527	12:35:38	d1c4676b-cf76-4461-b832-b15bac6c95e0	Successfully retrieved 0 pending issues
+20250527	13:07:03	b7698942-2c81-4ab9-b02f-6661c6132653	Successfully retrieved 0 pending issues
+20250527	13:07:03	b0196c58-51a5-4b2e-b936-5d2068ab874d	Successfully retrieved 0 pending issues
+20250527	13:07:15	3f2188ca-e190-45ee-8e64-7923c63c321b	Successfully retrieved 0 pending issues
+20250527	13:07:15	3cdf1e11-a3a9-4039-97b3-408784a453ce	Successfully retrieved 0 pending issues
+20250527	13:07:49	82c1dbcd-a6d7-4d9e-82e2-d4a20d4b8a9e	Successfully retrieved 0 pending issues
+20250527	13:07:49	7f2cfa09-0be3-46c9-8924-b849cba76e00	Successfully retrieved 0 pending issues
+20250527	13:09:16	758058ad-5676-433c-973c-7435ecabaac4	Successfully retrieved 0 pending issues
+20250527	13:09:16	3f6b861c-1ea8-4afb-8996-7c6dba956ffe	Successfully retrieved 0 pending issues
+20250527	13:39:11	440f1289-8d52-4755-a2ea-9b3a19a39a94	Item issued successfully - NAC: GT 19080, Quantity: 1 by user: Saman Tripathee
+20250527	13:39:11	81c97326-0646-40f5-8bf8-22742f5abff1	Item issued successfully - NAC: GT 19080, Quantity: 2 by user: Saman Tripathee
+20250527	13:39:11	803e2512-ca9d-4f43-9a52-987e7f96ce8f	Item issued successfully - NAC: GS 82025, Quantity: 1 by user: Saman Tripathee
+20250527	13:39:11	955ed0b8-def3-413f-812f-a96e123e12ee	Issue created successfully for date: 2025/04/30 by user: Saman Tripathee
+20250527	13:40:27	b15c0f44-1c84-4f0c-946a-cc98f17bcf54	Item issued successfully - NAC: GT 05153, Quantity: 10 by user: Saman Tripathee
+20250527	13:40:27	50135cc4-255c-4762-98f8-a9297b9b545a	Issue created successfully for date: 2025/05/01 by user: Saman Tripathee
+20250527	13:40:38	63e4cea3-a013-41cc-b76f-3b1f3827411a	Successfully retrieved 4 pending issues
+20250527	13:40:38	d50cead1-2a42-42f7-b65f-ef768ade4353	Successfully retrieved 4 pending issues
+20250527	14:55:07	9a03b3d2-d0dd-4ed2-a6aa-f8b7cf3fdf61	Item issued successfully - NAC: GT 04552, Quantity: 10 by user: Saman Tripathee
+20250527	14:55:07	c132d436-f526-4b9a-8cf0-3d2b125a6f8f	Issue created successfully for date: 2025/05/26 by user: Saman Tripathee
+20250527	15:00:23	d421bcc4-75c4-4e17-8545-b7d9bee09368	Item issued successfully - NAC: GT 04552, Quantity: 10 by user: Saman Tripathee
+20250527	15:00:23	edc1e718-d6e4-4770-9d21-3ebb84d76f88	Issue created successfully for date: 2025/04/30 by user: Saman Tripathee
+20250527	15:02:53	c30724a4-a73e-4853-a99b-3feee366fae9	Item issued successfully - NAC: GT 19080, Quantity: 10 by user: Saman Tripathee
+20250527	15:02:53	9e743cff-669e-47b5-80f6-78ddfa92af80	Issue created successfully for date: 2025/04/30 by user: Saman Tripathee
+20250527	15:04:17	78ddaa49-10be-4a22-97f5-11c9b9ac144a	Item issued successfully - NAC: GT 19080, Quantity: 10 by user: Saman Tripathee
+20250527	15:04:17	aa9d7ee9-be29-4a15-a279-ca24d69d3ac5	Issue created successfully for date: 2025/04/30 by user: Saman Tripathee
+20250527	15:04:35	14e52bab-906f-47ef-9495-c276e6acaa57	Item issued successfully - NAC: GT 19080, Quantity: 10 by user: Saman Tripathee
+20250527	15:04:35	55195068-6a2c-4411-90b0-cef42b7bcdd3	Issue created successfully for date: 2025/04/30 by user: Saman Tripathee
+20250527	15:07:03	97fe3bf4-fc92-47e7-90cf-fa9a21657c96	Item issued successfully - NAC: GT 04552, Quantity: 10 by user: Saman Tripathee
+20250527	15:07:03	31497f93-31eb-4d3e-bcf9-614604409357	Issue created successfully for date: 2025/04/30 by user: Saman Tripathee
+20250527	15:08:05	41ea41e1-ca0c-44ad-b5a7-9d51fcf3484e	Item issued successfully - NAC: GT 04552, Quantity: 10 by user: Saman Tripathee
+20250527	15:08:05	d0d33fb4-5ba2-4459-b391-185b86fb4512	Issue created successfully for date: 2025/05/01 by user: Saman Tripathee
+20250527	16:03:03	9fada288-a735-469a-86ac-92a1fec78f57	Item issued successfully - NAC: GT 04552, Quantity: 10 by user: Saman Tripathee
+20250527	16:03:03	2d5408b2-06fd-4afc-9295-a757b517941a	Issue created successfully for date: 2025/05/01 by user: Saman Tripathee
+20250527	16:05:06	d5bc44e5-3eac-4efd-bfaa-5bd2274a54e2	Item issued successfully - NAC: GT 04552, Quantity: 100 by user: Saman Tripathee
+20250527	16:05:06	c17d59e0-fe5c-4fd9-8471-bdc254342644	Item issued successfully - NAC: GT 19080, Quantity: 10 by user: Saman Tripathee
+20250527	16:05:06	88555dc0-a8cd-4ab1-b4a5-8541384546d8	Issue created successfully for date: 2025/05/01 by user: Saman Tripathee
+20250527	16:06:29	734c2502-c176-4318-b3ad-fdbbabe79e46	Item issued successfully - NAC: GT 04552, Quantity: 100 by user: Saman Tripathee
+20250527	16:06:29	24997244-4a56-4f9f-ad64-dba789d0840b	Item issued successfully - NAC: GT 04552, Quantity: 10 by user: Saman Tripathee
+20250527	16:06:29	9525124b-4332-4212-a85e-6afdcf55f5e4	Item issued successfully - NAC: GT 19080, Quantity: 1000 by user: Saman Tripathee
+20250527	16:06:29	30a2a9d9-5c69-4a94-aaba-9689f1492f08	Issue created successfully for date: 2025/05/01 by user: Saman Tripathee
+20250527	16:07:02	8f280c92-7819-43ee-a0aa-02557341dfb5	Item issued successfully - NAC: GT 19080, Quantity: 20 by user: Saman Tripathee
+20250527	16:07:02	5c238391-40f6-47e2-991a-b825f3de45b0	Issue created successfully for date: 2025/05/02 by user: Saman Tripathee
+20250527	16:07:34	de5d4781-359e-43f6-bbcb-c0da3f0b8a57	Item issued successfully - NAC: GT 04552, Quantity: 100 by user: Saman Tripathee
+20250527	16:07:34	cf22c5c3-4330-4416-a5d5-28be27d434de	Issue created successfully for date: 2025/05/15 by user: Saman Tripathee
+20250527	16:11:40	facd8b3f-e42a-4f36-b4fb-5a19fe8a89cf	Item issued successfully - NAC: GT 19080, Quantity: 15 by user: Saman Tripathee
+20250527	16:11:40	a5070250-316e-4ad3-9d73-689f2ab37064	Issue created successfully for date: 2025/05/15 by user: Saman Tripathee
+20250527	16:12:31	e1a5b812-821c-4d9a-9e46-d56a4c4545c3	Item issued successfully - NAC: GT 19080, Quantity: 10 by user: Saman Tripathee
+20250527	16:12:31	c0cc6dd0-e687-4c33-9378-9f325f29101c	Issue created successfully for date: 2025/05/01 by user: Saman Tripathee
+20250527	16:17:48	fa1f96d8-f7fd-4232-bcde-0d2996be5945	Successfully retrieved 5 pending issues
+20250527	16:17:48	8a3f4c92-8abb-4b70-a5f3-d881388b425e	Successfully retrieved 5 pending issues
+20250527	16:29:02	7e370b2a-3609-41e0-8f87-e256b7f82792	Item issued successfully - NAC: GS 84690, Quantity: 1 by user: Saman Tripathee
+20250527	16:29:02	69949e86-a196-4013-82a7-a5bd3f3faa03	Issue created successfully for date: 2025/04/30 by user: Saman Tripathee

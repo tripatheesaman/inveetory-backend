@@ -33,6 +33,7 @@ const calculateIssueCost = (openAmount: number, openQuantity: number, quantity: 
 
 export const createIssue = async (req: Request, res: Response): Promise<void> => {
   const { issueDate, items, issuedBy }: IssueRequest = req.body;
+  console.log(issueDate)
   
   if (!issueDate || !items || !items.length || !issuedBy) {
     logEvents(`Issue creation failed - Missing required fields by user: ${issuedBy?.name || 'Unknown'}`, "issueLog.log");
@@ -67,25 +68,20 @@ export const createIssue = async (req: Request, res: Response): Promise<void> =>
 
     const currentFY = configRows[0].config_value;
 
-    // Get today's date in YYYY-MM-DD format
-    const today = new Date().toISOString().split('T')[0];
-
-    // Get the latest issue slip number for today
-    const [lastIssue] = await connection.query<RowDataPacket[]>(
-      `SELECT issue_slip_number FROM issue_details 
-      WHERE DATE(issue_date) = ? AND current_fy = ?
-      ORDER BY CAST(SUBSTRING_INDEX(issue_slip_number, 'T', -1) AS UNSIGNED) DESC LIMIT 1`,
-      [today, currentFY]
+    // Get the day number based on days since first issue
+    const [dayNumberResult] = await connection.query<RowDataPacket[]>(
+      `SELECT 
+        CASE 
+          WHEN MIN(issue_date) IS NULL THEN 1
+          ELSE DATEDIFF(?, MIN(issue_date)) + 1
+        END as day_number
+      FROM issue_details 
+      WHERE current_fy = ?`,
+      [formattedIssueDate, currentFY]
     );
+    const dayNumber = dayNumberResult[0].day_number;
 
-    let issueSlipNumber: string;
-    if (lastIssue.length > 0) {
-      const lastTNumber = parseInt(lastIssue[0].issue_slip_number.split('T')[1]);
-      issueSlipNumber = `1T${lastTNumber + 1}`;
-    } else {
-      issueSlipNumber = '1T1';
-    }
-
+    const issueSlipNumber = `${dayNumber}Y${currentFY}`;
     const issueIds: number[] = [];
 
     for (const item of items) {
@@ -164,30 +160,28 @@ export const createIssue = async (req: Request, res: Response): Promise<void> =>
 };
 
 export const approveIssue = async (req: Request, res: Response): Promise<void> => {
-  const { issueId } = req.params;
-  const { approvedBy } = req.body;
+  const { itemIds, approvedBy } = req.body;
   const connection = await pool.getConnection();
 
   try {
     await connection.beginTransaction();
 
-    // Split issueId into array if it contains commas
-    const issueIds = issueId.split(',').map(id => id.trim());
-
     // Get all issue details
     const [issueDetails] = await connection.execute<RowDataPacket[]>(
       `SELECT 
-        id,
-        nac_code,
-        issue_quantity,
-        issue_slip_number
-      FROM issue_details 
-      WHERE id IN (?)`,
-      [issueIds]
+        i.id,
+        i.nac_code,
+        i.issue_quantity,
+        i.issue_slip_number,
+        s.current_balance
+      FROM issue_details i
+      LEFT JOIN stock_details s ON i.nac_code COLLATE utf8mb4_unicode_ci = s.nac_code COLLATE utf8mb4_unicode_ci
+      WHERE i.id IN (?)`,
+      [itemIds]
     );
 
     if (issueDetails.length === 0) {
-      logEvents(`Failed to approve issue - No issues found with IDs: ${issueId}`, "issueLog.log");
+      logEvents(`Failed to approve issues - No issues found with IDs: ${itemIds.join(', ')}`, "issueLog.log");
       throw new Error('Issue records not found');
     }
 
@@ -198,22 +192,12 @@ export const approveIssue = async (req: Request, res: Response): Promise<void> =
           approved_by = ?,
           updated_at = CURRENT_TIMESTAMP
       WHERE id IN (?)`,
-      [approvedBy, issueIds]
+      [approvedBy, itemIds]
     );
 
     // Update stock balance for each issue
     for (const issue of issueDetails) {
-      const [stockDetails] = await connection.execute<RowDataPacket[]>(
-        'SELECT current_balance FROM stock_details WHERE nac_code = ?',
-        [issue.nac_code]
-      );
-
-      if (stockDetails.length === 0) {
-        throw new Error(`Stock not found for NAC code: ${issue.nac_code}`);
-      }
-
-      const currentBalance = stockDetails[0].current_balance;
-      const newBalance = currentBalance - issue.issue_quantity;
+      const newBalance = issue.current_balance - issue.issue_quantity;
 
       if (newBalance < 0) {
         throw new Error(`Insufficient balance for item ${issue.nac_code}`);
@@ -226,14 +210,15 @@ export const approveIssue = async (req: Request, res: Response): Promise<void> =
     }
 
     await connection.commit();
-    logEvents(`Successfully approved issues with IDs: ${issueId} by user: ${approvedBy}`, "issueLog.log");
+    logEvents(`Successfully approved issues with IDs: ${itemIds.join(', ')} by user: ${approvedBy}`, "issueLog.log");
     res.status(200).json({
-      message: 'Issues approved and stock updated successfully'
+      message: 'Issues approved and stock updated successfully',
+      approvedCount: issueDetails.length
     });
   } catch (error) {
     await connection.rollback();
     const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
-    logEvents(`Error approving issues: ${errorMessage} for IDs: ${issueId}`, "issueLog.log");
+    logEvents(`Error approving issues: ${errorMessage} for IDs: ${itemIds.join(', ')}`, "issueLog.log");
     res.status(500).json({
       error: 'Internal Server Error',
       message: error instanceof Error ? error.message : 'An error occurred while approving issues'
@@ -244,74 +229,308 @@ export const approveIssue = async (req: Request, res: Response): Promise<void> =
 };
 
 export const rejectIssue = async (req: Request, res: Response): Promise<void> => {
-  const { issueId } = req.params;
-  const { rejectedBy, rejectionReason } = req.body;
+  const { itemIds, rejectedBy } = req.body;
   const connection = await pool.getConnection();
 
   try {
     await connection.beginTransaction();
 
+    // Get issue details for notifications and logging
     const [issueDetails] = await connection.execute<RowDataPacket[]>(
-      `SELECT id, issued_by, issue_slip_number 
+      `SELECT id, issue_slip_number, issued_by, issue_date 
       FROM issue_details 
-      WHERE id = ?`,
-      [issueId]
+      WHERE id IN (${itemIds.join(',')})`,
+      []
     );
 
-    if (!issueDetails.length) {
-      logEvents(`Failed to reject issue - Issue not found: ${issueId}`, "issueLog.log");
-      throw new Error('Issue record not found');
+    if (issueDetails.length === 0) {
+      logEvents(`Failed to reject issues - No issues found with IDs: ${itemIds.join(', ')}`, "issueLog.log");
+      throw new Error('Issue records not found');
     }
 
+    // Get the first issue's issued_by for notification
     const issuedBy = JSON.parse(issueDetails[0].issued_by);
-    const issueSlipNumber = issueDetails[0].issue_slip_number;
-
-    // Delete the issue record
-    await connection.execute(
-      'DELETE FROM issue_details WHERE id = ?',
-      [issueId]
-    );
-
+    
     const [users] = await connection.query<RowDataPacket[]>(
       'SELECT id FROM users WHERE username = ?',
-      [issuedBy.name]
+      [issuedBy.staffId]
     );
 
-    if (users.length === 0) {
-      logEvents(`Failed to reject issue - User not found: ${issuedBy.name}`, "issueLog.log");
-      res.status(404).json({
-        error: 'Not Found',
-        message: 'User not found'
-      });
-      return;
+    if (users.length > 0) {
+      const userId = users[0].id;
+      // Create a single notification with all issue details
+      const issueDetailsText = issueDetails.map(issue => 
+        `Issue Slip: ${issue.issue_slip_number} (${formatDate(issue.issue_date)})`
+      ).join(', ');
+
+      await connection.query(
+        `INSERT INTO notifications 
+         (user_id, reference_type, message, reference_id)
+         VALUES (?, ?, ?, ?)`,
+        [
+          userId,
+          'issue',
+          `Your issues have been rejected: ${issueDetailsText}`,
+          issueDetails[0].id
+        ]
+      );
     }
 
-    const userId = users[0].id;
-
-    await connection.query(
-      `INSERT INTO notifications 
-       (user_id, reference_type, message, reference_id)
-       VALUES (?, ?, ?, ?)`,
-      [
-        userId,
-        'issue',
-        `Your issue slip number ${issueSlipNumber} has been rejected for the following reason: ${rejectionReason}`,
-        issueId
-      ]
+    // Delete all the issue records
+    await connection.execute(
+      `DELETE FROM issue_details WHERE id IN (${itemIds.join(',')})`,
+      []
     );
 
     await connection.commit();
-    logEvents(`Successfully rejected issue ID: ${issueId} with slip number: ${issueSlipNumber} by user: ${rejectedBy}`, "issueLog.log");
+    logEvents(`Successfully rejected issues with IDs: ${itemIds.join(', ')} by user: ${rejectedBy}`, "issueLog.log");
     res.status(200).json({
-      message: 'Issue rejected successfully'
+      message: 'Issues rejected successfully',
+      rejectedCount: issueDetails.length
     });
   } catch (error) {
     await connection.rollback();
     const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
-    logEvents(`Error rejecting issue: ${errorMessage} for ID: ${issueId} by user: ${rejectedBy}`, "issueLog.log");
+    logEvents(`Error rejecting issues: ${errorMessage} for IDs: ${itemIds.join(', ')}`, "issueLog.log");
     res.status(500).json({
       error: 'Internal Server Error',
-      message: error instanceof Error ? error.message : 'An error occurred while rejecting issue'
+      message: error instanceof Error ? error.message : 'An error occurred while rejecting issues'
+    });
+  } finally {
+    connection.release();
+  }
+};
+
+export const getPendingIssues = async (req: Request, res: Response): Promise<void> => {
+  const connection = await pool.getConnection();
+
+  try {
+    const [issues] = await connection.execute<RowDataPacket[]>(
+      `SELECT 
+        i.id,
+        i.nac_code,
+        i.part_number,
+        i.issue_quantity,
+        i.issue_cost,
+        i.remaining_balance,
+        i.issue_slip_number,
+        i.issued_by,
+        i.issued_for,
+        SUBSTRING_INDEX(s.item_name, ',', 1) as item_name
+      FROM issue_details i
+      LEFT JOIN stock_details s ON i.nac_code COLLATE utf8mb4_unicode_ci = s.nac_code COLLATE utf8mb4_unicode_ci
+      WHERE i.approval_status = 'PENDING'
+      ORDER BY i.issue_date DESC`
+    );
+
+    // Parse the issued_by JSON string for each issue
+    const formattedIssues = issues.map(issue => ({
+      ...issue,
+      issued_by: JSON.parse(issue.issued_by)
+    }));
+
+    logEvents(`Successfully retrieved ${formattedIssues.length} pending issues`, "issueLog.log");
+    res.status(200).json({
+      message: 'Pending issues retrieved successfully',
+      issues: formattedIssues
+    });
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+    logEvents(`Error retrieving pending issues: ${errorMessage}`, "issueLog.log");
+    res.status(500).json({
+      error: 'Internal Server Error',
+      message: error instanceof Error ? error.message : 'An error occurred while retrieving pending issues'
+    });
+  } finally {
+    connection.release();
+  }
+};
+
+export const updateIssueItem = async (req: Request, res: Response): Promise<void> => {
+  const { id } = req.params;
+  const { quantity } = req.body;
+  const connection = await pool.getConnection();
+
+  try {
+    await connection.beginTransaction();
+
+    // Get the current issue details
+    const [issueDetails] = await connection.execute<RowDataPacket[]>(
+      `SELECT 
+        i.nac_code,
+        i.issue_quantity,
+        i.issue_slip_number,
+        s.current_balance,
+        s.open_quantity,
+        s.open_amount
+      FROM issue_details i
+      LEFT JOIN stock_details s ON i.nac_code COLLATE utf8mb4_unicode_ci = s.nac_code COLLATE utf8mb4_unicode_ci
+      WHERE i.id = ?`,
+      [id]
+    );
+
+    if (issueDetails.length === 0) {
+      throw new Error('Issue item not found');
+    }
+
+    const issue = issueDetails[0];
+    const quantityDifference = quantity - issue.issue_quantity;
+
+    // Calculate new issue cost
+    const issueCost = calculateIssueCost(
+      issue.open_amount,
+      issue.open_quantity,
+      quantity
+    );
+
+    // Update the issue details
+    await connection.execute(
+      `UPDATE issue_details 
+      SET issue_quantity = ?,
+          issue_cost = ?,
+          updated_at = CURRENT_TIMESTAMP
+      WHERE id = ?`,
+      [quantity, issueCost, id]
+    );
+
+    // Update stock balance
+    const newBalance = issue.current_balance - quantityDifference;
+    if (newBalance < 0) {
+      throw new Error('Insufficient stock balance');
+    }
+
+    await connection.execute(
+      'UPDATE stock_details SET current_balance = ? WHERE nac_code = ?',
+      [newBalance, issue.nac_code]
+    );
+
+    await connection.commit();
+    logEvents(`Successfully updated issue item ID: ${id} with new quantity: ${quantity}`, "issueLog.log");
+    res.status(200).json({
+      message: 'Issue item updated successfully',
+      issueSlipNumber: issue.issue_slip_number
+    });
+  } catch (error) {
+    await connection.rollback();
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+    logEvents(`Error updating issue item: ${errorMessage} for ID: ${id}`, "issueLog.log");
+    res.status(500).json({
+      error: 'Internal Server Error',
+      message: error instanceof Error ? error.message : 'An error occurred while updating issue item'
+    });
+  } finally {
+    connection.release();
+  }
+};
+
+export const deleteIssueItem = async (req: Request, res: Response): Promise<void> => {
+  const { id } = req.params;
+  const connection = await pool.getConnection();
+
+  try {
+    await connection.beginTransaction();
+
+    // Get the current issue details
+    const [issueDetails] = await connection.execute<RowDataPacket[]>(
+      `SELECT 
+        i.nac_code,
+        i.issue_quantity,
+        i.issue_slip_number,
+        s.current_balance
+      FROM issue_details i
+      LEFT JOIN stock_details s ON i.nac_code COLLATE utf8mb4_unicode_ci = s.nac_code COLLATE utf8mb4_unicode_ci
+      WHERE i.id = ?`,
+      [id]
+    );
+
+    if (issueDetails.length === 0) {
+      throw new Error('Issue item not found');
+    }
+
+    const issue = issueDetails[0];
+
+    // Delete the issue item
+    await connection.execute(
+      'DELETE FROM issue_details WHERE id = ?',
+      [id]
+    );
+
+    // Update stock balance
+    const newBalance = issue.current_balance + issue.issue_quantity;
+    await connection.execute(
+      'UPDATE stock_details SET current_balance = ? WHERE nac_code = ?',
+      [newBalance, issue.nac_code]
+    );
+
+    await connection.commit();
+    logEvents(`Successfully deleted issue item ID: ${id}`, "issueLog.log");
+    res.status(200).json({
+      message: 'Issue item deleted successfully',
+      issueSlipNumber: issue.issue_slip_number
+    });
+  } catch (error) {
+    await connection.rollback();
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+    logEvents(`Error deleting issue item: ${errorMessage} for ID: ${id}`, "issueLog.log");
+    res.status(500).json({
+      error: 'Internal Server Error',
+      message: error instanceof Error ? error.message : 'An error occurred while deleting issue item'
+    });
+  } finally {
+    connection.release();
+  }
+};
+
+export const getDailyIssueReport = async (req: Request, res: Response): Promise<void> => {
+  const { fromDate, toDate, equipmentNumber } = req.query;
+  const connection = await pool.getConnection();
+
+  try {
+    let query = `
+      SELECT 
+        i.issue_slip_number,
+        i.issue_date,
+        i.part_number,
+        i.issued_for,
+        i.issued_by,
+        i.issue_quantity,
+        i.issue_cost,
+        i.remaining_balance,
+        SUBSTRING_INDEX(s.item_name, ',', 1) as item_name
+      FROM issue_details i
+      LEFT JOIN stock_details s ON i.nac_code COLLATE utf8mb4_unicode_ci = s.nac_code COLLATE utf8mb4_unicode_ci
+      WHERE i.issue_date BETWEEN ? AND ?
+    `;
+
+    const queryParams: any[] = [fromDate, toDate];
+
+    // Add equipment number filter if provided
+    if (equipmentNumber) {
+      query += ` AND i.issued_for = ?`;
+      queryParams.push(equipmentNumber);
+    }
+
+    query += ` ORDER BY i.issue_date DESC, i.issue_slip_number`;
+
+    const [issues] = await connection.execute<RowDataPacket[]>(query, queryParams);
+
+    // Parse the issued_by JSON string for each issue
+    const formattedIssues = issues.map(issue => ({
+      ...issue,
+      issued_by: JSON.parse(issue.issued_by)
+    }));
+
+    logEvents(`Successfully generated daily issue report from ${fromDate} to ${toDate}${equipmentNumber ? ` for equipment ${equipmentNumber}` : ''}`, "issueLog.log");
+    res.status(200).json({
+      message: 'Daily issue report generated successfully',
+      issues: formattedIssues
+    });
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+    logEvents(`Error generating daily issue report: ${errorMessage}`, "issueLog.log");
+    res.status(500).json({
+      error: 'Internal Server Error',
+      message: error instanceof Error ? error.message : 'An error occurred while generating the report'
     });
   } finally {
     connection.release();

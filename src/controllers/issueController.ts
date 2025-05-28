@@ -166,7 +166,27 @@ export const approveIssue = async (req: Request, res: Response): Promise<void> =
   try {
     await connection.beginTransaction();
 
-    // Get all issue details
+    // First check if the issues exist and are pending
+    const [issueCheck] = await connection.execute<RowDataPacket[]>(
+      `SELECT id, approval_status 
+       FROM issue_details 
+       WHERE id IN (?)`,
+      [itemIds]
+    );
+
+    if (issueCheck.length === 0) {
+      logEvents(`Failed to approve issues - No issues found with IDs: ${itemIds.join(', ')}`, "issueLog.log");
+      throw new Error('Issue records not found');
+    }
+
+    // Check if any issues are already approved
+    const alreadyApproved = issueCheck.filter(issue => issue.approval_status === 'APPROVED');
+    if (alreadyApproved.length > 0) {
+      logEvents(`Failed to approve issues - Some issues are already approved: ${alreadyApproved.map(i => i.id).join(', ')}`, "issueLog.log");
+      throw new Error(`Issues ${alreadyApproved.map(i => i.id).join(', ')} are already approved`);
+    }
+
+    // Get all issue details with stock information
     const [issueDetails] = await connection.execute<RowDataPacket[]>(
       `SELECT 
         i.id,
@@ -180,11 +200,6 @@ export const approveIssue = async (req: Request, res: Response): Promise<void> =
       [itemIds]
     );
 
-    if (issueDetails.length === 0) {
-      logEvents(`Failed to approve issues - No issues found with IDs: ${itemIds.join(', ')}`, "issueLog.log");
-      throw new Error('Issue records not found');
-    }
-
     // Update all issues status
     await connection.execute(
       `UPDATE issue_details 
@@ -197,6 +212,10 @@ export const approveIssue = async (req: Request, res: Response): Promise<void> =
 
     // Update stock balance for each issue
     for (const issue of issueDetails) {
+      if (!issue.current_balance) {
+        throw new Error(`Stock details not found for item ${issue.nac_code}`);
+      }
+
       const newBalance = issue.current_balance - issue.issue_quantity;
 
       if (newBalance < 0) {

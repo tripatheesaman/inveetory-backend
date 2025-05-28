@@ -49,7 +49,7 @@ app.use('/api/rrp', verifyJWT, rrpRoutes);
 app.use('/api/user', verifyJWT, userRoutes);
 app.use('/api/role', verifyJWT, roleRoutes);
 app.use('/api/permission', verifyJWT, permissionRoutes);
-app.use('/api/report', reportRoutes);
+app.use('/api/report', verifyJWT,reportRoutes);
 
 
 app.get('/health', (req: Request, res: Response) => {

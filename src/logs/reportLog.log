@@ -1,2 +1,254 @@
-20250527	13:36:23	5721580e-f83e-4ef9-a2ce-cf864e98e666	Successfully generated daily issue report from 2025-05-07 to 2025-05-08 for equipment 1103
-20250527	13:36:37	7c86856a-4a46-4a6c-9e4d-ac8e3e987b44	Successfully generated daily issue report from 2025-05-01 to 2025-05-31
+20250528	10:33:29	c76014b2-e8dc-47c0-9ba1-db674e6e72e0	Count Query: 
+      SELECT COUNT(*) as total
+      FROM issue_details i
+      WHERE i.issue_date BETWEEN ? AND ?
+      AND i.approval_status = ?
+    
+20250528	10:33:29	10fc21c6-8539-4a2f-ae7f-91fab5b061a3	Count Params: ["2025-05-01","2025-05-30","APPROVED"]
+20250528	10:33:29	04f4f460-8ce7-44a7-bf4b-60ef203f72b2	Data Query: 
+      SELECT 
+        i.issue_slip_number,
+        i.issue_date,
+        i.part_number,
+        i.issued_for,
+        i.issued_by,
+        i.issue_quantity,
+        i.issue_cost,
+        i.remaining_balance,
+        SUBSTRING_INDEX(s.item_name, ',', 1) as item_name
+      FROM issue_details i
+      LEFT JOIN stock_details s ON i.nac_code COLLATE utf8mb4_unicode_ci = s.nac_code COLLATE utf8mb4_unicode_ci
+      WHERE i.issue_date BETWEEN ? AND ?
+      AND i.approval_status = ?
+     ORDER BY i.issue_date DESC, i.issue_slip_number LIMIT ? OFFSET ?
+20250528	10:33:29	fb94c5d0-546d-4720-9513-7a93ce2ab3ce	Data Params: ["2025-05-01","2025-05-30","APPROVED","10","0"]
+20250528	10:33:29	52f7140a-89d7-4982-8964-9a3859b8394b	Successfully generated daily issue report from 2025-05-01 to 2025-05-30
+20250528	10:33:54	cdefd70f-377e-4ab5-a767-d32da3c6267f	Count Query: 
+      SELECT COUNT(*) as total
+      FROM issue_details i
+      WHERE i.issue_date BETWEEN ? AND ?
+      AND i.approval_status = ?
+    
+20250528	10:33:54	bc61b31f-b4de-48bd-aa4c-8b9a59c97c7e	Data Query: 
+      SELECT 
+        i.issue_slip_number,
+        i.issue_date,
+        i.part_number,
+        i.issued_for,
+        i.issued_by,
+        i.issue_quantity,
+        i.issue_cost,
+        i.remaining_balance,
+        SUBSTRING_INDEX(s.item_name, ',', 1) as item_name
+      FROM issue_details i
+      LEFT JOIN stock_details s ON i.nac_code COLLATE utf8mb4_unicode_ci = s.nac_code COLLATE utf8mb4_unicode_ci
+      WHERE i.issue_date BETWEEN ? AND ?
+      AND i.approval_status = ?
+     ORDER BY i.issue_date DESC, i.issue_slip_number LIMIT ? OFFSET ?
+20250528	10:33:54	a9e4a3b2-f59c-4482-bc69-d46e186021a8	Data Params: ["2025-05-01","2025-05-30","APPROVED","10","0"]
+20250528	10:33:54	7ed0b562-4515-4b2c-9209-115c5551492b	Count Params: ["2025-05-01","2025-05-30","APPROVED"]
+20250528	10:33:54	9bb3c30c-dae5-41bc-9444-21678ed4ab6c	Successfully generated daily issue report from 2025-05-01 to 2025-05-30
+20250528	10:46:10	2da131a8-17c1-408c-a6b1-1e0ad9e43af2	Count Query: 
+      SELECT COUNT(*) as total
+      FROM issue_details i
+      WHERE i.issue_date BETWEEN ? AND ?
+      AND i.approval_status = ?
+    
+20250528	10:46:10	01a234da-f202-4113-8663-2575c2bfddb3	Count Params: ["2025-05-01","2025-05-30","APPROVED"]
+20250528	10:46:10	e818fe88-e6c2-4c1c-9d5c-11835670b9ee	Data Query: 
+      SELECT 
+        i.issue_slip_number,
+        i.issue_date,
+        i.part_number,
+        i.issued_for,
+        i.issued_by,
+        i.issue_quantity,
+        i.issue_cost,
+        i.remaining_balance,
+        SUBSTRING_INDEX(s.item_name, ',', 1) as item_name
+      FROM issue_details i
+      LEFT JOIN stock_details s ON i.nac_code COLLATE utf8mb4_unicode_ci = s.nac_code COLLATE utf8mb4_unicode_ci
+      WHERE i.issue_date BETWEEN ? AND ?
+      AND i.approval_status = ?
+     ORDER BY i.issue_date DESC, i.issue_slip_number LIMIT ? OFFSET ?
+20250528	10:46:10	f5ae6aff-6fbf-44ec-aaa3-c785ca1a8585	Data Params: ["2025-05-01","2025-05-30","APPROVED","10","0"]
+20250528	10:46:10	9ea64b53-91de-494f-ab78-499dbff55d6c	Successfully generated daily issue report from 2025-05-01 to 2025-05-30
+20250528	10:58:36	737eed8a-f883-4388-8ec2-506538997b72	Count Query: 
+      SELECT COUNT(*) as total
+      FROM issue_details i
+      WHERE i.issue_date BETWEEN ? AND ?
+      AND i.approval_status = ?
+    
+20250528	10:58:36	0e9a691b-1793-48e3-90c7-e9b5b50d5738	Count Params: ["2025-05-01","2025-05-30","APPROVED"]
+20250528	10:58:36	b713b9a3-03b2-4203-beb3-028bfa494883	Data Query: 
+      SELECT 
+        i.issue_slip_number,
+        i.issue_date,
+        i.part_number,
+        i.issued_for,
+        i.issued_by,
+        i.issue_quantity,
+        i.issue_cost,
+        i.remaining_balance,
+        SUBSTRING_INDEX(s.item_name, ',', 1) as item_name
+      FROM issue_details i
+      LEFT JOIN stock_details s ON i.nac_code COLLATE utf8mb4_unicode_ci = s.nac_code COLLATE utf8mb4_unicode_ci
+      WHERE i.issue_date BETWEEN ? AND ?
+      AND i.approval_status = ?
+     ORDER BY i.issue_date DESC, i.issue_slip_number LIMIT ? OFFSET ?
+20250528	10:58:36	d84f1c94-6084-45d6-8c5d-542daadaaf2e	Data Params: ["2025-05-01","2025-05-30","APPROVED","10","0"]
+20250528	10:58:36	b450545c-6ecf-4145-b1bf-70108ca154b6	Successfully generated daily issue report from 2025-05-01 to 2025-05-30
+20250528	10:58:36	50ca7dae-1582-4227-8a31-0975fdf823cf	Count Query: 
+      SELECT COUNT(*) as total
+      FROM issue_details i
+      WHERE i.issue_date BETWEEN ? AND ?
+      AND i.approval_status = ?
+    
+20250528	10:58:36	a5f8b7df-101a-416a-9760-844aee1ff32f	Count Params: ["2025-05-01","2025-05-30","APPROVED"]
+20250528	10:58:36	c290c2b0-32db-47cf-9fec-cc3baeb5b34e	Data Params: ["2025-05-01","2025-05-30","APPROVED","10","0"]
+20250528	10:58:36	03fa76b1-1ef2-438a-9b53-a839dfe0f6fe	Data Query: 
+      SELECT 
+        i.issue_slip_number,
+        i.issue_date,
+        i.part_number,
+        i.issued_for,
+        i.issued_by,
+        i.issue_quantity,
+        i.issue_cost,
+        i.remaining_balance,
+        SUBSTRING_INDEX(s.item_name, ',', 1) as item_name
+      FROM issue_details i
+      LEFT JOIN stock_details s ON i.nac_code COLLATE utf8mb4_unicode_ci = s.nac_code COLLATE utf8mb4_unicode_ci
+      WHERE i.issue_date BETWEEN ? AND ?
+      AND i.approval_status = ?
+     ORDER BY i.issue_date DESC, i.issue_slip_number LIMIT ? OFFSET ?
+20250528	10:58:36	144fadca-a365-4c6a-900d-9e9d7dd6b440	Successfully generated daily issue report from 2025-05-01 to 2025-05-30
+20250528	11:05:48	fb212fdd-26eb-48ac-917f-cf36f4b01c0d	Count Query: 
+      SELECT COUNT(*) as total
+      FROM issue_details i
+      WHERE i.issue_date BETWEEN ? AND ?
+      AND i.approval_status = ?
+    
+20250528	11:05:48	b81b95fa-3ebf-4047-ac8a-173fc59c4428	Count Params: ["2025-05-01","2025-05-30","APPROVED"]
+20250528	11:05:48	00adb357-590c-4b6e-ab57-e3bd21d24330	Data Query: 
+      SELECT 
+        i.issue_slip_number,
+        i.issue_date,
+        i.part_number,
+        i.issued_for,
+        i.issued_by,
+        i.issue_quantity,
+        i.issue_cost,
+        i.remaining_balance,
+        SUBSTRING_INDEX(s.item_name, ',', 1) as item_name
+      FROM issue_details i
+      LEFT JOIN stock_details s ON i.nac_code COLLATE utf8mb4_unicode_ci = s.nac_code COLLATE utf8mb4_unicode_ci
+      WHERE i.issue_date BETWEEN ? AND ?
+      AND i.approval_status = ?
+     ORDER BY i.issue_date DESC, i.issue_slip_number LIMIT ? OFFSET ?
+20250528	11:05:48	79d53beb-c786-48cd-b4f0-4bd472c7548a	Data Params: ["2025-05-01","2025-05-30","APPROVED","10","0"]
+20250528	11:05:48	539de2c5-3a36-4967-acdd-c1ad32d2c4eb	Successfully generated daily issue report from 2025-05-01 to 2025-05-30
+20250528	11:09:35	728ba62f-bf24-4ab1-a7eb-7a28efbd8fe5	Count Query: 
+      SELECT COUNT(*) as total
+      FROM issue_details i
+      WHERE i.issue_date BETWEEN ? AND ?
+      AND i.approval_status = ?
+    
+20250528	11:09:35	813f197d-f69a-420c-9765-79a3f6171c07	Count Params: ["2025-05-01","2025-05-30","APPROVED"]
+20250528	11:09:35	1872daf6-9cf7-4590-b5e4-6cf045d6a55b	Data Params: ["2025-05-01","2025-05-30","APPROVED","10","0"]
+20250528	11:09:35	e6c1950e-fb79-468f-94ad-d367b6432c20	Data Query: 
+      SELECT 
+        i.issue_slip_number,
+        i.issue_date,
+        i.part_number,
+        i.issued_for,
+        i.issued_by,
+        i.issue_quantity,
+        i.issue_cost,
+        i.remaining_balance,
+        SUBSTRING_INDEX(s.item_name, ',', 1) as item_name
+      FROM issue_details i
+      LEFT JOIN stock_details s ON i.nac_code COLLATE utf8mb4_unicode_ci = s.nac_code COLLATE utf8mb4_unicode_ci
+      WHERE i.issue_date BETWEEN ? AND ?
+      AND i.approval_status = ?
+     ORDER BY i.issue_date DESC, i.issue_slip_number LIMIT ? OFFSET ?
+20250528	11:09:35	30c385d4-8ea8-4ac5-a7dc-856137613db8	Successfully generated daily issue report from 2025-05-01 to 2025-05-30
+20250528	13:05:46	6d41de61-bd47-4701-bb57-ac5d7c17bea1	Export Params: ["2025-05-01","2025-05-30","APPROVED"]
+20250528	13:05:46	5c7367a2-6f14-4827-9e38-88fd97080d80	Export Query: 
+      SELECT 
+        i.issue_slip_number,
+        i.issue_date,
+        i.part_number,
+        i.issued_for,
+        i.issued_by,
+        i.issue_quantity,
+        i.issue_cost,
+        i.remaining_balance,
+        SUBSTRING_INDEX(s.item_name, ',', 1) as item_name
+      FROM issue_details i
+      LEFT JOIN stock_details s ON i.nac_code COLLATE utf8mb4_unicode_ci = s.nac_code COLLATE utf8mb4_unicode_ci
+      WHERE i.issue_date BETWEEN ? AND ?
+      AND i.approval_status = ?
+     ORDER BY i.issue_date DESC, i.issue_slip_number
+20250528	13:05:46	c0c1c2d4-f8e9-4fa9-87ea-5c53e2c93c13	Successfully exported daily issue report from 2025-05-01 to 2025-05-30
+20250528	13:07:11	6140bb9b-6520-41b6-b1ac-f102b5900483	Export Query: 
+      SELECT 
+        i.issue_slip_number,
+        i.issue_date,
+        i.part_number,
+        i.issued_for,
+        i.issued_by,
+        i.issue_quantity,
+        i.issue_cost,
+        i.remaining_balance,
+        SUBSTRING_INDEX(s.item_name, ',', 1) as item_name
+      FROM issue_details i
+      LEFT JOIN stock_details s ON i.nac_code COLLATE utf8mb4_unicode_ci = s.nac_code COLLATE utf8mb4_unicode_ci
+      WHERE i.issue_date BETWEEN ? AND ?
+      AND i.approval_status = ?
+     ORDER BY i.issue_date DESC, i.issue_slip_number
+20250528	13:07:11	c7baa95e-752b-41f2-845f-f7c02f725cfb	Export Params: ["2025-05-01","2025-05-30","APPROVED"]
+20250528	13:07:11	76f5a6d6-73b1-41d2-a20a-071246b29753	Successfully exported daily issue report from 2025-05-01 to 2025-05-30
+20250528	13:07:23	34802b63-e86e-4d48-a1b1-9e6f2586e605	Count Query: 
+      SELECT COUNT(*) as total
+      FROM issue_details i
+      WHERE i.issue_date BETWEEN ? AND ?
+      AND i.approval_status = ?
+     AND i.issued_for = ?
+20250528	13:07:23	6ca5ce95-6337-4438-9504-822febca5b1b	Count Params: ["2025-05-01","2025-05-30","APPROVED","1000"]
+20250528	13:07:23	f99c8797-14e9-4273-8d7b-a83677890d7b	Data Query: 
+      SELECT 
+        i.issue_slip_number,
+        i.issue_date,
+        i.part_number,
+        i.issued_for,
+        i.issued_by,
+        i.issue_quantity,
+        i.issue_cost,
+        i.remaining_balance,
+        SUBSTRING_INDEX(s.item_name, ',', 1) as item_name
+      FROM issue_details i
+      LEFT JOIN stock_details s ON i.nac_code COLLATE utf8mb4_unicode_ci = s.nac_code COLLATE utf8mb4_unicode_ci
+      WHERE i.issue_date BETWEEN ? AND ?
+      AND i.approval_status = ?
+     AND i.issued_for = ? ORDER BY i.issue_date DESC, i.issue_slip_number LIMIT ? OFFSET ?
+20250528	13:07:23	b5f9a424-a795-4e11-8fb6-127548e32ae4	Data Params: ["2025-05-01","2025-05-30","APPROVED","1000","10","0"]
+20250528	13:07:23	566ede8e-a995-4d6a-a88c-2ccfdcfeca05	Successfully generated daily issue report from 2025-05-01 to 2025-05-30 for equipment 1000
+20250528	13:07:25	7821246c-c64a-4102-b9e1-f46652bfdf23	Export Query: 
+      SELECT 
+        i.issue_slip_number,
+        i.issue_date,
+        i.part_number,
+        i.issued_for,
+        i.issued_by,
+        i.issue_quantity,
+        i.issue_cost,
+        i.remaining_balance,
+        SUBSTRING_INDEX(s.item_name, ',', 1) as item_name
+      FROM issue_details i
+      LEFT JOIN stock_details s ON i.nac_code COLLATE utf8mb4_unicode_ci = s.nac_code COLLATE utf8mb4_unicode_ci
+      WHERE i.issue_date BETWEEN ? AND ?
+      AND i.approval_status = ?
+     AND i.issued_for = ? ORDER BY i.issue_date DESC, i.issue_slip_number
+20250528	13:07:25	83ae6b00-5418-4a25-a2f4-0d3624e44736	Export Params: ["2025-05-01","2025-05-30","APPROVED","1000"]
+20250528	13:07:25	831139c9-0409-4d28-aef9-f21169e64997	Successfully exported daily issue report from 2025-05-01 to 2025-05-30 for equipment 1000

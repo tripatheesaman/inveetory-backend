@@ -119,3 +119,21 @@
 20250527	16:17:48	8a3f4c92-8abb-4b70-a5f3-d881388b425e	Successfully retrieved 5 pending issues
 20250527	16:29:02	7e370b2a-3609-41e0-8f87-e256b7f82792	Item issued successfully - NAC: GS 84690, Quantity: 1 by user: Saman Tripathee
 20250527	16:29:02	69949e86-a196-4013-82a7-a5bd3f3faa03	Issue created successfully for date: 2025/04/30 by user: Saman Tripathee
+20250528	10:01:37	37185d50-85e3-4ce3-a74d-27b0107db6b8	Successfully retrieved 6 pending issues
+20250528	10:01:37	117bedf4-e895-4001-9707-6ba9f493bf94	Successfully retrieved 6 pending issues
+20250528	10:02:09	3d6e8fcd-9912-4235-b6ab-53a6a2924972	Successfully retrieved 6 pending issues
+20250528	10:02:09	8767b578-5a62-4a17-9805-692360f4afd3	Successfully retrieved 6 pending issues
+20250528	10:02:14	810dc87a-7141-436f-9054-70b17ae39f55	Failed to approve issues - No issues found with IDs: 36
+20250528	10:02:14	c136bb7f-7a9e-4189-b416-a32a533fbf6a	Error approving issues: Issue records not found for IDs: 36
+20250528	10:03:44	fb06a2c7-0873-4094-a756-b29691ce1e61	Successfully approved issues with IDs: 36 by user: superadmin@god.com
+20250528	10:03:44	214983d1-f9bf-44c9-88d1-89d96d0539e2	Successfully retrieved 5 pending issues
+20250528	10:03:46	76538b71-14c8-4532-9806-472d10f68402	Successfully approved issues with IDs: 34 by user: superadmin@god.com
+20250528	10:03:46	bf43d5a9-5b7b-4154-9ad6-a691115a60b7	Successfully retrieved 4 pending issues
+20250528	10:03:49	08cf7f8d-af7c-41d4-a0f6-6245eeb95af4	Successfully approved issues with IDs: 38 by user: superadmin@god.com
+20250528	10:03:49	c7cac6b2-ca61-4ed3-bfa9-91e857d44c47	Successfully retrieved 3 pending issues
+20250528	10:03:51	8d992fc7-daa7-44fd-becf-efba3dcfe801	Successfully approved issues with IDs: 31, 32, 33 by user: superadmin@god.com
+20250528	10:03:51	51f16476-c2db-4a53-8d5e-3c5dffa94ddd	Successfully retrieved 0 pending issues
+20250528	10:04:00	140c1840-5254-41dc-82c3-944b11fc35bc	Successfully retrieved 0 pending issues
+20250528	10:04:00	3843f47b-d474-4a9d-80bd-a2a4a289a93d	Successfully retrieved 0 pending issues
+20250528	11:05:39	55c49777-3840-4f58-9cff-c1f5824a4d55	Successfully retrieved 0 pending issues
+20250528	11:05:39	46d19300-ca4e-4ff9-9cb8-feddabeb0bca	Successfully retrieved 0 pending issues

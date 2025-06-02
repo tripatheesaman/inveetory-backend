@@ -11,3 +11,27 @@
 20250526	13:55:26	29e5cb13-a36b-4fca-ab94-8e667b8c2db8	Fetching RRP details for RRP number: F001T1
 20250526	13:55:26	e04ec882-5601-40a2-bdaf-c08db5d0fded	Successfully fetched all RRP details for: F001T1
 20250526	13:55:26	20ab4cf6-31c5-4f1a-82fd-20cae330ca8d	Successfully generated RRP Excel for: F001T1
+20250527	11:16:08	af29279f-a28b-488d-aa3f-91a7b1179227	Generating request Excel for request number: R006
+20250527	11:16:08	49e4a2bd-9bc1-4160-b620-09f0c410eb7d	Fetching request details for request number: R006
+20250527	11:16:08	6a7e3cb3-e7c3-467d-8acb-5120846a156b	Found 1 items for request: R006
+20250527	11:16:08	b1ce3cd9-1246-4aed-bc69-d45165c2f5f6	Successfully fetched all details for request: R006
+20250527	11:16:08	e2d2386a-d584-4a20-9fcd-b8b4c5cc8b49	Resizing image: /images/request/5cb5b109-ad99-4828-8615-f0987d4c2679.png
+20250527	11:16:08	96ced522-46ca-4d60-bc7c-9b1aae3a3e2c	Successfully resized image: /images/request/5cb5b109-ad99-4828-8615-f0987d4c2679.png
+20250527	11:16:08	b85e997e-f646-40c2-be58-c66718f3415e	Resizing image: /images/request/5cb5b109-ad99-4828-8615-f0987d4c2679.png
+20250527	11:16:08	8d2b2593-b6ff-4fc4-856c-afa938071718	Successfully resized image: /images/request/5cb5b109-ad99-4828-8615-f0987d4c2679.png
+20250527	11:16:08	fadf1b09-0869-4644-9249-0e8b51da62b5	Successfully generated request Excel for: R006
+20250527	11:21:04	5dce9b20-c759-46b1-8869-eaf4e21a8a4f	Generating RRP Excel for RRP number: L005T1
+20250527	11:21:04	9184f301-b06b-4ddb-a2df-f54d16736e4c	Fetching RRP details for RRP number: L005T1
+20250527	11:21:04	6bc09974-7476-4cab-a983-939970b5bcb7	Successfully fetched all RRP details for: L005T1
+20250527	11:21:04	ef6a4747-f08c-4504-bb2d-03d29729f74a	Successfully generated RRP Excel for: L005T1
+20250527	12:22:16	db43c301-2e9c-4fa3-8db7-bba7bd37dca0	Generating request Excel for request number: R003
+20250527	12:22:16	69bfd33a-e162-4525-ac86-4f21590428c3	Fetching request details for request number: R003
+20250527	12:22:16	1b6cbefa-6572-4e5b-b6de-15821ae4da65	Found 2 items for request: R003
+20250527	12:22:16	f7b394a9-8bcd-49e0-801a-14dd0a972031	Successfully fetched all details for request: R003
+20250527	12:22:16	3ea20757-7821-4a7e-9ed1-e5d5eb6ef46d	Resizing image: /images/request/81e68806-9341-4a38-a687-e4c70ed9f5f6.png
+20250527	12:22:16	a42d9e8e-b5ff-4d75-b963-3c13edac3d7e	Successfully resized image: /images/request/81e68806-9341-4a38-a687-e4c70ed9f5f6.png
+20250527	12:22:16	f7618bcc-bedd-4a02-9159-19d5126d5d8c	Resizing image: /images/request/81e68806-9341-4a38-a687-e4c70ed9f5f6.png
+20250527	12:22:16	09341dc5-e9eb-4d67-adf9-fc412b00b7f9	Resizing image: /images/request/8a2d694f-b794-4958-a8c2-b17d8bbd7768.png
+20250527	12:22:16	c1a4baac-055c-4739-95d0-eafa779365b1	Successfully resized image: /images/request/81e68806-9341-4a38-a687-e4c70ed9f5f6.png
+20250527	12:22:16	775f0c95-8c94-490e-8d2e-1c411cfe25c7	Successfully resized image: /images/request/8a2d694f-b794-4958-a8c2-b17d8bbd7768.png
+20250527	12:22:16	c021818a-bced-408b-95fc-065d85bc13f5	Successfully generated request Excel for: R003

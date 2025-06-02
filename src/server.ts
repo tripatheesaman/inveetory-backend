@@ -18,6 +18,7 @@ import rrpRoutes from './routes/rrpRoutes';
 import userRoutes from './routes/userRoutes';
 import roleRoutes from './routes/roleRoutes';
 import permissionRoutes from './routes/permissionRoutes';
+import reportRoutes from './routes/reportRoutes';
 
 const app = express();
 const PORT = process.env.PORT || 3500;
@@ -48,6 +49,7 @@ app.use('/api/rrp', verifyJWT, rrpRoutes);
 app.use('/api/user', verifyJWT, userRoutes);
 app.use('/api/role', verifyJWT, roleRoutes);
 app.use('/api/permission', verifyJWT, permissionRoutes);
+app.use('/api/report', reportRoutes);
 
 
 app.get('/health', (req: Request, res: Response) => {

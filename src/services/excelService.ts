@@ -89,6 +89,17 @@ interface RRPDetails extends RowDataPacket {
     customs_number: string;
 }
 
+export interface StockCardData extends RowDataPacket {
+    nac_code: string;
+    item_name: string;
+    part_number: string;
+    equipment_number: string;
+    location: string;
+    card_number: string;
+    open_quantity: number;
+    open_amount: number;
+}
+
 export class ExcelService {
     private static async getRequestDetails(requestNumber: string): Promise<{
         requestDetails: RequestDetails;
@@ -642,6 +653,281 @@ export class ExcelService {
             logEvents(`Error generating RRP Excel for ${rrpNumber}: ${errorMessage}`, "excelServiceLog.log");
             throw new Error(`Failed to generate RRP Excel: ${errorMessage}`);
         }
+    }
+
+    public static async generateStockCardExcel(
+        stockData: StockCardData[],
+        templatePath: string
+    ): Promise<ExcelJS.Buffer> {
+        try {
+            if (!stockData || stockData.length === 0) {
+                logEvents('No stock data provided for Excel generation', "excelServiceLog.log");
+                throw new Error('No stock data provided for Excel generation');
+            }
+
+            logEvents(`Generating stock card Excel for ${stockData.length} items`, "excelServiceLog.log");
+
+            // Prepare the output workbook
+            const outputWorkbook = new ExcelJS.Workbook();
+            for (const stock of stockData) {
+                // Load the template for each stock item
+                const templateWorkbook = new ExcelJS.Workbook();
+                await templateWorkbook.xlsx.readFile(templatePath);
+                const templateSheet = templateWorkbook.getWorksheet('Stock Card Template');
+                if (!templateSheet) {
+                    logEvents('Template worksheet not found', "excelServiceLog.log");
+                    throw new Error('Template worksheet not found');
+                }
+
+                // Rename the template worksheet
+                templateSheet.name = `Bin Card ${stock.nac_code}`;
+
+                // Fill in the header and data as before
+                templateSheet.getCell('A5').value = `NAC Code: ${stock.nac_code}`;
+                templateSheet.getCell('A7').value = `Nomenclature: ${stock.item_name}`;
+                templateSheet.getCell('A8').value = `PartNo: ${(stock as any).primary_part_number}`;
+                templateSheet.getCell('A9').value = `Alternate P/N: ${(stock as any).secondary_part_numbers.join(', ')}`;
+                templateSheet.getCell('A10').value = `Applicable Fleet: ${stock.equipment_number}`;
+                templateSheet.getCell('J4').value = stock.card_number;
+                templateSheet.getCell('J5').value = new Date().toISOString().split('T')[0].replace(/-/g, '/');
+                templateSheet.getCell('J6').value = stock.location;
+
+                // Set initial balance in row 20
+                const referenceRow = templateSheet.getRow(20);
+                referenceRow.getCell('A').value = (stock as any).openingBalanceDate.toISOString().split('T')[0].replace(/-/g, '/');
+                referenceRow.getCell('B').value = 'B.F.';
+                referenceRow.getCell('C').value = stock.open_quantity;
+                referenceRow.getCell('H').value = stock.open_quantity;
+
+                // Process movements, inserting new rows as needed
+                let rowIndex = 20;
+                let runningBalance = typeof stock.open_quantity === 'string'
+                    ? parseFloat(stock.open_quantity) || 0
+                    : (stock.open_quantity || 0);
+                let deferredIssues: { quantity: number; reference: string; equipment: string }[] = [];
+                // Ensure all movements have correct types and references
+                const movements = (stock as any).movements.map((movement: any) => {
+                    movement.quantity = parseFloat(movement.quantity) || 0;
+                    movement.amount = parseFloat(movement.amount) || 0;
+                    let referenceStr: string = movement.reference != null ? String(movement.reference) : '';
+                    if (movement.type === 'receive') {
+                        referenceStr = referenceStr.indexOf('T') !== -1 ? referenceStr.split('T')[0] : referenceStr;
+                    } else if (movement.type === 'issue') {
+                        referenceStr = referenceStr.indexOf('Y') !== -1 ? referenceStr.split('Y')[0] : referenceStr;
+                    }
+                    // For issues, ensure equipment number is set from issue table
+                    if (movement.type === 'issue' && movement.equipment_number) {
+                        movement.issued_for = movement.equipment_number;
+                    }
+                    movement.referenceStr = referenceStr;
+                    return movement;
+                });
+                for (const movement of movements) {
+                    rowIndex++;
+                    templateSheet.insertRow(rowIndex, []);
+                    const refRow = templateSheet.getRow(20);
+                    const newRow = templateSheet.getRow(rowIndex);
+                    newRow.height = refRow.height || 15;
+                    newRow.hidden = refRow.hidden || false;
+                    newRow.outlineLevel = refRow.outlineLevel || 0;
+                    refRow.eachCell((cell, colNumber) => {
+                        const newCell = newRow.getCell(colNumber);
+                        if (cell.style) newCell.style = cell.style;
+                        if (cell.font) newCell.font = cell.font;
+                        if (cell.alignment) newCell.alignment = cell.alignment;
+                        if (cell.border) newCell.border = cell.border;
+                        if (cell.fill) newCell.fill = cell.fill;
+                        if (cell.numFmt) newCell.numFmt = cell.numFmt;
+                        if (cell.protection) newCell.protection = cell.protection;
+                    });
+
+                    if (movement.type === 'receive') {
+                        newRow.getCell('A').value = movement.date.toISOString().split('T')[0].replace(/-/g, '/');
+                        newRow.getCell('B').value = movement.referenceStr;
+                        newRow.getCell('C').value = movement.quantity;
+                        newRow.getCell('D').value = movement.amount;
+                        runningBalance += movement.quantity;
+                        newRow.getCell('H').value = runningBalance;
+                        // Check for deferred issues
+                        if (deferredIssues.length > 0) {
+                            let remainingBalance = runningBalance;
+                            const issuesToProcess = [...deferredIssues];
+                            deferredIssues = [];
+                            for (const deferred of issuesToProcess) {
+                                if (remainingBalance >= deferred.quantity) {
+                                    rowIndex++;
+                                    templateSheet.insertRow(rowIndex, []);
+                                    const deferredRow = templateSheet.getRow(rowIndex);
+                                    deferredRow.height = refRow.height || 15;
+                                    deferredRow.hidden = refRow.hidden || false;
+                                    deferredRow.outlineLevel = refRow.outlineLevel || 0;
+                                    refRow.eachCell((cell, colNumber) => {
+                                        const newCell = deferredRow.getCell(colNumber);
+                                        if (cell.style) newCell.style = cell.style;
+                                        if (cell.font) newCell.font = cell.font;
+                                        if (cell.alignment) newCell.alignment = cell.alignment;
+                                        if (cell.border) newCell.border = cell.border;
+                                        if (cell.fill) newCell.fill = cell.fill;
+                                        if (cell.numFmt) newCell.numFmt = cell.numFmt;
+                                        if (cell.protection) newCell.protection = cell.protection;
+                                    });
+                                    deferredRow.getCell('E').value = movement.date.toISOString().split('T')[0].replace(/-/g, '/');
+                                    deferredRow.getCell('F').value = 'Deferred Issue';
+                                    deferredRow.getCell('G').value = deferred.quantity;
+                                    deferredRow.getCell('J').value = deferred.equipment;
+                                    remainingBalance -= deferred.quantity;
+                                    runningBalance = remainingBalance;
+                                    deferredRow.getCell('H').value = runningBalance;
+                                } else if (remainingBalance > 0) {
+                                    rowIndex++;
+                                    templateSheet.insertRow(rowIndex, []);
+                                    const deferredRow = templateSheet.getRow(rowIndex);
+                                    deferredRow.height = refRow.height || 15;
+                                    deferredRow.hidden = refRow.hidden || false;
+                                    deferredRow.outlineLevel = refRow.outlineLevel || 0;
+                                    refRow.eachCell((cell, colNumber) => {
+                                        const newCell = deferredRow.getCell(colNumber);
+                                        if (cell.style) newCell.style = cell.style;
+                                        if (cell.font) newCell.font = cell.font;
+                                        if (cell.alignment) newCell.alignment = cell.alignment;
+                                        if (cell.border) newCell.border = cell.border;
+                                        if (cell.fill) newCell.fill = cell.fill;
+                                        if (cell.numFmt) newCell.numFmt = cell.numFmt;
+                                        if (cell.protection) newCell.protection = cell.protection;
+                                    });
+                                    deferredRow.getCell('E').value = movement.date.toISOString().split('T')[0].replace(/-/g, '/');
+                                    deferredRow.getCell('F').value = 'Deferred Issue';
+                                    deferredRow.getCell('G').value = remainingBalance;
+                                    deferredRow.getCell('J').value = deferred.equipment;
+                                    runningBalance = 0;
+                                    deferredRow.getCell('H').value = runningBalance;
+                                    deferredIssues.push({
+                                        quantity: deferred.quantity - remainingBalance,
+                                        reference: deferred.reference,
+                                        equipment: deferred.equipment
+                                    });
+                                    break;
+                                } else {
+                                    deferredIssues.push(deferred);
+                                }
+                            }
+                        }
+                    } else {
+                        if (runningBalance >= movement.quantity) {
+                            newRow.getCell('E').value = movement.date.toISOString().split('T')[0].replace(/-/g, '/');
+                            newRow.getCell('F').value = movement.referenceStr;
+                            newRow.getCell('G').value = movement.quantity;
+                            newRow.getCell('J').value = movement.issued_for || '';
+                            runningBalance -= movement.quantity;
+                            newRow.getCell('H').value = runningBalance;
+                        } else if (runningBalance > 0) {
+                            newRow.getCell('E').value = movement.date.toISOString().split('T')[0].replace(/-/g, '/');
+                            newRow.getCell('F').value = movement.reference;
+                            newRow.getCell('G').value = runningBalance;
+                            newRow.getCell('J').value = movement.issued_for || '';
+                            runningBalance = 0;
+                            newRow.getCell('H').value = runningBalance;
+                            deferredIssues.push({
+                                quantity: movement.quantity - runningBalance,
+                                reference: movement.reference,
+                                equipment: movement.issued_for || ''
+                            });
+                        } else {
+                            deferredIssues.push({
+                                quantity: movement.quantity,
+                                reference: movement.reference,
+                                equipment: movement.issued_for || ''
+                            });
+                        }
+                    }
+
+                    // After setting values for D, E, F, G, I, J, K, re-apply style from reference row
+                    ['D','E','F','G','I','J','K'].forEach(col => {
+                        const refCell = refRow.getCell(col);
+                        const newCell = newRow.getCell(col);
+                        if (refCell.style) newCell.style = refCell.style;
+                        if (refCell.font) newCell.font = refCell.font;
+                        if (refCell.alignment) newCell.alignment = refCell.alignment;
+                        if (refCell.border) newCell.border = refCell.border;
+                        if (refCell.fill) newCell.fill = refCell.fill;
+                        if (refCell.numFmt) newCell.numFmt = refCell.numFmt;
+                        if (refCell.protection) newCell.protection = refCell.protection;
+                    });
+                }
+
+                templateSheet.pageSetup.printArea = `A1:K${rowIndex}`;
+                templateSheet.pageSetup.printTitlesRow = '16:18';
+
+                // Add the filled sheet to the output workbook
+                const newSheet = outputWorkbook.addWorksheet(templateSheet.name);
+                templateSheet.eachRow({ includeEmpty: true }, (row, rowNumber) => {
+                    const newRow = newSheet.getRow(rowNumber);
+                    newRow.height = row.height;
+                    row.eachCell({ includeEmpty: true }, (cell, colNumber) => {
+                        const newCell = newRow.getCell(colNumber);
+                        newCell.value = cell.value;
+                        if (cell.style) newCell.style = cell.style;
+                        if (cell.font) newCell.font = cell.font;
+                        if (cell.alignment) newCell.alignment = cell.alignment;
+                        if (cell.border) newCell.border = cell.border;
+                        if (cell.fill) newCell.fill = cell.fill;
+                        if (cell.numFmt) newCell.numFmt = cell.numFmt;
+                        if (cell.protection) newCell.protection = cell.protection;
+                    });
+                });
+                // Copy column widths
+                templateSheet.columns.forEach((col, idx) => {
+                    if (col) {
+                        const targetCol = newSheet.getColumn(idx + 1);
+                        targetCol.width = col.width;
+                    }
+                });
+                // Copy merged cells
+                const mergeCells = templateSheet.mergeCells;
+                if (mergeCells) {
+                    const mergeRanges = mergeCells.toString().split(',');
+                    mergeRanges.forEach(range => {
+                        if (range) {
+                            newSheet.mergeCells(range.trim());
+                        }
+                    });
+                }
+                // Copy auto filter if exists
+                if (templateSheet.autoFilter) {
+                    newSheet.autoFilter = templateSheet.autoFilter;
+                }
+                // Copy page setup
+                newSheet.pageSetup = { ...templateSheet.pageSetup };
+
+                // After copying all rows/cells from templateSheet to newSheet, explicitly re-apply all merged cell ranges from templateSheet.model.merges to newSheet to ensure header merges are preserved.
+                if (templateSheet.model && templateSheet.model.merges) {
+                    templateSheet.model.merges.forEach(range => {
+                        newSheet.mergeCells(range);
+                    });
+                }
+            }
+
+            logEvents(`Successfully generated stock card Excel`, "excelServiceLog.log");
+            return await outputWorkbook.xlsx.writeBuffer();
+        } catch (error) {
+            const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+            logEvents(`Error generating stock card Excel: ${errorMessage}`, "excelServiceLog.log");
+            throw new Error(`Failed to generate stock card Excel: ${errorMessage}`);
+        }
+    }
+
+    private static applyRowFormatting(
+        sheet: ExcelJS.Worksheet,
+        rowIndex: number,
+        columns: string[],
+        font: Partial<ExcelJS.Font>,
+        alignment: Partial<ExcelJS.Alignment>
+    ): void {
+        columns.forEach(col => {
+            const cell = sheet.getCell(`${col}${rowIndex}`);
+            cell.font = font;
+            cell.alignment = alignment;
+        });
     }
 }
 

@@ -289,3 +289,198 @@
 20250528	11:07:57	96033d35-a16c-4d3b-9274-2bb8f241aeba	Server running on port 5000
 20250528	11:08:12	979dc10a-775b-4bc1-aa5e-2961c750c672	Connected to MySQL
 20250528	11:08:12	f5783d72-de49-4ddf-b08a-7c72bcbedc84	Server running on port 5000
+20250528	13:18:20	6a5b9bb1-543d-432f-bf22-fa77efdaa5e3	Connected to MySQL
+20250528	13:18:20	9fdb4603-01e1-4ac8-85b9-1fbd9c1c6bc8	Server running on port 5000
+20250528	13:43:04	c444f802-657f-4557-bace-02f2c2fb4ee3	404 - Route not found: GET /api/items/search?query=cotton
+20250528	13:45:01	58f29acb-a76f-4d88-82c5-6f4b32aebc7e	404 - Route not found: GET /api/items/search?query=c
+20250528	13:45:05	b714250e-d0fe-453b-a59c-cd97e3090827	404 - Route not found: GET /api/items/search?query=s
+20250528	13:46:09	ee101357-2b1f-4fd3-821f-0a0660e5754d	404 - Route not found: GET /api/items/search?query=c
+20250528	13:49:22	4184eaef-a4e4-4e31-8ef2-962f017fdea2	404 - Route not found: POST /api/report/stockcard/generate
+20250528	16:21:31	2bf73a25-41f2-45fb-891b-77f093ab7893	404 - Route not found: POST /api/report/stock-card/generate
+20250530	10:31:08	4e99eeea-1fb4-4d5c-baf7-4ebdf0b6c4d1	Connected to MySQL
+20250530	10:31:08	46963ebc-4ac7-4bd6-a588-2b9459d1ea74	Server running on port 5000
+20250530	11:34:25	4f6d17d8-76c9-4cb5-8827-dd3beee96b9e	Connected to MySQL
+20250530	11:34:25	d621c9ac-8999-446d-968d-d7bb3afc8139	Server running on port 5000
+20250530	11:34:32	dd4ff930-8136-4827-ba93-f930f3cb79dd	Connected to MySQL
+20250530	11:34:32	6ab66b9b-aa18-4cb1-ae4c-d49caeeadb2a	Server running on port 5000
+20250530	11:34:35	96902cab-9fa8-48a8-9815-b4a856a54414	Connected to MySQL
+20250530	11:34:35	f64a208b-1f1b-46bb-9777-6f8b065a6469	Server running on port 5000
+20250530	11:34:39	91595d56-6adb-46e9-aae3-4395e987adcb	Connected to MySQL
+20250530	11:34:39	751a645c-f9c5-4651-b23b-867bf5289e26	Server running on port 5000
+20250530	11:35:00	cadd9d76-ac7e-44fe-82f6-b076375dbb9a	Connected to MySQL
+20250530	11:35:00	044e9393-dcdc-4706-8fd2-f2d30c257f8d	Server running on port 5000
+20250602	12:30:46	e9caa943-086a-4fdf-9f77-2e0d9de38d13	Connected to MySQL
+20250602	12:30:46	6cdc19f5-a7c7-4641-9c1d-342d798bee59	Server running on port 5000
+20250602	12:38:57	ac86e748-fa3f-4514-a6c2-39f7f1e966aa	Connected to MySQL
+20250602	12:38:57	7718e750-ccb8-4daf-b69c-d1871033a58b	Server running on port 5000
+20250602	12:39:09	30d9f1af-55cd-4d31-bacc-2df8f05b50ef	404 - Route not found: POST /api/report/stock-card/generate
+20250602	12:47:39	d045dd2a-ca73-4dd1-90ba-fb2aa3c6d963	Connected to MySQL
+20250602	12:47:39	503cce9c-6455-4855-9ced-7b9a0b1fc307	Server running on port 5000
+20250602	12:52:58	128b7986-a84c-4f0c-8404-0ae4d3dd090a	Connected to MySQL
+20250602	12:52:58	acd30739-0a96-45b7-957c-b9e2b0ed41b8	Server running on port 5000
+20250602	12:53:19	fa80f362-343b-45a6-88a4-9fb828ed88c0	Connected to MySQL
+20250602	12:53:19	073c0e8e-1189-48f9-a1ef-7e6a7fae7237	Server running on port 5000
+20250602	12:53:27	bead055e-2037-47a6-925a-d5b8ee6c5d95	Connected to MySQL
+20250602	12:53:27	b491ebf9-b89f-458d-b9b8-64521fba6105	Server running on port 5000
+20250602	12:55:47	68aaef95-6688-4aea-bb97-23bd4a432ca6	Connected to MySQL
+20250602	12:55:47	f0b40ba5-2e4c-48ce-95a0-06f27e5cc4bc	Server running on port 5000
+20250602	12:55:57	b4d1ba5d-4998-4831-ae5a-42ea7158c155	Connected to MySQL
+20250602	12:55:57	7daeac4b-6b7c-4649-a29e-e23facea777e	Server running on port 5000
+20250602	12:56:03	48093eb7-96e2-4485-af9a-18a81d115e6f	Connected to MySQL
+20250602	12:56:03	c4656d9e-adca-49ec-991b-c682b0ec93eb	Server running on port 5000
+20250602	12:56:07	2df4edf6-4d3c-484d-9a1d-c32a28c2e5ea	Connected to MySQL
+20250602	12:56:07	fa45349f-9a74-4b30-aeee-9fcfe2770beb	Server running on port 5000
+20250602	12:56:09	3b14513c-8752-4465-a81a-02c2b25cfee4	Connected to MySQL
+20250602	12:56:09	9d20b377-92c3-47bd-a587-847c380bd90b	Server running on port 5000
+20250602	12:57:09	c709291e-ebac-4317-ad67-57c71f0a2889	Connected to MySQL
+20250602	12:57:09	00ea9581-5311-4cca-a646-e46b438ce47e	Server running on port 5000
+20250602	12:57:19	d7e02732-6ef9-4002-9261-8a5b8e21116d	Connected to MySQL
+20250602	12:57:19	52497240-4e7b-4589-83c8-e1bfb886e67b	Server running on port 5000
+20250602	12:57:21	08c85975-5444-434d-8009-03ccbb48efa9	Connected to MySQL
+20250602	12:57:21	c6859bd0-8679-4aab-bf85-1733ba3fedda	Server running on port 5000
+20250602	12:57:26	ca996ad1-b8a2-4789-afb6-099f885beb6e	Connected to MySQL
+20250602	12:57:26	d70b76d0-7e81-4138-bebc-e8d36c1cf741	Server running on port 5000
+20250602	12:58:43	4545e5b5-2622-4e99-8002-c9b9b65bc318	Connected to MySQL
+20250602	12:58:43	64c397a9-b3fb-4d4e-bbf5-6ad2e1cde6ad	Server running on port 5000
+20250602	12:58:47	8b557caa-c39e-4892-8942-b53e464813e8	Connected to MySQL
+20250602	12:58:47	4b069490-a0aa-4738-a8b1-ab582359583f	Server running on port 5000
+20250602	12:59:47	17f10d14-afe0-4354-9bda-db07ad544967	Connected to MySQL
+20250602	12:59:47	d7769731-e184-483a-8273-010c872a4ed0	Server running on port 5000
+20250602	12:59:49	33521a9f-5270-4358-b6cb-b8a2af427414	Connected to MySQL
+20250602	12:59:49	98393f1e-d43f-4997-b565-0649c1aa9612	Server running on port 5000
+20250602	12:59:53	97837163-ba08-4419-a6b9-3ca4a9fac33f	Connected to MySQL
+20250602	12:59:53	f6da462a-67e0-402c-8006-17bbcc74f6ac	Server running on port 5000
+20250602	13:04:39	838f5c75-f0e6-4526-8c00-4c262186bbdb	Connected to MySQL
+20250602	13:04:39	d14ab490-4a57-40ea-93f1-e3f38c2d01a7	Server running on port 5000
+20250602	13:05:08	d4a74f4a-39f6-493a-bb66-2a6733461145	Connected to MySQL
+20250602	13:05:08	fbdb594b-0d96-42fd-aa86-f89b12ab6191	Server running on port 5000
+20250602	13:05:10	b04330cd-ab7a-4138-bb9c-bffec0cb2c9e	Connected to MySQL
+20250602	13:05:10	bd9382e5-16db-41c4-adbe-7cc938bacb96	Server running on port 5000
+20250602	13:10:11	8c41bc14-de8e-488e-aa20-d051d14acac1	Connected to MySQL
+20250602	13:10:11	4eb289ff-add9-4e64-95b0-7b8e60baa097	Server running on port 5000
+20250602	13:10:14	9c467cb8-e9e9-4e46-a94a-ad9fe5b22ed9	Connected to MySQL
+20250602	13:10:14	71846075-e6d5-4dcb-a2a8-342151dc6468	Server running on port 5000
+20250602	13:10:16	c56ee9c7-63cc-4d14-a5fa-6fa336f7bf52	Connected to MySQL
+20250602	13:10:16	4d6d6e03-febe-4de6-81f3-136832b26520	Server running on port 5000
+20250602	13:12:52	19844947-f31a-4401-9989-57a4b48e0b49	Connected to MySQL
+20250602	13:12:52	d06ecb99-f178-4bf6-9aad-edbc625ef27c	Server running on port 5000
+20250602	13:15:38	e3dc56ea-1fb7-49cd-8b6a-1c8c7d459641	Connected to MySQL
+20250602	13:15:38	4d13b965-2630-43af-bb3f-e210161586af	Server running on port 5000
+20250602	13:16:31	be76883b-7770-4aa5-814e-e2d958fd1f67	Connected to MySQL
+20250602	13:16:31	55a94d08-55cc-4d88-89fc-afa8e409c538	Server running on port 5000
+20250602	13:16:33	46acc229-8dd4-4c6c-9121-e009d4977b4b	Connected to MySQL
+20250602	13:16:33	b2cfb46e-11cb-487e-804f-773f1398b24e	Server running on port 5000
+20250602	13:24:16	716ec301-6583-4cd9-9bef-05c2c3fe16a8	Connected to MySQL
+20250602	13:24:16	f7237c10-53b6-4c18-8b56-d13e8b3604cd	Server running on port 5000
+20250602	13:24:41	4345c044-0d44-4ce7-a3b3-9109de8d8d40	Connected to MySQL
+20250602	13:24:41	651b44a5-dd3e-4b84-a15d-42497e7355a9	Server running on port 5000
+20250602	13:29:58	858a5872-9ea4-43f0-bd04-044caf9d5b10	Connected to MySQL
+20250602	13:29:58	b59eb43e-bccf-49cb-8e50-c8ffed3fa516	Server running on port 5000
+20250602	13:30:01	9b8f458d-98f3-4c00-b2f0-6f644997bda8	Connected to MySQL
+20250602	13:30:01	994b75e3-208c-4afb-a49a-d6c899f423af	Server running on port 5000
+20250602	13:32:47	81f5a5ac-02b1-4941-b555-3251f8259b6a	Connected to MySQL
+20250602	13:32:47	a1b0d009-7f71-4ab5-a1f0-0617338d75f7	Server running on port 5000
+20250602	13:34:06	111ba05c-bf3f-4425-b201-9a90ec6a6e80	Connected to MySQL
+20250602	13:34:06	9b7111dc-4ee8-4e23-aaf1-df3565d6500f	Server running on port 5000
+20250602	13:36:23	b373f32e-06a2-4295-9e2f-193691601efc	Connected to MySQL
+20250602	13:36:23	9628df05-ef6c-4c7c-b7f6-77a6c09f3efb	Server running on port 5000
+20250602	13:36:43	4a5ffd4b-e74f-4cc2-aee0-ad9ff73533ca	Connected to MySQL
+20250602	13:36:43	a21f3e71-4db2-4243-83ab-a454aa9e7cfe	Server running on port 5000
+20250602	13:49:52	d4040c50-1598-4a45-b69c-3685b49faab7	Connected to MySQL
+20250602	13:49:52	917d8265-f9e8-4962-9295-f2d2c092070b	Server running on port 5000
+20250602	13:49:53	9aeee213-1144-475b-8219-4eae6457a6af	Connected to MySQL
+20250602	13:49:53	79e958ec-e130-4471-bb89-a3039f720fa6	Server running on port 5000
+20250602	13:52:09	79329e87-365c-4223-84a6-816a466fd2c3	Connected to MySQL
+20250602	13:52:09	a83cd968-7b06-4374-b1af-0ef7e05d2119	Server running on port 5000
+20250602	13:53:18	23a7aca1-d0d0-4b52-adf8-3da3c55f8b12	Connected to MySQL
+20250602	13:53:18	74e28200-71b6-45a8-97ac-ea5f03ac744f	Server running on port 5000
+20250602	14:06:19	0d517255-2bc9-4203-843f-e39b3a0c275b	Connected to MySQL
+20250602	14:06:19	920ce4c1-3f38-4db6-aa34-3979c684970e	Server running on port 5000
+20250602	14:14:10	b60492b3-3806-4726-a0c8-ed3d362f067c	Connected to MySQL
+20250602	14:14:10	348f1828-c28a-47cc-b506-e00a383b5f93	Server running on port 5000
+20250602	14:17:15	4f8fddd2-e19d-447a-bdae-7df07783458c	Connected to MySQL
+20250602	14:17:15	e76705a6-8990-481c-b975-b61d55ca03d2	Server running on port 5000
+20250602	14:43:12	a830f63f-6cf2-4970-b754-a70e6dac3b37	Connected to MySQL
+20250602	14:43:12	5df1362c-7433-4fba-b35c-c0d6035fa244	Server running on port 5000
+20250602	14:44:24	8bd2a365-ed56-44bf-ad43-4925ba8fc659	Connected to MySQL
+20250602	14:44:24	c9c554c6-4a8b-4ca2-8095-2e206f4cecfa	Server running on port 5000
+20250602	14:46:03	452ec56f-2a3c-4cb6-8f5e-5b0ed218a69b	Connected to MySQL
+20250602	14:46:03	61b2511e-bf57-4900-b11b-464240814f3e	Server running on port 5000
+20250602	14:46:05	13e0797a-b137-4945-8e2c-bea082613bf0	Connected to MySQL
+20250602	14:46:05	d291ddf4-681a-4c5f-a950-49157a65f2db	Server running on port 5000
+20250602	15:06:43	6680a686-1340-47be-9c5c-e4e4fc5721f5	Server running on port 5000
+20250602	15:06:43	f016fc28-07f5-499e-bcdc-28aed8ef5cd6	Connected to MySQL
+20250602	15:14:23	be6b5eae-23e4-46fb-a740-5037d5918c1e	Connected to MySQL
+20250602	15:14:23	d2d0eaea-e0c3-45ff-a02e-2be24b2a7cc6	Server running on port 5000
+20250602	15:14:46	408c16ea-c12c-494d-bf8f-d50c5185a684	Connected to MySQL
+20250602	15:14:46	a247da91-67d2-44c9-9c78-f549e1f40bd6	Server running on port 5000
+20250602	15:14:50	72959b79-6679-4b12-a7a9-6804bd18bed4	Connected to MySQL
+20250602	15:14:50	8b06ccf5-0f24-4964-bd06-667fccc65792	Server running on port 5000
+20250602	15:20:14	f34ac311-e458-40f8-9cb4-8d4efc022ef9	Connected to MySQL
+20250602	15:20:14	19192042-7262-4ea1-ac30-b0404bfc0cc4	Server running on port 5000
+20250602	15:20:19	467d57d7-57fe-4bc1-92df-b7027a270273	Connected to MySQL
+20250602	15:20:19	ac5ca35d-2e4f-43cd-8bfa-a14a5d767d91	Server running on port 5000
+20250602	15:20:22	486ecf88-b8fa-402d-a0e6-f30b12cf43ac	Connected to MySQL
+20250602	15:20:22	540d1c76-2793-48cc-81be-f5092354cc4f	Server running on port 5000
+20250602	15:22:00	e7fbf001-a2c3-47a9-9e92-11f92ba05d27	Connected to MySQL
+20250602	15:22:00	38d3874c-a3c8-45fa-83f0-714cbf49f49c	Server running on port 5000
+20250602	15:25:41	88adde64-15b8-41ab-a250-746cf7a9e1d9	Connected to MySQL
+20250602	15:25:41	fb6c8914-fb1d-47ad-a117-99fab2bb736f	Server running on port 5000
+20250602	15:25:47	584dd9b7-b366-4b11-b08a-511dec07724e	Connected to MySQL
+20250602	15:25:47	c3fcb03a-7e9c-4ceb-8f47-6b95f623eb62	Server running on port 5000
+20250602	15:29:11	93704a46-b74e-47f0-a6c9-b7d0a0f5f49f	Connected to MySQL
+20250602	15:29:11	95bb89f7-c2cd-49c0-9dde-82b36a49f95a	Server running on port 5000
+20250602	15:31:08	a3b19812-47e0-475c-a94b-223dac581857	Connected to MySQL
+20250602	15:31:08	7d41e096-92e3-4323-a429-f61e69391419	Server running on port 5000
+20250602	15:32:29	18198676-8b55-42fa-83d9-b5d95ddc8022	Connected to MySQL
+20250602	15:32:29	5a72c5aa-42ff-4772-b32a-b888850b24a7	Server running on port 5000
+20250602	15:37:53	bd0850a3-eb71-49e1-8de1-5f0c6696b6e6	Connected to MySQL
+20250602	15:37:53	ea5477a9-a92d-4f0d-936f-67b60b22d6d6	Server running on port 5000
+20250602	15:37:59	71bb7f5f-7029-4b1b-984c-ab46cd2501be	Connected to MySQL
+20250602	15:37:59	c6aa3deb-9981-40c9-a8d9-060a52a2c876	Server running on port 5000
+20250602	15:38:01	7e2c5e9b-5e32-44b0-9549-892b52db5946	Connected to MySQL
+20250602	15:38:01	475b894b-86a0-4086-bef4-f7f532d58dbd	Server running on port 5000
+20250602	15:41:48	b35d57bd-24a8-4ff0-8d6b-cb7bd60cc564	Connected to MySQL
+20250602	15:41:48	53867f63-64de-49e3-8d6a-b075e580d8b7	Server running on port 5000
+20250602	15:48:51	db1787e1-5ad6-4eba-95fb-03bae6657fbf	Connected to MySQL
+20250602	15:48:51	4f5a5ad9-9fb1-43fc-810c-f97c96ecef98	Server running on port 5000
+20250602	15:54:49	e145b2b5-a170-472a-90bb-630f9081ff95	Connected to MySQL
+20250602	15:54:49	b880b13e-cc84-4e09-b66b-3fc3e9475947	Server running on port 5000
+20250602	15:58:22	96b8f33b-6fcb-4a8b-a568-3d615ebd2c92	Connected to MySQL
+20250602	15:58:22	22254fb4-64c3-409a-968e-2dd64487308c	Server running on port 5000
+20250602	15:58:28	da9a46af-372f-44f1-9ad6-33800a013234	Connected to MySQL
+20250602	15:58:28	182c1191-72d1-487f-84f9-c850c64a3dc5	Server running on port 5000
+20250602	16:01:16	3b24a39d-7c74-45a0-8a64-4ec03044dfbc	Connected to MySQL
+20250602	16:01:16	75b70ad6-6e39-49e6-82d6-591e00cc9567	Server running on port 5000
+20250602	16:03:11	1124a2d1-8a47-4572-ae0c-ce48b863aa6f	Connected to MySQL
+20250602	16:03:11	6e8275db-42b8-4354-b046-2f37573e77c2	Server running on port 5000
+20250602	16:03:13	a416d607-567a-4528-938b-bb17a691242a	Connected to MySQL
+20250602	16:03:13	03300c7f-c63d-4ee9-8ac1-4b7240e90d00	Server running on port 5000
+20250602	16:03:29	3dbc8392-ac12-4d57-bfad-628eff2856b0	Connected to MySQL
+20250602	16:03:29	6966b2a8-eb5d-4d92-b99c-8f3958abe85b	Server running on port 5000
+20250602	16:03:59	8f811d2d-669d-46f8-9d0f-d979a7599672	Connected to MySQL
+20250602	16:03:59	5d60bc51-f96c-4c1c-b72a-733b1733bd57	Server running on port 5000
+20250602	16:04:40	eedbf21a-153f-45e0-bfd6-23a1adfaa2ae	Connected to MySQL
+20250602	16:04:40	63348f42-742b-4e82-ab41-4041b81f1c93	Server running on port 5000
+20250602	16:09:14	d762d0fd-5da8-4301-8cee-57a7ef3ca2fa	Server running on port 5000
+20250602	16:09:14	1991b069-74bf-417d-9997-76f98d9ee026	Connected to MySQL
+20250602	16:11:42	60e66ce8-892d-4239-af72-2dd30304e4d6	Connected to MySQL
+20250602	16:11:42	8b1e668d-bbcc-4a20-bdc9-8bc8a6d3910a	Server running on port 5000
+20250602	16:12:10	8d4e882d-6bfe-4768-87e3-a1cdc9b085f2	Connected to MySQL
+20250602	16:12:10	65309a18-7653-484a-b857-e6e152600cdf	Server running on port 5000
+20250602	16:12:12	25e581c4-e4c0-4c94-b9ff-7c0155dee9b7	Connected to MySQL
+20250602	16:12:12	648afd35-bb16-44bc-9fb7-42837ce1b249	Server running on port 5000
+20250602	16:13:23	e681379b-b864-40dc-a8ac-5cec55238d04	Connected to MySQL
+20250602	16:13:23	00d1f7d8-dc22-4b57-9ec9-c2f44f9a211d	Server running on port 5000
+20250602	16:13:25	0fd2e7a6-beaf-47ce-866a-701ee9530889	Connected to MySQL
+20250602	16:13:25	b5eb154f-ba5b-4153-87db-a5507c7de1f1	Server running on port 5000
+20250602	16:15:25	109baeae-934a-431f-a1ba-241b2ac2c85e	Connected to MySQL
+20250602	16:15:25	af787ac8-b967-435d-8525-2fb9ad6f561a	Server running on port 5000
+20250602	16:15:33	ee29a276-f664-4c16-b100-2c19393953e7	Connected to MySQL
+20250602	16:15:33	09df0737-fe2d-442d-8cb1-83f5aae0c88e	Server running on port 5000
+20250602	16:54:09	2e0d97be-dd6e-4d94-8231-fdf81da10f4d	Connected to MySQL
+20250602	16:54:09	e34325eb-a7e3-44d8-ba18-a421f631d26d	Server running on port 5000
+20250602	16:54:13	c389c663-52fe-49aa-b0fb-a3e24b0a841f	Connected to MySQL
+20250602	16:54:13	7f677ccc-cf0f-49f4-9943-621fbb107da8	Server running on port 5000
+20250602	16:54:42	ce3fa0c7-62ad-45f0-bb64-747893409d76	Connected to MySQL
+20250602	16:54:42	45639f06-91f4-4cfb-9bb4-7a159cebf296	Server running on port 5000

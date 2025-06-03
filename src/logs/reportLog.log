@@ -1177,3 +1177,43 @@
 20250602	16:54:18	cee61e3b-7740-47c5-8af2-c0d5e57e4964	Raw stock details result: [{"nac_code":"GT 04552","item_name":"Cotton Gloves","part_number":"N/A,54 LOCAL PURCHASE","equipment_number":"Consumables, Inventory Section, Ppe Item","location":"New Location again twice","card_number":"10","open_quantity":"752.00","open_amount":26095.599609375}]
 20250602	16:54:18	737a4705-272c-4816-a2e4-a3db1267a131	Found 1 stock details for processing
 20250602	16:54:18	af7677b3-e2c4-4f37-a2e4-197959ea7d1b	Successfully generated stock card report for 1 items
+20250603	10:09:04	efedb92e-c93f-46a3-a2df-c29fa67edcf2	Verifying record with pattern: %GT%04552%
+20250603	10:09:04	559f1174-76e5-44e3-be42-cc11e6ed70c6	Verification results: [{"nac_code":"GT 04552","code_length":8,"code_hex":"4754203034353532"}]
+20250603	10:09:04	7e4fadee-5f1c-4d22-a1a6-3dbb6ca2cc75	Stock Query: 
+      SELECT 
+        s.nac_code,
+        s.item_name,
+        s.part_numbers as part_number,
+        s.applicable_equipments as equipment_number,
+        s.location,
+        s.card_number,
+        s.open_quantity,
+        s.open_amount
+      FROM stock_details s
+      WHERE s.nac_code LIKE ?
+    
+20250603	10:09:04	fc8907ad-c471-49f3-a81b-87025228d31c	Original NAC code: GT 04552
+20250603	10:09:04	9b0f85a3-2eeb-47d3-8e9a-94c3a7e7aca7	Search pattern: GT%04552
+20250603	10:09:04	8d4d9221-0a3b-4c6d-a83a-2093b4c512e5	Found 1 stock details for processing
+20250603	10:09:04	fa508bd7-389b-434a-b0ed-94cafeba6d9b	Raw stock details result: [{"nac_code":"GT 04552","item_name":"Cotton Gloves","part_number":"N/A,54 LOCAL PURCHASE","equipment_number":"Consumables, Inventory Section, Ppe Item","location":"New Location again twice","card_number":"10","open_quantity":"752.00","open_amount":26095.599609375}]
+20250603	10:09:04	fbca44ff-8afd-4203-a88b-6d883c49ce4b	Successfully generated stock card report for 2 items
+20250603	10:09:43	daa3764d-50be-47c6-b181-a1119770b50f	Verifying record with pattern: %GT%04552%
+20250603	10:09:43	c456c6cd-ce0a-4197-951b-49fa1cd956e8	Verification results: [{"nac_code":"GT 04552","code_length":8,"code_hex":"4754203034353532"}]
+20250603	10:09:43	b3152b10-7002-4b84-9943-1114cbb60a49	Stock Query: 
+      SELECT 
+        s.nac_code,
+        s.item_name,
+        s.part_numbers as part_number,
+        s.applicable_equipments as equipment_number,
+        s.location,
+        s.card_number,
+        s.open_quantity,
+        s.open_amount
+      FROM stock_details s
+      WHERE s.nac_code LIKE ?
+    
+20250603	10:09:43	a07c9c2d-c3d7-4026-a1b9-74ff2f6e009c	Original NAC code: GT 04552
+20250603	10:09:43	2435ee29-2f47-4b62-b9f7-12f9d634ee7a	Search pattern: GT%04552
+20250603	10:09:43	81cb3445-91fb-44cc-a85e-3c257bdaffd1	Raw stock details result: [{"nac_code":"GT 04552","item_name":"Cotton Gloves","part_number":"N/A,54 LOCAL PURCHASE","equipment_number":"Consumables, Inventory Section, Ppe Item","location":"New Location again twice","card_number":"10","open_quantity":"752.00","open_amount":26095.599609375}]
+20250603	10:09:43	17f5cde9-fff0-4e28-97b0-ad5693adfb7f	Found 1 stock details for processing
+20250603	10:09:43	d8312ab2-653b-45fe-a4c0-de054b711053	Successfully generated stock card report for 2 items

@@ -242,3 +242,77 @@
 20250603	11:35:37	3bf7b6e5-6f6c-4836-866d-b8846798e77f	Successfully fetched 0 pending receives
 20250603	11:36:15	4a5bbdbc-eba5-47d2-bcd3-403500dbf1a8	Successfully fetched 0 pending receives
 20250603	11:36:15	73dbc2d1-de68-440a-a1c0-1d4d0d6e2584	Successfully fetched 0 pending receives
+20250603	16:31:22	f181ded4-301b-4f55-a861-4508be0636c1	Successfully fetched 0 pending receives
+20250603	16:31:22	52b142cf-e68b-48d5-8a7e-287cc0b78896	Successfully fetched 0 pending receives
+20250603	16:31:35	d86a28a8-e5c6-46b0-9faf-fc2e62255014	Successfully fetched 0 pending receives
+20250603	16:31:36	d9918e67-e8e3-4aa0-9eb4-3a15838fcb31	Successfully fetched 0 pending receives
+20250603	16:35:56	970c9763-ce70-42f2-8e69-cb39beda8a8d	Successfully fetched 0 pending receives
+20250603	16:35:56	605ffc9d-4774-4065-82a0-774abe30f41a	Successfully fetched 0 pending receives
+20250603	16:37:38	ce30e72a-d309-4cfa-b169-edc48d2526f9	Successfully fetched 0 pending receives
+20250603	16:37:38	817399b7-f3d4-4419-b104-e712c5a0ad32	Successfully fetched 0 pending receives
+20250603	16:38:05	3b2caf3d-f3b3-457c-8611-8ea88d9398f9	Successfully fetched 0 pending receives
+20250603	16:38:05	dece6dfb-32f2-4bdd-a374-9d31dd92072e	Successfully fetched 0 pending receives
+20250603	16:38:19	25c86bd9-a1a8-4a10-9c24-f4de3f54c4ab	Successfully fetched 0 pending receives
+20250603	16:38:19	bf38b9d3-ff1e-4754-bb39-c6f4ccca3bb0	Successfully fetched 0 pending receives
+20250603	16:39:46	98dec623-ce78-4b90-bc1d-07ff2b9790a8	Successfully searched receivables with 2 results
+20250603	16:39:49	9dd8b568-6e38-497a-a9c6-69c5435bfc85	Successfully searched receivables with 2 results
+20250603	16:42:19	5fafff42-1ad3-4ef5-9f3f-455e0cf80514	Created receive item for request R004 with ID 33 by user: superadmin@god.com
+20250603	16:42:19	5363ef77-6f78-4178-ab80-a4cf2a675954	Successfully created receive with 1 items by user: superadmin@god.com
+20250603	16:42:24	45fcd22a-dea2-48a2-aa42-d0e688e387cf	Successfully fetched 1 pending receives
+20250603	16:42:24	31ca8816-c3e3-406e-bcc0-0a61811e7b44	Successfully fetched 1 pending receives
+20250603	16:42:27	b6ceff23-36a9-4ab0-9cb9-0308e7b9387f	Successfully fetched receive details for ID: 33
+20250603	16:42:52	ac6207df-04f6-4513-897f-311b2eb6537b	Successfully updated stock for NAC code: GT 04552 with new balance: 3089
+20250603	16:42:52	cbc8dea3-ac74-4140-b8d8-4ddf9e2d2323	Successfully approved receive ID: 33
+20250603	16:42:52	71e973f3-55e0-4740-bdcb-ed3f69883d67	Successfully fetched 0 pending receives
+20250603	16:45:24	8479a60b-59e9-4746-aaf6-9c044fb59cbe	Successfully fetched 0 pending receives
+20250603	16:45:24	3cacee04-439d-4c8a-81f3-a1e51705ccf9	Successfully fetched 0 pending receives
+20250603	16:46:09	6e729d9d-5436-44ed-a5f1-79c18e89061d	Successfully fetched 0 pending receives
+20250603	16:46:09	924d74ba-6a63-4d5c-8559-db6b05d5f842	Successfully fetched 0 pending receives
+20250604	10:07:08	f3084453-8606-4da4-a60a-4dc70f1f4dd1	Successfully fetched 0 pending receives
+20250604	10:07:08	90323d44-9d6b-4269-b848-a6424e1cfd78	Successfully fetched 0 pending receives
+20250604	10:10:34	b9a8bb4d-cfe0-487c-938e-31c38d0c3921	Successfully fetched 0 pending receives
+20250604	10:10:34	66deee49-fa99-41e3-ba26-acce312f65f1	Successfully fetched 0 pending receives
+20250604	10:11:57	2f6f81c7-5c13-4d97-afc2-2b234ea0a153	Successfully searched receivables with 3 results
+20250604	10:16:40	cdc962af-9572-48e9-aa7c-4f40ae720e7c	Successfully searched receivables with 3 results
+20250604	10:16:41	9b24f2a1-b4e9-410e-8bca-74636102bb0a	Successfully searched receivables with 2 results
+20250604	10:20:12	a5144d31-ee14-4ce4-9558-d8fe49a6ce88	Created receive item for request R005 with ID 34 by user: superadmin@god.com
+20250604	10:20:12	e9d038d0-a5c2-44e9-8920-ade0083b0a14	Successfully created receive with 1 items by user: superadmin@god.com
+20250604	10:20:16	8593892f-e3ef-4834-a9eb-cf6dc5eeb0e4	Successfully fetched 1 pending receives
+20250604	10:20:16	401f8c38-9f83-4cb8-9bf6-5c4c835902a6	Successfully fetched 1 pending receives
+20250604	10:20:17	2b0ab4ae-45ec-41f5-81a2-ed098f5fc453	Successfully fetched receive details for ID: 34
+20250604	10:27:22	9a4ba8d5-8bd9-4dad-a84f-72fd60ca6408	Successfully fetched receive details for ID: 34
+20250604	10:28:30	31697c46-7c8b-40d1-9f5a-023f4f1c34a3	Successfully updated stock for NAC code: GT 04552 with new balance: 3094
+20250604	10:28:30	043550c8-1bdf-49ec-a82d-bd028bafb041	Successfully approved receive ID: 34
+20250604	10:28:30	b9bbd92d-cad3-4202-81cb-080ee18be510	Successfully fetched 0 pending receives
+20250604	11:22:45	494b8cb7-d796-4099-99f0-84cad7f71bc6	Successfully fetched 0 pending receives
+20250604	11:22:45	654cab5b-05db-4bbd-a1ed-f0fe81583c43	Successfully fetched 0 pending receives
+20250604	11:29:22	7a32ec28-4f99-4c06-99c8-22b661fffe5f	Successfully fetched 0 pending receives
+20250604	11:29:22	3ec3a55e-c20a-4fcd-9d61-1dae9013fb6b	Successfully fetched 0 pending receives
+20250604	11:29:56	7e5678e4-dc92-4e3c-bb33-a983d79f1615	Successfully fetched 0 pending receives
+20250604	11:29:56	32fb5ff6-289f-488c-9018-006dce2f293b	Successfully fetched 0 pending receives
+20250604	11:29:59	16538adf-e100-40f7-806f-d1add4f0cbf0	Successfully fetched 0 pending receives
+20250604	11:29:59	9a962570-8b7c-475e-8cfd-9e6457418d27	Successfully fetched 0 pending receives
+20250604	11:32:44	77ef85d4-6c89-4173-be03-47f9f0552389	Successfully fetched 0 pending receives
+20250604	11:32:44	e3c47eb5-7338-4464-9c6e-ff9804489d1c	Successfully fetched 0 pending receives
+20250604	11:32:52	52417e97-fec1-44b6-b5ed-b56bc9970db5	Successfully fetched 0 pending receives
+20250604	11:32:52	d8f25d30-8eef-438f-b10a-ef25374f3552	Successfully fetched 0 pending receives
+20250604	11:39:35	77f7b8fc-4f62-4cbc-ab60-37968662eb5c	Successfully fetched 0 pending receives
+20250604	11:39:35	4dcff21e-6598-470a-a1a5-c16af0ba887b	Successfully fetched 0 pending receives
+20250604	13:32:32	f0857600-a91e-4733-ba66-93de60d71071	Successfully fetched 0 pending receives
+20250604	13:32:32	c95732cd-6a76-4928-b621-e8c4f4db541f	Successfully fetched 0 pending receives
+20250606	11:43:51	5783117b-e44a-4558-b8a1-3eb3ab1fc3c3	Successfully fetched 0 pending receives
+20250606	11:43:51	47542f02-3348-4e5d-8b55-c3ec2079d121	Successfully fetched 0 pending receives
+20250606	11:46:34	abab08ae-d5e2-4052-9342-1809038e1bce	Successfully fetched 0 pending receives
+20250606	11:46:34	4d4ecb47-448c-4173-aae1-e5d0fc700b35	Successfully fetched 0 pending receives
+20250606	11:46:39	39587266-5e82-4ee3-a53a-fab27392866d	Successfully fetched 0 pending receives
+20250606	11:46:39	45cc01d9-90e8-4a9d-9917-ba81d7cd6672	Successfully fetched 0 pending receives
+20250606	11:47:51	50845853-7c9c-49df-837f-fae423c98c9b	Successfully fetched 0 pending receives
+20250606	11:47:51	e0816059-0ef4-48f2-ab36-32de6fb5e8ca	Successfully fetched 0 pending receives
+20250606	11:53:32	af9567d0-69e2-4102-814e-86b5d7d202ef	Successfully fetched 0 pending receives
+20250606	11:53:32	3135b61a-f7e7-4a92-b91d-fa6f4a3bd36a	Successfully fetched 0 pending receives
+20250606	11:55:56	79f7cc51-8cb3-4808-94a4-620be20d9e99	Successfully fetched 0 pending receives
+20250606	11:55:56	d9205e70-8488-4239-82ed-9521628602cb	Successfully fetched 0 pending receives
+20250606	11:56:03	69f0df54-789b-4e2e-9c76-79457dd6a4f9	Successfully fetched 0 pending receives
+20250606	11:56:03	e13b5c4a-8500-4fc8-827b-46c56e60b9c7	Successfully fetched 0 pending receives
+20250606	12:22:45	a4594e09-0dfa-46cd-82dd-95c124c5d9f7	Successfully fetched 0 pending receives
+20250606	12:22:45	d973c9b9-2e38-4d64-bb19-d57b85788600	Successfully fetched 0 pending receives

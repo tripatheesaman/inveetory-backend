@@ -207,15 +207,15 @@ export class ExcelService {
             logEvents(`Generating request Excel for request number: ${requestNumber}`, "excelServiceLog.log");
             
             const { requestDetails, items, userDetails, authorityDetails } = await ExcelService.getRequestDetails(requestNumber);
-            const templatePath = path.join(__dirname, '../../public/templates/template_file.xlsx');
-            
-            const workbook = new ExcelJS.Workbook();
-            await workbook.xlsx.readFile(templatePath);
-            
-            const worksheet = workbook.getWorksheet('Request Template');
-            if (!worksheet) {
-                throw new Error('Template worksheet not found');
-            }
+        const templatePath = path.join(__dirname, '../../public/templates/template_file.xlsx');
+        
+        const workbook = new ExcelJS.Workbook();
+        await workbook.xlsx.readFile(templatePath);
+        
+        const worksheet = workbook.getWorksheet('Request Template');
+        if (!worksheet) {
+            throw new Error('Template worksheet not found');
+        }
 
             const templateWorksheet = workbook.getWorksheet('Request Template');
             if (!templateWorksheet) {
@@ -259,21 +259,21 @@ export class ExcelService {
             });
 
             const formattedDate = ExcelService.formatDate(requestDetails.request_date);
-            worksheet.getCell('C7').value = `${requestDetails.request_number}(${formattedDate})`;
+        worksheet.getCell('C7').value = `${requestDetails.request_number}(${formattedDate})`;
 
-            let currentRow = 10;
-            let specificationsText = '';
+        let currentRow = 10;
+        let specificationsText = '';
             let imagePlaced = false;
             let imageBuffer: Buffer | null = null;
-            for (const item of items) {
-                worksheet.getCell(`B${currentRow}`).value = item.nac_code;
-                worksheet.getCell(`C${currentRow}`).value = item.item_name;
-                worksheet.getCell(`D${currentRow}`).value = item.part_number;
-                worksheet.getCell(`E${currentRow}`).value = item.unit;
-                worksheet.getCell(`F${currentRow}`).value = item.requested_quantity;
-                worksheet.getCell(`G${currentRow}`).value = item.current_balance;
-                worksheet.getCell(`H${currentRow}`).value = item.previous_rate;
-                worksheet.getCell(`I${currentRow}`).value = item.equipment_number;
+        for (const item of items) {
+            worksheet.getCell(`B${currentRow}`).value = item.nac_code;
+            worksheet.getCell(`C${currentRow}`).value = item.item_name;
+            worksheet.getCell(`D${currentRow}`).value = item.part_number;
+            worksheet.getCell(`E${currentRow}`).value = item.unit;
+            worksheet.getCell(`F${currentRow}`).value = item.requested_quantity;
+            worksheet.getCell(`G${currentRow}`).value = item.current_balance;
+            worksheet.getCell(`H${currentRow}`).value = item.previous_rate;
+            worksheet.getCell(`I${currentRow}`).value = item.equipment_number;
                 specificationsText += `${item.nac_code}:${item.specifications}\n`;
 
                 if (!imagePlaced && item.image_path) {
@@ -314,11 +314,11 @@ export class ExcelService {
                     const item = imageItems[i];
                     const imageBuffer = await ExcelService.resizeImage(item.image_path, imageWidthPx, imageHeightPx);
                     
-                    if (imageBuffer.length > 0) {
-                        const imageId = workbook.addImage({
-                            buffer: imageBuffer,
-                            extension: 'png'
-                        });
+                if (imageBuffer.length > 0) {
+                    const imageId = workbook.addImage({
+                        buffer: imageBuffer,
+                        extension: 'png'
+                    });
 
                         let imagePosition;
                         if (i === 0) {

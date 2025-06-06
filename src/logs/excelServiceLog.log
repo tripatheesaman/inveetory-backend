@@ -212,3 +212,39 @@
 20250603	11:54:22	dd91a029-952b-4051-a840-53dca32fc3c2	Fetching RRP details for RRP number: L002T1
 20250603	11:54:22	b6ebe633-c7b9-4962-abbd-7d15691e26e7	Successfully fetched all RRP details for: L002T1
 20250603	11:54:22	c53f6f77-66cd-4e09-a666-3bc4c00353cc	Successfully generated RRP Excel for: L002T1
+20250603	16:38:42	359a72e8-e82c-4377-84ac-8cf402e450e1	Generating request Excel for request number: R004
+20250603	16:38:42	f44645db-c9a7-4030-b6da-9dba970c0b72	Fetching request details for request number: R004
+20250603	16:38:42	238ed85b-07af-47f5-9b1c-8599b05e4624	Found 2 items for request: R004
+20250603	16:38:42	2520b331-d0b3-4672-b1fb-d87f36d96289	Successfully fetched all details for request: R004
+20250603	16:38:42	19329c38-1757-4f61-8f4a-8aeee08d0786	Resizing image: /images/request/730fd657-590f-4a6a-b551-d2bfb1022841.png
+20250603	16:38:42	e0d08003-585b-4f0e-b47f-876ad560c3a6	Error resizing image /images/request/730fd657-590f-4a6a-b551-d2bfb1022841.png: Failed to fetch image from frontend: http://localhost:3000/images/request/730fd657-590f-4a6a-b551-d2bfb1022841.png
+20250603	16:38:42	8027637e-6620-4326-a3bf-90c3171a39b8	Resizing image: /images/request/730fd657-590f-4a6a-b551-d2bfb1022841.png
+20250603	16:38:42	d0f8909c-5355-4bb9-8eb4-9d4eea5a724d	Error resizing image /images/request/730fd657-590f-4a6a-b551-d2bfb1022841.png: Failed to fetch image from frontend: http://localhost:3000/images/request/730fd657-590f-4a6a-b551-d2bfb1022841.png
+20250603	16:38:42	7002ca6b-1185-41b2-843c-3ffbc7070551	Resizing image: /images/request/ede60ec2-01c1-425a-9bbc-4e7625cf3bca.png
+20250603	16:38:42	70d354d5-7b95-4518-ad70-012a824e2d99	Successfully resized image: /images/request/ede60ec2-01c1-425a-9bbc-4e7625cf3bca.png
+20250603	16:38:42	d4984a6e-d108-442d-bdfa-641d43c61ee5	Successfully generated request Excel for: R004
+20250603	16:46:39	d71c3519-3cb1-4dba-90b2-7cdd9cfba6a7	Generating RRP Excel for RRP number: L004T1
+20250603	16:46:39	a5514a55-147b-4b9c-a918-272e3234716c	Fetching RRP details for RRP number: L004T1
+20250603	16:46:39	2928f731-a9cf-4d4c-a697-eb353d10358c	Successfully fetched all RRP details for: L004T1
+20250603	16:46:39	afa23255-d466-492c-bc3a-63fab54f6d98	Successfully generated RRP Excel for: L004T1
+20250603	16:48:07	c427e7e9-6af0-4d08-9e6e-3926e0064679	Generating stock card Excel for 1 items
+20250603	16:48:07	a0f682f5-8368-4e01-a078-ab1ea49f0022	Successfully generated stock card Excel
+20250603	16:48:54	f2df1c89-5888-4ff3-9ce8-1a749c1ce18e	Generating stock card Excel for 1 items
+20250603	16:48:54	fb030cfe-3ecc-4b82-b263-17efb89f316b	Successfully generated stock card Excel
+20250604	10:11:20	43adf203-866d-47a5-908c-77d30d637fca	Generating request Excel for request number: R004
+20250604	10:11:20	0dcd7dc8-1118-48c9-b766-63d2d23508b9	Fetching request details for request number: R004
+20250604	10:11:20	4283ce4e-955e-48c0-90f5-619d12d90480	Found 3 items for request: R004
+20250604	10:11:20	41d5eb34-6f2a-4555-b7a0-edfbaad27a09	Successfully fetched all details for request: R004
+20250604	10:11:20	50e276fb-fed2-46e9-bf91-3c8f3f011fd8	Resizing image: /images/request/730fd657-590f-4a6a-b551-d2bfb1022841.png
+20250604	10:11:20	961d35f1-55cd-4ade-9776-8c62128637d0	Error resizing image /images/request/730fd657-590f-4a6a-b551-d2bfb1022841.png: Failed to fetch image from frontend: http://localhost:3000/images/request/730fd657-590f-4a6a-b551-d2bfb1022841.png
+20250604	10:11:20	3c456fae-196a-4362-aee4-175b32ec5876	Resizing image: /images/request/730fd657-590f-4a6a-b551-d2bfb1022841.png
+20250604	10:11:20	cb3f2f87-0fdf-4af1-941b-0a4b325506e6	Error resizing image /images/request/730fd657-590f-4a6a-b551-d2bfb1022841.png: Failed to fetch image from frontend: http://localhost:3000/images/request/730fd657-590f-4a6a-b551-d2bfb1022841.png
+20250604	10:11:20	5f4443c5-8448-44df-9236-2e8fb9a05850	Resizing image: /images/request/ede60ec2-01c1-425a-9bbc-4e7625cf3bca.png
+20250604	10:11:20	85bab2c4-32b8-42be-9eb7-830ee4a5eb55	Successfully resized image: /images/request/ede60ec2-01c1-425a-9bbc-4e7625cf3bca.png
+20250604	10:11:20	b614c838-9aa6-41ff-9e37-e1ae6c4e2bf0	Resizing image: /images/request/644cd815-c2a9-469e-9cbc-0e4848ac4833.png
+20250604	10:11:20	a46821ea-dd4f-4ddb-ab33-6c3664b2c799	Successfully resized image: /images/request/644cd815-c2a9-469e-9cbc-0e4848ac4833.png
+20250604	10:11:20	19186ce7-08b9-4aea-bca5-07af1d6c3051	Successfully generated request Excel for: R004
+20250604	12:28:55	09a638d5-c935-49df-9694-ef212140b55d	Generating stock card Excel for 1 items
+20250604	12:28:55	1ed32c4d-8f51-42cd-8de6-5d406fab36c3	Successfully generated stock card Excel
+20250604	12:51:31	8c158d9f-a6ab-4e49-8f3f-769a14eb9f0c	Generating stock card Excel for 1 items
+20250604	12:51:31	5b29c8ae-ddb8-4dcd-8604-5b4a244b1b48	Successfully generated stock card Excel

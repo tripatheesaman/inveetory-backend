@@ -329,9 +329,9 @@ export const generateStockCardReport = async (req: Request, res: Response): Prom
         FROM issue_details
         WHERE nac_code = ?
         AND approval_status = 'APPROVED'
-        ${fromDate && toDate ? 'AND issue_date BETWEEN ? AND ?' : ''}
+        ${!generateByIssueDate && fromDate && toDate ? 'AND issue_date BETWEEN ? AND ?' : ''}
         ORDER BY issue_date ASC
-      `, [stock.nac_code, ...(fromDate && toDate ? [fromDate, toDate] : [])]);
+      `, [stock.nac_code, ...(!generateByIssueDate && fromDate && toDate ? [fromDate, toDate] : [])]);
 
       const [receiveRecords] = await connection.execute<RowDataPacket[]>(`
         SELECT 
@@ -345,9 +345,9 @@ export const generateStockCardReport = async (req: Request, res: Response): Prom
         JOIN rrp_details rrp ON rd.rrp_fk = rrp.id
         WHERE rd.nac_code = ?
         AND rd.approval_status = 'APPROVED'
-        ${fromDate && toDate ? 'AND rd.receive_date BETWEEN ? AND ?' : ''}
+        ${!generateByIssueDate && fromDate && toDate ? 'AND rd.receive_date BETWEEN ? AND ?' : ''}
         ORDER BY rd.receive_date ASC
-      `, [stock.nac_code, ...(fromDate && toDate ? [fromDate, toDate] : [])]);
+      `, [stock.nac_code, ...(!generateByIssueDate && fromDate && toDate ? [fromDate, toDate] : [])]);
 
       let movements: StockMovement[] = [
         ...issueRecords.map(record => ({

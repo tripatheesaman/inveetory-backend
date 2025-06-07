@@ -67,3 +67,22 @@
 20250527	13:07:09	3afdb328-98e3-4b3d-bc10-1e87898c9b40	Successfully fetched 2 users for current user: superadmin@god.com
 20250527	13:07:09	ef34f89a-4ec2-4967-90c2-3a81a4d6f85b	Fetching users for current user: superadmin@god.com
 20250527	13:07:09	0304cfb6-165d-40d0-aebd-140c3be6e567	Successfully fetched 2 users for current user: superadmin@god.com
+20250603	11:05:59	e928142b-ae03-4c46-b649-a8b77719ab52	Fetching users for current user: superadmin@god.com
+20250603	11:05:59	f810554a-3689-4725-9126-17eef6eda224	Successfully fetched 2 users for current user: superadmin@god.com
+20250603	11:05:59	2719f27b-5935-44d9-8f1a-c8c248e952ad	Fetching users for current user: superadmin@god.com
+20250603	11:05:59	8482647d-d1dd-4ee2-9131-cb3987c21656	Successfully fetched 2 users for current user: superadmin@god.com
+20250603	11:06:06	e4c7a94a-eb07-4aa8-8e14-ecef0615bc9c	Fetching users for current user: superadmin@god.com
+20250603	11:06:06	24f07898-95f8-43d2-90a5-581c11e45575	Successfully fetched 2 users for current user: superadmin@god.com
+20250603	11:06:06	95ae52c1-da3e-4473-b008-f04aa08ed87d	Fetching users for current user: superadmin@god.com
+20250603	11:06:06	7c98daeb-fda8-4c93-b3bb-abc877f85a22	Successfully fetched 2 users for current user: superadmin@god.com
+20250603	11:06:09	a4761c68-6835-46c0-81d3-effdd6985e8a	Fetching user details for ID: 1 by current user: superadmin@god.com
+20250603	11:06:09	017e3faa-ca3b-49a5-87e1-7fcdbf9f1d34	Successfully fetched user details for ID: 1
+20250603	11:06:09	08152cf5-73e1-4716-938b-cf5ac38471f9	Fetching user details for ID: 1 by current user: superadmin@god.com
+20250603	11:06:09	fe2afb6e-8505-4a24-9222-96e327f487ce	Successfully fetched user details for ID: 1
+20250603	11:06:12	3d8509ef-3919-444e-b8f3-2a0a374a70dd	Starting user update transaction for ID: 1
+20250603	11:06:12	aecb9ae5-065c-42bd-9cd4-ead506e6b891	Updating user: superadmin@god.com by superadmin@god.com
+20250603	11:06:12	47c8a0a2-9447-478e-919d-1c9e6277c730	Successfully updated user: superadmin@god.com
+20250603	11:06:12	325a8055-47b2-4e5d-933c-8ee6644b4ec5	Fetching users for current user: superadmin@god.com
+20250603	11:06:12	b7b6628c-544c-4812-81bd-59105c89b493	Successfully fetched 2 users for current user: superadmin@god.com
+20250603	11:06:12	0ba50b21-c130-4e09-b134-20fff9765522	Fetching users for current user: superadmin@god.com
+20250603	11:06:12	63a1473d-eb4a-46b5-8139-64b31437c41e	Successfully fetched 2 users for current user: superadmin@god.com

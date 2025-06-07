@@ -280,3 +280,109 @@
 20250603	11:36:58	052e49dc-7b3f-4ac1-b779-3725a5dc4013	Successfully fetched 1 pending requests
 20250603	11:37:10	d338f4e5-d521-430c-90fe-7ca5fb125fed	Successfully searched requests with 4 results
 20250603	11:37:12	873438b0-add7-4750-8a84-0b7d90b3683d	Successfully searched requests with 1 results
+20250603	16:31:22	8548ebd5-8450-4ce1-9951-6ca10e30bc79	Successfully fetched 1 pending requests
+20250603	16:31:22	4195304f-ffa2-4f38-8717-e96cb12948ba	Successfully fetched 1 pending requests
+20250603	16:31:29	d423acad-a806-4424-bcb1-f8a6d333f06b	Successfully fetched last request info: R004
+20250603	16:31:29	36d9b4df-da44-4f2a-87eb-6f141102750e	Successfully fetched last request info: R004
+20250603	16:31:35	a48fb2f5-0d5d-40d5-bef2-b701a2b72107	Successfully fetched 1 pending requests
+20250603	16:31:36	76f5f5ef-d8c0-42bc-8df4-d96379c5c678	Successfully fetched 1 pending requests
+20250603	16:31:42	16dc152e-e638-4053-9f2c-b19814698ac2	Successfully fetched last request info: R004
+20250603	16:31:42	d9278606-62c6-4896-9b38-cc4e5aebd955	Successfully fetched last request info: R004
+20250603	16:35:56	52bb4d70-e41b-43d6-885d-7e366aa2a425	Successfully fetched 1 pending requests
+20250603	16:35:56	63213105-aec2-4be2-b5ce-ea45b019b19b	Successfully fetched 1 pending requests
+20250603	16:36:18	7e8039cc-4134-4990-9f1d-4761f8caab2a	Successfully fetched last request info: R004
+20250603	16:36:18	a4d955b3-5d78-46dc-b0dc-af603fed1b3d	Successfully fetched last request info: R004
+20250603	16:36:26	2a46b4cc-b529-4e37-bab5-44e31ef0fd97	Successfully fetched last request info: R004
+20250603	16:36:26	17e96a76-bdd3-47bd-a259-05334302fedd	Successfully fetched last request info: R004
+20250603	16:37:36	f8ba7399-d7d0-4e8d-b2b3-d3175bde7e1b	Successfully created request R005 with 1 items by user: superadmin@god.com
+20250603	16:37:38	200adf5e-74aa-4c88-b895-eb7c2fd680e8	Successfully fetched 2 pending requests
+20250603	16:37:38	a871fc6b-c6f6-4161-becb-0fa5cc1d90f5	Successfully fetched 2 pending requests
+20250603	16:37:41	cfa7c0f3-c817-415d-8d0f-9848bdf6e8df	Successfully fetched 3 items for request R005
+20250603	16:37:45	d891558b-2268-49bc-a207-86eb455e7023	Successfully fetched 2 items for request R004
+20250603	16:37:47	b750f319-3cc7-47b7-83b2-31db3c391813	Successfully fetched 3 items for request R005
+20250603	16:38:02	a252b5ec-03de-4fad-8797-de903d410185	Successfully rejected request R005 by user: superadmin@god.com
+20250603	16:38:02	5098c453-dd5d-4348-8078-96ea810910bb	Successfully fetched 1 pending requests
+20250603	16:38:05	bddd125b-7e58-4f79-acf5-f87d0bbc42d7	Successfully fetched 1 pending requests
+20250603	16:38:05	6f95776c-a7ca-470a-950f-31f66350de86	Successfully fetched 1 pending requests
+20250603	16:38:12	8416469f-cba1-4b65-9beb-e669611b3e6d	Successfully fetched request R005 with 3 items
+20250603	16:38:12	24b18fd9-6ec9-48d5-95c6-720957e276f2	Successfully fetched request R005 with 3 items
+20250603	16:38:19	a5585826-bfa0-4237-913b-3f5dd8f02d94	Successfully updated request 22 to R005 with 3 items
+20250603	16:38:19	39a0b47d-fd35-4679-95c2-fe8ee5a17985	Successfully fetched 4 pending requests
+20250603	16:38:19	ed28d687-5c80-4e6d-b374-eb51cc6baa74	Successfully fetched 4 pending requests
+20250603	16:38:22	3e4174a4-3c7f-4938-a75d-f4587791b4dc	Successfully fetched 2 items for request R004
+20250603	16:38:23	1f2035b6-cbc0-455f-8894-975680deb87d	Successfully approved request R004 by user: superadmin@god.com
+20250603	16:38:23	f41f4065-239b-4bbc-b8ff-3a962e5ed98b	Successfully fetched 3 pending requests
+20250603	16:38:34	7932c16f-4f52-4da6-9cd9-dbc68c5d7ba9	Successfully searched requests with 4 results
+20250603	16:38:35	a983a1de-0ddc-4a11-8a0e-0753e8dac48c	Successfully searched requests with 4 results
+20250603	16:38:35	4ec386d2-ef27-42dc-a124-92230c3dbc89	Successfully searched requests with 1 results
+20250603	16:38:40	30108e63-44d9-4730-9f52-0ebc7762f69e	Successfully searched requests with 4 results
+20250603	16:38:40	27ab55b2-9963-4fa0-af22-8eb934ca5b4d	Successfully searched requests with 1 results
+20250603	16:42:24	7058ca5d-4134-41ff-8eb3-3530b84af541	Successfully fetched 3 pending requests
+20250603	16:42:24	d8346bcf-6754-4b85-9e60-788723fad5a9	Successfully fetched 3 pending requests
+20250603	16:45:24	1d68f021-0f4c-4287-8532-abd73acf59d4	Successfully fetched 3 pending requests
+20250603	16:45:24	b4fcba4d-feec-405d-b027-b60f14286b68	Successfully fetched 3 pending requests
+20250603	16:46:09	573dbedd-ebda-4a72-a3e5-7d9902e51f7e	Successfully fetched 3 pending requests
+20250603	16:46:09	e90b118b-3acd-402c-9a91-70d9f20fecb5	Successfully fetched 3 pending requests
+20250604	10:07:08	681fd04d-5787-4401-8d1a-4ce18b3caa54	Successfully fetched 3 pending requests
+20250604	10:07:08	ea82d16f-fe1c-4be9-a1f3-5dfd05b238d6	Successfully fetched 3 pending requests
+20250604	10:07:21	e1723e59-440f-4134-89dc-2f0729ee9e3c	Successfully fetched last request info: R004
+20250604	10:07:21	9f690349-3b6f-406a-9b9a-8680968045f8	Successfully fetched last request info: R004
+20250604	10:09:38	3fd02476-3e13-42a5-ae15-d1cbaeb13be4	Successfully fetched last request info: R004
+20250604	10:09:38	aeb58ab0-a5d7-4760-a92c-d20461cdc441	Successfully fetched last request info: R004
+20250604	10:10:31	4dfe28f4-6d16-478e-9919-83c622b75dc8	Successfully created request R004 with 1 items by user: superadmin@god.com
+20250604	10:10:34	bc7df81a-df76-466f-846d-d467713f052b	Successfully fetched 4 pending requests
+20250604	10:10:34	06fb007a-eaee-4e54-8f5d-a549e3d93c38	Successfully fetched 4 pending requests
+20250604	10:10:47	9c49e559-242c-4d2b-a85b-1a6210c9d7d7	Successfully fetched 3 items for request R005
+20250604	10:10:57	8a78367b-1599-489c-9eee-1b8c251da9aa	Successfully approved request R005 by user: superadmin@god.com
+20250604	10:10:57	40bf81ed-5995-4b7e-862a-fb71dcd128ac	Successfully fetched 1 pending requests
+20250604	10:10:58	8d7236c1-5ff6-4c8a-adef-d2fc44bad31a	Successfully fetched 3 items for request R004
+20250604	10:11:10	da476c81-d701-49e2-ac90-ebe58f4cba8c	Successfully approved request R004 by user: superadmin@god.com
+20250604	10:11:10	9aefdd6a-2190-4aaf-8007-2fc9e2338c13	Successfully fetched 0 pending requests
+20250604	10:11:17	d421b5e9-bcab-49d3-93a8-48f804a998f0	Successfully searched requests with 4 results
+20250604	10:11:18	7e0e02f8-73b0-446a-aecc-2990b1b18685	Successfully searched requests with 4 results
+20250604	10:11:33	3a7059ac-5f6d-4ce8-8418-dc2676ae208a	Successfully fetched last request info: R004
+20250604	10:11:33	05d105ee-f57b-48c5-97a9-2419519a3b2f	Successfully fetched last request info: R004
+20250604	10:11:37	2555cc74-bbcd-40cb-9080-2975c838dea8	Successfully fetched last request info: R004
+20250604	10:11:37	a3f8a54d-ac2e-4ede-9901-366918c02158	Successfully fetched last request info: R004
+20250604	10:20:16	b54987c3-8ef6-442c-95bb-d96d857552c8	Successfully fetched 0 pending requests
+20250604	10:20:16	6983cbc4-cea8-46fb-b20e-8f56bef38692	Successfully fetched 0 pending requests
+20250604	11:22:45	f31b4ef0-5f0c-45e7-bfb1-c14019750064	Successfully fetched 0 pending requests
+20250604	11:22:45	4086f150-ec96-4b73-a01b-95ce32a5cd1b	Successfully fetched 0 pending requests
+20250604	11:29:22	9b3668bf-0815-4d97-9b9d-b2e34f4e770e	Successfully fetched 0 pending requests
+20250604	11:29:22	f8409def-3d1a-4c66-9178-955fcf716fab	Successfully fetched 0 pending requests
+20250604	11:29:56	4a1022f4-91d9-4424-951a-0ed480069f74	Successfully fetched 0 pending requests
+20250604	11:29:56	a4b92c5f-f945-4212-b2e3-3a627739511d	Successfully fetched 0 pending requests
+20250604	11:29:58	e101a96f-e3be-4f49-b325-b605d2b7e484	Successfully fetched last request info: R004
+20250604	11:29:58	ab10a48a-857c-4557-b7b2-67683210b59f	Successfully fetched last request info: R004
+20250604	11:29:59	b668f871-238b-484a-8e8d-0377394bd04f	Successfully fetched 0 pending requests
+20250604	11:29:59	e6666854-e0fe-4bff-ad3b-4c9f86a5e1fa	Successfully fetched 0 pending requests
+20250604	11:32:44	4ee9f870-402b-44cf-a5f4-52e996501dd9	Successfully fetched 0 pending requests
+20250604	11:32:44	b6b54cb2-f5fa-4ba6-94c4-4f9a5e5c0348	Successfully fetched 0 pending requests
+20250604	11:32:50	9c379c68-8831-4244-9ae9-7a0e2bd00b17	Successfully fetched last request info: R004
+20250604	11:32:50	06388b8c-6b98-4c34-90ee-dee0b292d1e6	Successfully fetched last request info: R004
+20250604	11:32:52	2bc3ea75-dee5-40e6-8fd5-485999d679e0	Successfully fetched 0 pending requests
+20250604	11:32:52	56473f74-3cb5-4557-97b2-5382cd93024e	Successfully fetched 0 pending requests
+20250604	11:33:31	240fccdc-c824-447e-8551-39d1e0e65d0f	Successfully fetched last request info: R004
+20250604	11:33:31	cc2fd9ce-f99a-4d9a-8288-b8a060ffd421	Successfully fetched last request info: R004
+20250604	11:39:35	6a7cdde9-5926-41ff-9658-1bdbc627dc31	Successfully fetched 0 pending requests
+20250604	11:39:35	a998a1cd-5ac4-4114-a74c-756800170c5b	Successfully fetched 0 pending requests
+20250604	13:32:32	0c7f5fd9-4a77-44c5-8883-12868b0a8a46	Successfully fetched 0 pending requests
+20250604	13:32:32	3241c073-1375-4027-90ac-20dffdcf1ade	Successfully fetched 0 pending requests
+20250604	13:39:22	d00894f9-2ae2-42a0-a511-bd6d7e5a1a00	Successfully fetched last request info: R004
+20250604	13:39:22	255b1378-45fc-41c9-9952-d5ba91042530	Successfully fetched last request info: R004
+20250606	11:43:51	fefc32e7-0ff0-4cbd-a45c-b0a571c8426d	Successfully fetched 0 pending requests
+20250606	11:43:51	04d8df78-244c-48fb-903e-45ef3b89f653	Successfully fetched 0 pending requests
+20250606	11:46:34	8c8413f5-b692-41e4-9538-ee56785575a3	Successfully fetched 0 pending requests
+20250606	11:46:34	1f8f6daa-f065-44f5-a5ff-d2c287c6066c	Successfully fetched 0 pending requests
+20250606	11:46:39	414b513d-5a41-4d88-9dfd-b3a9e075c22e	Successfully fetched 0 pending requests
+20250606	11:46:39	f5a5beb0-74ce-4be6-ab3e-89c96bf13e10	Successfully fetched 0 pending requests
+20250606	11:47:51	8ea96e75-e58e-42f0-9526-6f82bcac1aa7	Successfully fetched 0 pending requests
+20250606	11:47:51	3c61678f-ce77-47ed-8ccd-44cb4634109d	Successfully fetched 0 pending requests
+20250606	11:53:32	93e5a15a-74d9-40fd-8e30-ce0b9266b57d	Successfully fetched 0 pending requests
+20250606	11:53:32	76e3ddeb-7da8-4420-bc6a-de3d2c887ac0	Successfully fetched 0 pending requests
+20250606	11:55:56	0ef0caf1-ab77-4dc4-b14e-8fcd7936df28	Successfully fetched 0 pending requests
+20250606	11:55:56	2c86fa1a-8d23-4c23-93a9-b443b2918868	Successfully fetched 0 pending requests
+20250606	11:56:03	ba65dd46-687d-4758-94ce-cfbc479fb821	Successfully fetched 0 pending requests
+20250606	11:56:03	f262b53f-6368-4001-b9b8-11ebbe75fefb	Successfully fetched 0 pending requests
+20250606	12:22:45	e37f4c4c-a43b-49d6-851d-b913e6b7d58b	Successfully fetched 0 pending requests
+20250606	12:22:45	40568d4e-9857-41d3-95f0-29502d88e342	Successfully fetched 0 pending requests

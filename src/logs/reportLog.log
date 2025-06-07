@@ -1217,3 +1217,4 @@
 20250603	10:09:43	81cb3445-91fb-44cc-a85e-3c257bdaffd1	Raw stock details result: [{"nac_code":"GT 04552","item_name":"Cotton Gloves","part_number":"N/A,54 LOCAL PURCHASE","equipment_number":"Consumables, Inventory Section, Ppe Item","location":"New Location again twice","card_number":"10","open_quantity":"752.00","open_amount":26095.599609375}]
 20250603	10:09:43	17f5cde9-fff0-4e28-97b0-ad5693adfb7f	Found 1 stock details for processing
 20250603	10:09:43	d8312ab2-653b-45fe-a4c0-de054b711053	Successfully generated stock card report for 2 items
+20250604	12:28:44	3faae195-8dec-4b00-8247-13311f646fbc	Error in generateStockCardReport: Cannot read properties of undefined (reading 'replace')

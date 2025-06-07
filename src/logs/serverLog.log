@@ -522,3 +522,44 @@
 20250603	11:52:24	71ff4202-441c-4d78-b2df-b57ddbe42bdf	Server running on port 5000
 20250603	11:52:29	6e73ce9d-2279-4f14-a644-95484b6351de	Connected to MySQL
 20250603	11:52:29	ab75266b-0cdf-4584-bbf0-a21971dad40f	Server running on port 5000
+20250603	16:31:22	dd84dd04-a11b-40f0-a522-062e254d2274	Connected to MySQL
+20250603	16:31:22	cc3ee82b-0b91-4aa2-a559-b9438e84ea54	Server running on port 5000
+20250604	10:06:16	7b508769-f033-41ec-8db1-5f8658c1738a	Connected to MySQL
+20250604	10:06:16	6294b234-be2b-4dea-93a4-a61b873f81cf	Server running on port 5000
+20250604	11:48:13	b538f11d-ed77-4cd5-9748-26de480f4f3f	Connected to MySQL
+20250604	11:48:13	c8c9bdab-778a-4b51-80c1-7608c92402d5	Server running on port 5000
+20250604	11:48:28	1196f94f-ec41-4329-93f2-a96aedfcfd46	Connected to MySQL
+20250604	11:48:28	1c471572-8f93-4762-89f5-fb36b90a05f7	Server running on port 5000
+20250604	12:49:13	9f6f3351-0528-427b-be27-ea5ca5cef5cc	Connected to MySQL
+20250604	12:49:13	56415ea2-ea1c-4860-9a83-4ffd6ba07a12	Server running on port 5000
+20250604	12:50:32	b5b6f150-5699-40b3-ab82-e21f27971e51	Connected to MySQL
+20250604	12:50:32	bdbdccf8-4973-415b-989d-7814f959b00c	Server running on port 5000
+20250604	12:51:15	4e5c0a4c-1123-4ea6-b992-d82b0a9aa53a	Connected to MySQL
+20250604	12:51:15	eb1b007f-3d5b-4b0b-9c57-1a0e7c0ec0a6	Server running on port 5000
+20250604	12:51:17	a4ef4db1-21e6-47f0-851c-d2c660dbd5e1	Connected to MySQL
+20250604	12:51:17	8aa55a64-b42c-450d-9e99-0936b22a536a	Server running on port 5000
+20250606	11:41:11	13f0f6d8-d7f0-49b9-b4dc-0dcca050cb5f	Connected to MySQL
+20250606	11:41:11	99fe298b-f756-4abf-a8a7-575b55d4adde	Server running on port 5000
+20250606	11:48:17	4f39675f-5827-4a5a-a32f-721e582ae99b	404 - Route not found: GET /api/settings/fiscal-year
+20250606	11:48:54	30e31cf9-d9ea-44c6-a221-aa411a9b5a2d	404 - Route not found: GET /api/settings/fiscal-year
+20250606	11:48:54	550c8414-c0b6-46a9-b747-b0b081a5ba46	404 - Route not found: GET /api/settings/fiscal-year
+20250606	11:53:27	5ed821e9-b4e3-4975-bbf4-df149c53e3f5	Connected to MySQL
+20250606	11:53:27	c1231d0b-30ef-4d33-85ba-8d792cfd51da	Server running on port 5000
+20250606	12:22:47	9b6a991f-de27-4ee7-aa4d-d4b22e82b81c	404 - Route not found: GET /api/settings/request/authority-details
+20250606	12:22:47	54e735ee-f71d-4533-ab7d-08ace0b810ee	404 - Route not found: GET /api/settings/request/authority-details
+20250606	12:26:57	456a94a7-c247-4ea7-b457-e075ba0c0d59	Connected to MySQL
+20250606	12:26:57	ef53c2e9-f730-46cc-b46a-90de1f29d5ea	Server running on port 5000
+20250606	12:27:02	9296b9dc-8595-40a3-ac1b-2f1944a1c8de	Connected to MySQL
+20250606	12:27:02	cf810216-97a5-4c20-beff-dda9151c219c	Server running on port 5000
+20250606	12:27:07	dabb03a8-5f11-4b87-9293-c422741b3872	Connected to MySQL
+20250606	12:27:07	2fa15f0d-8f61-4bb4-a960-6f412b66f790	Server running on port 5000
+20250606	12:28:01	de7f554f-d185-4b2f-8e13-13a32f2da3df	Connected to MySQL
+20250606	12:28:01	72df0b90-965b-4ecc-a72d-b77f1c0eb777	Server running on port 5000
+20250606	12:28:04	409cea78-af18-4723-a354-1b70fbd326f4	Connected to MySQL
+20250606	12:28:04	d9979b74-87c1-4900-9947-91060c6bbea1	Server running on port 5000
+20250606	12:28:11	ced50461-6a01-4b28-a306-f43a8d76357d	Connected to MySQL
+20250606	12:28:11	8a0a5a01-9f64-469a-bacf-716c3fb0fed8	Server running on port 5000
+20250606	12:28:11	e8aad0d2-ee4f-479c-8efa-2360ee6af3c1	Connected to MySQL
+20250606	12:28:11	7c56af1e-f7c3-48fc-b7ce-1c052bc665fd	Server running on port 5000
+20250606	12:28:14	69fbd7cf-4313-4c13-acfb-18a7613aeb25	Connected to MySQL
+20250606	12:28:14	cfa6d2d0-3bcf-4e24-9dd5-24b8c5f77b22	Server running on port 5000

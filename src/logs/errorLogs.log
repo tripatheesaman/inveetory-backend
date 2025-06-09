@@ -1,0 +1,1 @@
+20250608	16:05:46	bddb3f66-e759-4fc9-bbdb-c02f7d39d1fa	TypeError	Cannot destructure property 'type' of 'req.body' as it is undefined.	DELETE,/api/settings/rrp/suppliers/foreign-1749377908486,http://localhost:3000

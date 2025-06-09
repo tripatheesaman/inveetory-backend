@@ -257,4 +257,198 @@ export const updateRRPAuthorityDetails = async (req: Request, res: Response): Pr
   } finally {
     connection.release();
   }
+};
+
+export const getRRPSuppliers = async (req: Request, res: Response): Promise<void> => {
+  const connection = await pool.getConnection();
+
+  try {
+    const [rows] = await connection.execute<RowDataPacket[]>(
+      `SELECT config_name, config_value 
+       FROM app_config 
+       WHERE config_name IN ('supplier_list_local', 'supplier_list_foreign')`
+    );
+
+    const suppliers = rows.reduce((acc: any, row) => {
+      const type = row.config_name === 'supplier_list_local' ? 'local' : 'foreign';
+      const names = row.config_value ? row.config_value.split(', ').map((name: string) => name.trim()) : [];
+      
+      return [
+        ...acc,
+        ...names.map((name: string, index: number) => ({
+          id: `${type}-${index + 1}`,
+          name,
+          type
+        }))
+      ];
+    }, []);
+
+    res.status(200).json(suppliers);
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+    logEvents(`Error in getRRPSuppliers: ${errorMessage}`, "settingsLog.log");
+    res.status(500).json({
+      error: 'Internal Server Error',
+      message: errorMessage
+    });
+  } finally {
+    connection.release();
+  }
+};
+
+export const addRRPSupplier = async (req: Request, res: Response): Promise<void> => {
+  const { name, type } = req.body;
+  const connection = await pool.getConnection();
+
+  try {
+    const configName = type === 'local' ? 'supplier_list_local' : 'supplier_list_foreign';
+    
+    // Get current list
+    const [rows] = await connection.execute<RowDataPacket[]>(
+      'SELECT config_value FROM app_config WHERE config_name = ?',
+      [configName]
+    );
+
+    if (rows.length === 0) {
+      // If no config exists, create new
+      await connection.execute(
+        'INSERT INTO app_config (config_name, config_value) VALUES (?, ?)',
+        [configName, name]
+      );
+    } else {
+      // Append to existing list
+      const currentList = rows[0].config_value;
+      const newList = currentList ? `${currentList}, ${name}` : name;
+      
+      await connection.execute(
+        'UPDATE app_config SET config_value = ? WHERE config_name = ?',
+        [newList, configName]
+      );
+    }
+
+    res.status(201).json({
+      id: `${type}-${Date.now()}`,
+      name,
+      type
+    });
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+    logEvents(`Error in addRRPSupplier: ${errorMessage}`, "settingsLog.log");
+    res.status(500).json({
+      error: 'Internal Server Error',
+      message: errorMessage
+    });
+  } finally {
+    connection.release();
+  }
+};
+
+export const updateRRPSupplier = async (req: Request, res: Response): Promise<void> => {
+  const { id } = req.params;
+  const { name, type } = req.body;
+  const connection = await pool.getConnection();
+
+  try {
+    const configName = type === 'local' ? 'supplier_list_local' : 'supplier_list_foreign';
+    
+    // Get current list
+    const [rows] = await connection.execute<RowDataPacket[]>(
+      'SELECT config_value FROM app_config WHERE config_name = ?',
+      [configName]
+    );
+
+    if (rows.length > 0) {
+      const currentList = rows[0].config_value.split(', ');
+      const index = parseInt(id.split('-')[1]) - 1;
+      
+      if (index >= 0 && index < currentList.length) {
+        currentList[index] = name;
+        const newList = currentList.join(', ');
+        
+        await connection.execute(
+          'UPDATE app_config SET config_value = ? WHERE config_name = ?',
+          [newList, configName]
+        );
+
+        res.status(200).json({
+          id,
+          name,
+          type
+        });
+      } else {
+        res.status(404).json({
+          error: 'Not Found',
+          message: 'Supplier not found'
+        });
+      }
+    } else {
+      res.status(404).json({
+        error: 'Not Found',
+        message: 'Supplier list not found'
+      });
+    }
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+    logEvents(`Error in updateRRPSupplier: ${errorMessage}`, "settingsLog.log");
+    res.status(500).json({
+      error: 'Internal Server Error',
+      message: errorMessage
+    });
+  } finally {
+    connection.release();
+  }
+};
+
+export const deleteRRPSupplier = async (req: Request, res: Response): Promise<void> => {
+  const { id } = req.params;
+  const { name, type } = req.body;
+  const connection = await pool.getConnection();
+
+  try {
+    const configName = type === 'local' ? 'supplier_list_local' : 'supplier_list_foreign';
+    
+    // Get current list
+    const [rows] = await connection.execute<RowDataPacket[]>(
+      'SELECT config_value FROM app_config WHERE config_name = ?',
+      [configName]
+    );
+
+    if (rows.length > 0) {
+      const currentList = rows[0].config_value.split(', ');
+      const index = currentList.findIndex((supplier: string) => supplier.trim() === name.trim());
+      
+      if (index >= 0) {
+        currentList.splice(index, 1);
+        const newList = currentList.join(', ');
+        
+        await connection.execute(
+          'UPDATE app_config SET config_value = ? WHERE config_name = ?',
+          [newList, configName]
+        );
+
+        res.status(200).json({
+          message: 'Supplier deleted successfully'
+        });
+      } else {
+        res.status(404).json({
+          error: 'Not Found',
+          message: 'Supplier not found'
+        });
+      }
+    } else {
+      res.status(404).json({
+        error: 'Not Found',
+        message: 'Supplier list not found'
+      });
+    }
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+    logEvents(`Error in deleteRRPSupplier: ${errorMessage}`, "settingsLog.log");
+    res.status(500).json({
+      error: 'Internal Server Error',
+      message: errorMessage
+    });
+  } finally {
+    connection.release();
+  }
 }; 

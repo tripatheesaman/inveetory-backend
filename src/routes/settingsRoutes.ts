@@ -5,7 +5,11 @@ import {
   getRequestAuthorityDetails, 
   updateRequestAuthorityDetails,
   getRRPAuthorityDetails,
-  updateRRPAuthorityDetails
+  updateRRPAuthorityDetails,
+  getRRPSuppliers,
+  addRRPSupplier,
+  updateRRPSupplier,
+  deleteRRPSupplier
 } from '../controllers/settingsController';
 import verifyJWT from '../middlewares/verifyJWT';
 
@@ -27,5 +31,11 @@ router.put('/request/authority-details', updateRequestAuthorityDetails);
 // RRP authority details routes
 router.get('/rrp/authority-details', getRRPAuthorityDetails);
 router.put('/rrp/authority-details', updateRRPAuthorityDetails);
+
+// RRP supplier routes
+router.get('/rrp/suppliers', getRRPSuppliers);
+router.post('/rrp/suppliers', addRRPSupplier);
+router.put('/rrp/suppliers/:id', updateRRPSupplier);
+router.delete('/rrp/suppliers/:id', deleteRRPSupplier);
 
 export default router; 

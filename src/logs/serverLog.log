@@ -563,3 +563,54 @@
 20250606	12:28:11	7c56af1e-f7c3-48fc-b7ce-1c052bc665fd	Server running on port 5000
 20250606	12:28:14	69fbd7cf-4313-4c13-acfb-18a7613aeb25	Connected to MySQL
 20250606	12:28:14	cfa6d2d0-3bcf-4e24-9dd5-24b8c5f77b22	Server running on port 5000
+20250608	13:22:09	4fdbe2f5-0564-44e8-879f-9874befbb7fe	Connected to MySQL
+20250608	13:22:09	ab29eb8d-c238-4bad-b968-b25ba8777443	Server running on port 5000
+20250608	13:30:29	9a6dc101-b101-4e38-b36e-61d4605eaaa0	404 - Route not found: GET /api/settings/rrp/suppliers?type=local
+20250608	13:30:29	6721d042-9043-4469-8f8e-8ff59b54ce84	404 - Route not found: GET /api/settings/rrp/suppliers?type=foreign
+20250608	13:30:29	15bb5f0f-48d1-460e-bb9d-cbc449198645	404 - Route not found: GET /api/settings/rrp/suppliers?type=local
+20250608	13:30:29	1e7c8f49-f5f2-4b73-a620-0dadb9b38d58	404 - Route not found: GET /api/settings/rrp/suppliers?type=foreign
+20250608	15:23:23	9e693f08-0d7a-4d00-85e3-61402a0dfc0c	404 - Route not found: GET /api/settings/rrp/suppliers
+20250608	15:32:34	d952297a-e392-41f2-a1a6-6f73c01f30e2	Connected to MySQL
+20250608	15:32:35	c49c7166-7fa6-4fe9-a1c7-32ee10075488	Server running on port 5000
+20250608	15:32:39	8ed1db1b-caef-4125-81e0-e18fcd67ab8c	Connected to MySQL
+20250608	15:32:39	b4f744f6-c622-4718-be74-408d81675fc4	Server running on port 5000
+20250608	15:32:44	849a6fb2-39d5-46ce-a8a3-1afca6e014dc	Connected to MySQL
+20250608	15:32:44	dbea4111-8724-43ac-b9f4-9aa637af6723	Server running on port 5000
+20250608	15:33:34	018a247c-834d-4ae6-9729-0748daca3a28	Connected to MySQL
+20250608	15:33:34	a764ece9-96d4-497c-b707-9ae7f237735f	Server running on port 5000
+20250608	15:34:16	a60fd64c-9475-43ae-bea4-72fb3f2aeeb3	Connected to MySQL
+20250608	15:34:16	d10213ab-4646-4ea8-965c-af28b0042d28	Server running on port 5000
+20250608	15:34:46	fae93666-c588-49c7-b701-17dd5a59cb79	Connected to MySQL
+20250608	15:34:46	83a544e5-4636-471a-9b54-c93e40a82d17	Server running on port 5000
+20250608	15:34:49	4a4dc16d-0dd7-4d91-99c1-0fad55632053	Connected to MySQL
+20250608	15:34:49	9b093515-7a44-4a80-9cea-f6ae60ba4731	Server running on port 5000
+20250608	15:38:20	e0382bab-7723-46f7-bf9c-f2fc6ce4ba4b	Connected to MySQL
+20250608	15:38:20	eef6d0cc-e311-417a-8f2c-16cbb9aed587	Server running on port 5000
+20250608	15:39:04	c5dd5a2f-d8cf-436a-b3a6-630a1a9bb983	Connected to MySQL
+20250608	15:39:04	0a0c3cc9-030e-4acc-846a-3b0c3cb870fe	Server running on port 5000
+20250608	15:39:21	f627e908-cdb0-482f-8daf-e6f739915f66	Connected to MySQL
+20250608	15:39:21	e29f428b-ad77-4d0e-962d-861f3eb505c5	Server running on port 5000
+20250608	15:39:23	179a80b8-82d3-46d5-b700-e561037909f2	Connected to MySQL
+20250608	15:39:23	0c918a81-18e0-472d-91d5-94d8908c7b0f	Server running on port 5000
+20250608	15:39:36	b55d1130-a7ef-4ae3-859f-a9c64c3902db	Connected to MySQL
+20250608	15:39:36	7870b4b1-ccc3-49ca-8c20-069b4d10f989	Server running on port 5000
+20250608	15:39:42	2304d321-1fba-4842-b963-8c81dfcb1503	Connected to MySQL
+20250608	15:39:42	105f1861-ecea-49a0-8796-150f1d302f82	Server running on port 5000
+20250608	15:48:05	e0ef4cee-0d6e-4283-adab-7e70d2f95dab	Connected to MySQL
+20250608	15:48:05	d13b1810-5180-445f-b71e-895f93c58d0a	Server running on port 5000
+20250608	15:48:11	439da3cd-3b4e-4c2b-ae37-de1ccd14364a	Connected to MySQL
+20250608	15:48:11	f3d34e48-2435-4ed7-9a81-fd775a93a559	Server running on port 5000
+20250608	16:15:06	89073feb-3642-4245-98ae-b0e466501c22	Connected to MySQL
+20250608	16:15:06	ae8ad4cf-af5f-41ee-8ef6-5aacf54ab43d	Server running on port 5000
+20250608	16:15:08	0b87b940-3525-44f3-8e16-140db83c4078	Connected to MySQL
+20250608	16:15:08	1e285133-ca68-472e-bc58-04d5d6afbb76	Server running on port 5000
+20250608	16:36:05	08c7810e-4055-4a1b-8da3-88e1d24b2b53	Connected to MySQL
+20250608	16:36:05	bb383045-76e6-4031-81ef-288d95405f64	Server running on port 5000
+20250608	16:44:37	92463226-dca1-4bd5-a1c4-30be6bae95da	Connected to MySQL
+20250608	16:44:37	8c9269ca-8f6f-41e9-b907-5da6077d70fe	Server running on port 5000
+20250608	16:45:09	9597cc4e-9893-45e1-99f4-b22b156ae2db	Connected to MySQL
+20250608	16:45:09	62e5bb7a-f3dc-421e-872a-0b7654042fa8	Server running on port 5000
+20250608	16:45:34	75673085-82cc-47a7-b19a-b05ffbc85e44	Connected to MySQL
+20250608	16:45:34	6fc0fa68-15e4-4173-9c1a-44085ebe2bb9	Server running on port 5000
+20250608	16:45:42	d8351b2b-3f1d-4b18-ba3c-d8385214272d	Connected to MySQL
+20250608	16:45:42	a2985d0d-278e-4ef3-ad46-847d232b90d3	Server running on port 5000

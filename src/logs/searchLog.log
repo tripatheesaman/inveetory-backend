@@ -308,3 +308,129 @@
 20250604	11:29:31	e02eff59-5d3f-43d4-828f-648d924f3d2b	Successfully fetched item details for ID: 2932
 20250604	11:29:33	eb7df164-456a-4f3a-825d-16bb07ad3476	Fetching item details for ID: 1839
 20250604	11:29:33	d8732891-2dc9-4d4d-baa3-fb42420daf59	Successfully fetched item details for ID: 1839
+20250609	11:00:38	fd7baa30-ba7d-4650-8605-d547c59d0fc4	Starting stock search with parameters: universal=cotton, equipmentNumber=, partNumber=
+20250609	11:00:38	f1c8e22a-fc0d-4932-9b73-02cdb676bb73	Using FULLTEXT search for universal parameter: cotton
+20250609	11:00:38	9a5deab1-9556-4303-855d-24062f708481	Successfully found 2 results for search parameters
+20250609	11:03:03	8b66b458-25de-4523-b610-b507cb53c4fc	Using FULLTEXT search for universal parameter: cotton
+20250609	11:03:03	32957acd-1d71-4902-91db-174cb5bc6950	Starting stock search with parameters: universal=cotton, equipmentNumber=, partNumber=
+20250609	11:03:03	78c9254f-decc-4d6d-a151-1be437891f29	Successfully found 2 results for search parameters
+20250609	13:58:31	62a0df75-2956-4139-9900-419e567968e8	Starting stock search with parameters: universal=cot, equipmentNumber=, partNumber=
+20250609	13:58:31	89aab9f5-80c2-4ac8-9528-617c57214fb4	Using FULLTEXT search for universal parameter: cot
+20250609	13:58:31	dc6d33e7-98e0-42ae-ba43-548498f99647	Successfully found 5 results for search parameters
+20250609	13:58:52	959961e9-ff10-41b2-86b0-20b6757a3c31	Starting stock search with parameters: universal=cotton, equipmentNumber=, partNumber=
+20250609	13:58:52	1ba82bef-3702-43c1-ac7b-a8b9bd5c7028	Using FULLTEXT search for universal parameter: cotton
+20250609	13:58:52	82263a54-9270-4365-b825-b1ad788a5dd1	Successfully found 2 results for search parameters
+20250609	13:59:07	161daab7-350e-46a5-892f-c90a8f52da90	Starting stock search with parameters: universal=cotton gloved, equipmentNumber=, partNumber=
+20250609	13:59:07	30b78ce6-7d8c-4ed7-bb47-f12fc9e59da4	Using FULLTEXT search for universal parameter: cotton gloved
+20250609	13:59:07	4c35f764-dfe3-4ad6-9a29-5afd07b81ecd	Successfully found 2 results for search parameters
+20250609	15:15:06	ffb8817c-c7ce-4917-8012-1bc2ce886f20	Starting stock search with parameters: universal=cotton, equipmentNumber=, partNumber=
+20250609	15:15:06	a4c4e9e4-ef63-4c65-abd4-976fbcab48bf	Using FULLTEXT search for universal parameter: cotton
+20250609	15:15:06	1c42e12c-f4e7-424b-89c6-15ba9be2abad	Successfully found 2 results for search parameters
+20250609	15:34:18	7c2b3344-699f-4dc6-96f5-4ebb8beb63fc	Starting stock search with parameters: universal=cotton, equipmentNumber=, partNumber=
+20250609	15:34:18	f4efc240-db12-4deb-b893-20167769b70b	Using FULLTEXT search for universal parameter: cotton
+20250609	15:34:18	aa2753d3-f42d-45cd-a8f5-8e5aa9e5b08d	Successfully found 2 results for search parameters
+20250609	15:42:40	3c5e96ed-6fd8-4aa9-a3dd-ad7df0e34427	Starting stock search with parameters: universal=cotton, equipmentNumber=, partNumber=
+20250609	15:42:40	197079fa-437d-4d8a-871c-11ba770bb77b	Using FULLTEXT search for universal parameter: cotton
+20250609	15:42:40	8cf922e1-1733-40c2-b88b-ce615de69fb9	Successfully found 2 results for search parameters
+20250609	15:43:28	6751183d-4b80-4ccc-a4c6-4b503dc5973a	Starting stock search with parameters: universal=cotton, equipmentNumber=, partNumber=
+20250609	15:43:28	cf947b5b-76a5-41b2-8828-4069188c5534	Using FULLTEXT search for universal parameter: cotton
+20250609	15:43:28	7f76cf9b-393c-42d1-be41-ffcf9eb4364e	Successfully found 2 results for search parameters
+20250609	15:44:26	884f68fe-acac-49c1-a88e-d1675866bac9	Starting stock search with parameters: universal=issue, equipmentNumber=, partNumber=
+20250609	15:44:26	ae34a592-be66-4a36-9648-1a7b4cf4dea9	Using FULLTEXT search for universal parameter: issue
+20250609	15:44:26	57d6ce4c-390e-4862-83d3-0e0cf860992f	No results found for search parameters
+20250609	15:44:29	c510f068-61b5-4c15-9f11-faf265e5476a	Starting stock search with parameters: universal=cotton, equipmentNumber=, partNumber=
+20250609	15:44:29	10e37e44-fb9e-4ea3-a72e-2f8133d5371d	Using FULLTEXT search for universal parameter: cotton
+20250609	15:44:29	a094ab51-478b-42f6-bc0b-a5826bd62de5	Successfully found 2 results for search parameters
+20250609	15:50:28	2510da17-d457-4157-9329-107b319644af	Starting stock search with parameters: universal=c, equipmentNumber=, partNumber=
+20250609	15:50:28	68d3971d-3c74-4c49-8082-c63811c23016	Using FULLTEXT search for universal parameter: c
+20250609	15:50:28	d56ac586-1a10-4f38-ab1d-562d9c7b866e	Successfully found 50 results for search parameters
+20250609	15:50:29	e0af2e47-41dd-49f3-8216-57be36d52eef	Starting stock search with parameters: universal=cotton, equipmentNumber=, partNumber=
+20250609	15:50:29	eb69d23f-49ff-4496-90e7-16e3058a560d	Using FULLTEXT search for universal parameter: cotton
+20250609	15:50:29	12ea09f7-ec3a-43fa-9fca-3b3c5478eb69	Successfully found 2 results for search parameters
+20250609	15:54:17	b9d4dd19-5cc6-4cbf-961f-d5f180dacebe	Starting stock search with parameters: universal=c, equipmentNumber=, partNumber=
+20250609	15:54:17	342b89c5-de0b-411d-a03b-d0b4c9bff059	Using FULLTEXT search for universal parameter: c
+20250609	15:54:17	3660f03f-7c9c-4f09-a83c-d48eaa9f2fb1	Successfully found 50 results for search parameters
+20250609	15:54:28	6fc09e5c-8403-40e2-9bcb-2301004bf307	Starting stock search with parameters: universal=cotton, equipmentNumber=, partNumber=
+20250609	15:54:28	7ded08a4-e2d0-4860-a264-c2878e226a86	Using FULLTEXT search for universal parameter: cotton
+20250609	15:54:28	0136fa34-d1cc-408e-85f5-f3d914533808	Successfully found 2 results for search parameters
+20250609	15:55:12	24a2daea-15a6-435d-9c09-2f1dfc304605	Starting stock search with parameters: universal=c, equipmentNumber=, partNumber=
+20250609	15:55:12	6e335bb9-cd84-47b0-a35c-c65374aad77c	Using FULLTEXT search for universal parameter: c
+20250609	15:55:12	22470c6d-6909-4a2f-9e4c-1b5754d69a36	Successfully found 50 results for search parameters
+20250609	15:55:14	f92cd865-a5a6-40c4-a76c-032a838bd76e	Starting stock search with parameters: universal=cotton, equipmentNumber=, partNumber=
+20250609	15:55:14	ae4a5b6d-0157-404f-86bb-d900a068ee6e	Using FULLTEXT search for universal parameter: cotton
+20250609	15:55:14	21b25081-924e-4a0d-b740-702e16e126a8	Successfully found 2 results for search parameters
+20250609	15:56:39	788d57e3-dc12-41b9-b106-36727a169ea7	Starting stock search with parameters: universal=cotton, equipmentNumber=, partNumber=
+20250609	15:56:39	28f59a03-eaca-4ac2-abc4-2bf393a88819	Using FULLTEXT search for universal parameter: cotton
+20250609	15:56:39	8ff42e02-7e55-4123-b64e-d4e5ab65ddc7	Successfully found 2 results for search parameters
+20250609	16:04:12	ca0bc7fd-2546-4cb1-b869-7edbe71cc0a5	Starting stock search with parameters: universal=shit, equipmentNumber=, partNumber=
+20250609	16:04:12	8f61a4b4-4481-4057-b112-775914d96a3b	Using FULLTEXT search for universal parameter: shit
+20250609	16:04:12	79e1038f-0e93-4177-a7a5-9a8f73d755fe	Successfully found 1 results for search parameters
+20250609	16:04:18	5507d849-3528-41ab-97d9-f9d648f6942f	Starting stock search with parameters: universal=cotton, equipmentNumber=, partNumber=
+20250609	16:04:18	3fb6b3d9-519f-42ea-ac2a-aec360215bb8	Using FULLTEXT search for universal parameter: cotton
+20250609	16:04:18	afa67ed7-8b35-40ec-9816-8d22f103f7de	Successfully found 2 results for search parameters
+20250609	16:08:52	94c253e2-b345-40be-bf49-0a4b75787662	Starting stock search with parameters: universal=cotton, equipmentNumber=, partNumber=
+20250609	16:08:52	7f3e2e65-500c-42f3-8ae6-144fa328c138	Using FULLTEXT search for universal parameter: cotton
+20250609	16:08:52	1b0545d2-5fda-46a3-9d60-0eaadc9c8a75	Successfully found 2 results for search parameters
+20250609	16:20:52	32b61821-7c1d-4967-9f64-21e5cb5babfa	Starting stock search with parameters: universal=cotton glove, equipmentNumber=, partNumber=
+20250609	16:20:52	d2230572-f1fa-4b82-a307-7e22ea4f8532	Using FULLTEXT search for universal parameter: cotton glove
+20250609	16:20:52	e5b21144-3e07-40ba-bc4f-423568a788e5	Successfully found 5 results for search parameters
+20250609	16:21:26	3266f9b9-2121-4aa9-9715-e2830e9aa961	Starting stock search with parameters: universal=cotton glov, equipmentNumber=, partNumber=
+20250609	16:21:26	45023ba2-5633-4280-bd10-d44d61b86e83	Using FULLTEXT search for universal parameter: cotton glov
+20250609	16:21:26	389a1840-89df-4f9a-866b-667570235624	Successfully found 5 results for search parameters
+20250609	16:21:54	e4e0abe9-d90a-4a1f-9ad2-4bd4c194b258	Starting stock search with parameters: universal=rubber, equipmentNumber=, partNumber=
+20250609	16:21:54	4bc549ea-26d7-47ba-9a3a-d65336216e72	Using FULLTEXT search for universal parameter: rubber
+20250609	16:21:54	193db28e-afe1-4d71-8770-0d16866f555e	Successfully found 33 results for search parameters
+20250609	16:21:57	6e3689ac-ce08-4ca2-97d6-a77f76043ba8	Starting stock search with parameters: universal=rubber glovers, equipmentNumber=, partNumber=
+20250609	16:21:57	1869fbdc-2299-4edd-b249-888625013341	Using FULLTEXT search for universal parameter: rubber glovers
+20250609	16:21:57	88858bc8-9318-4012-a6f1-11045d093058	Successfully found 33 results for search parameters
+20250609	16:21:58	e0f34d89-be70-4f81-84f0-0d5e383d79cf	Starting stock search with parameters: universal=rubber gloves, equipmentNumber=, partNumber=
+20250609	16:21:58	f7240fdf-c2ef-4f42-9a36-92e8c1f37980	Using FULLTEXT search for universal parameter: rubber gloves
+20250609	16:21:58	d3aa4308-7d5d-4042-95e1-dcfcce03f0e3	Successfully found 35 results for search parameters
+20250609	16:22:22	29717d22-dfea-463a-a4d1-c5afedc618b1	Starting stock search with parameters: universal=cotton, equipmentNumber=, partNumber=
+20250609	16:22:22	14fbd07c-6180-41df-a8c3-c75ec74b06f7	Using FULLTEXT search for universal parameter: cotton
+20250609	16:22:22	479e9099-bde3-46a3-ad12-3b6b7d67e672	Successfully found 2 results for search parameters
+20250609	16:22:42	62e763ee-d907-4801-9e18-aa3364ae8b6e	Starting stock search with parameters: universal=cotton, equipmentNumber=, partNumber=
+20250609	16:22:42	f5ed2f2a-b797-43b3-b64b-fca33ad8e3b6	Using FULLTEXT search for universal parameter: cotton
+20250609	16:22:42	58ccb037-646b-46ff-ba65-1c1fad1a6f4d	Successfully found 2 results for search parameters
+20250609	16:23:01	ae63ae9d-0f77-4922-b751-17324ada252d	Starting stock search with parameters: universal=cotton, equipmentNumber=, partNumber=
+20250609	16:23:01	893f625f-a0c2-474d-b075-0091830d0c57	Using FULLTEXT search for universal parameter: cotton
+20250609	16:23:01	d2aa2c83-eca3-421d-9b2f-45a7247e4af3	Successfully found 2 results for search parameters
+20250609	16:23:21	08974071-5fc2-4468-8cbc-9d4d3bfe5e24	Using FULLTEXT search for universal parameter: c
+20250609	16:23:21	15060f88-9386-4a91-a3cc-f77d4d19cfc9	Starting stock search with parameters: universal=c, equipmentNumber=, partNumber=
+20250609	16:23:21	9c3f55d4-3a25-44ea-9b80-7fd2d01633b2	Successfully found 50 results for search parameters
+20250609	16:23:22	a38719d4-4ece-4b46-8363-ce042bef785f	Using FULLTEXT search for universal parameter: cotton
+20250609	16:23:22	6d7f35c9-4125-4090-9011-060773807666	Starting stock search with parameters: universal=cotton, equipmentNumber=, partNumber=
+20250609	16:23:22	a25b0f5a-ab41-40b5-ab49-6782c719a5f0	Successfully found 2 results for search parameters
+20250609	16:23:44	d621819e-ac50-4914-9c0f-cc00f8952514	Starting stock search with parameters: universal=cototn, equipmentNumber=, partNumber=
+20250609	16:23:44	7e300b3a-771a-43ce-b151-d8ebc05c08c6	Using FULLTEXT search for universal parameter: cototn
+20250609	16:23:44	1d985b4f-c683-49ed-99e2-c0d51d292011	No results found for search parameters
+20250609	16:23:46	6d4b5b46-d15d-419d-af4e-37e491c0c3da	Starting stock search with parameters: universal=cotton, equipmentNumber=, partNumber=
+20250609	16:23:46	fe055f2a-4fc7-428b-a9c7-7f9f6c80d685	Using FULLTEXT search for universal parameter: cotton
+20250609	16:23:46	1d937dc1-1e31-4096-bc18-ff540e8fdee4	Successfully found 2 results for search parameters
+20250609	16:24:19	4d02a4fa-eb6e-4b31-9544-6511f41011a9	Starting stock search with parameters: universal=c, equipmentNumber=, partNumber=
+20250609	16:24:19	29c38841-5347-4f41-b682-31455d0ac007	Using FULLTEXT search for universal parameter: c
+20250609	16:24:19	ab10b214-3e78-4877-887b-9dceba796a04	Successfully found 50 results for search parameters
+20250609	16:24:20	c706a2b8-faa3-42f3-8ef7-70d75cea3d9b	Using FULLTEXT search for universal parameter: cotton
+20250609	16:24:20	f9b05382-a9f7-4f69-8bd8-701c668533b2	Starting stock search with parameters: universal=cotton, equipmentNumber=, partNumber=
+20250609	16:24:20	b39852fa-c57b-4f1b-ad8e-e6418efce563	Successfully found 2 results for search parameters
+20250609	16:30:56	f4d109c7-a9c3-446d-9efc-11b371287d04	Starting stock search with parameters: universal=300, equipmentNumber=, partNumber=
+20250609	16:30:56	ac0eaf01-9e9a-4a30-87e1-9bfe24ec98b2	Using FULLTEXT search for universal parameter: 300
+20250609	16:30:56	05e350be-a533-4e8b-a30a-9e7a2971d1d2	Successfully found 50 results for search parameters
+20250609	16:31:00	8fb92e11-18dd-4a3d-8028-8280622ed68f	Starting stock search with parameters: universal=cotton, equipmentNumber=, partNumber=
+20250609	16:31:00	3c884286-f73c-4b48-8c7e-7142026a48cc	Using FULLTEXT search for universal parameter: cotton
+20250609	16:31:00	fea9fce6-7ca4-487e-871e-90311592806c	Successfully found 2 results for search parameters
+20250609	16:31:17	9cd4678a-0978-428b-b74e-442d1ec908ac	Starting stock search with parameters: universal=c, equipmentNumber=, partNumber=
+20250609	16:31:17	3d6d1c77-1ede-403c-ae38-4c3e9cd92645	Using FULLTEXT search for universal parameter: c
+20250609	16:31:17	8793a18e-78e7-4d0d-870a-3fa4498d0690	Successfully found 50 results for search parameters
+20250609	16:31:18	2afa7996-532e-4c46-9863-4d9e28c2ae5e	Starting stock search with parameters: universal=cotton, equipmentNumber=, partNumber=
+20250609	16:31:18	c4bd7081-ba19-4d64-a121-24aa0b865aa7	Using FULLTEXT search for universal parameter: cotton
+20250609	16:31:18	aa52969d-a06f-406b-be2a-ad7a11d08eda	Successfully found 2 results for search parameters
+20250609	16:31:36	9d5fab4c-55bf-4f00-b342-f2c1e2b88f8b	Starting stock search with parameters: universal=cotton, equipmentNumber=, partNumber=
+20250609	16:31:36	e0c394dd-dd0b-4acf-adc7-7c47cf134a9b	Using FULLTEXT search for universal parameter: cotton
+20250609	16:31:36	7272c14a-a291-424a-acca-56fa3a796dec	Successfully found 2 results for search parameters
+20250609	16:32:03	33250a05-4c98-4e1c-883b-e24a7499d4bd	Starting stock search with parameters: universal=cotton, equipmentNumber=, partNumber=
+20250609	16:32:03	26a4bba0-ab1b-48d9-b32e-6f263651e349	Using FULLTEXT search for universal parameter: cotton
+20250609	16:32:03	b22f18fb-1821-48da-b21a-ba127c741868	Successfully found 2 results for search parameters
+20250609	16:36:18	1bc54293-c485-46ac-a9a8-5109368528b2	Starting stock search with parameters: universal=cotton, equipmentNumber=, partNumber=
+20250609	16:36:18	ebb00904-8897-4d42-bc3f-2d078ba20aca	Using FULLTEXT search for universal parameter: cotton
+20250609	16:36:18	5c1c86dc-f202-4756-8f9b-fb06f3e8178b	Successfully found 2 results for search parameters

@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import pool from '../config/db';
-import { RowDataPacket } from 'mysql2';
+import { RowDataPacket, PoolConnection } from 'mysql2/promise';
 import { formatDate, formatDateForDB } from '../utils/dateUtils';
 import { logEvents } from '../middlewares/logger';
 
@@ -26,14 +26,48 @@ interface StockDetails extends RowDataPacket {
   open_amount: number;
 }
 
-const calculateIssueCost = (openAmount: number, openQuantity: number, quantity: number): number => {
-  if (openAmount === 0 || openQuantity === 0) return 0;
-  return (openAmount / openQuantity) * quantity;
+const calculateIssueCost = async (connection: PoolConnection, nacCode: string, quantity: number): Promise<number> => {
+  // First check for received quantity and RRP total amount
+  const [rrpResults] = await connection.query<RowDataPacket[]>(
+    `SELECT 
+      COALESCE(SUM(rd.received_quantity), 0) as total_received_quantity,
+      COALESCE(SUM(rrp.total_amount), 0) as total_amount
+    FROM receive_details rd
+    JOIN rrp_details rrp ON rd.rrp_fk = rrp.id
+    WHERE rd.nac_code = ?
+    AND rd.rrp_fk IS NOT NULL
+    AND rrp.approval_status = 'APPROVED'`,
+    [nacCode]
+  );
+
+  const totalReceivedQuantity = rrpResults[0].total_received_quantity;
+  const totalAmount = rrpResults[0].total_amount;
+
+  // If we have received quantity and total amount, use that for calculation
+  if (totalReceivedQuantity > 0 && totalAmount > 0) {
+    return (totalAmount / totalReceivedQuantity) * quantity;
+  }
+
+  // Fall back to open quantity logic if no RRP records found
+  const [stockResults] = await connection.query<RowDataPacket[]>(
+    'SELECT open_quantity, open_amount FROM stock_details WHERE nac_code = ?',
+      [nacCode]
+    );
+
+  if (stockResults.length === 0) {
+    return 0;
+  }
+
+  const { open_quantity, open_amount } = stockResults[0];
+  if (open_quantity === 0 || open_amount === 0) {
+    return 0;
+  }
+
+  return (open_amount / open_quantity) * quantity;
 };
 
 export const createIssue = async (req: Request, res: Response): Promise<void> => {
   const { issueDate, items, issuedBy }: IssueRequest = req.body;
-  console.log(issueDate)
   
   if (!issueDate || !items || !items.length || !issuedBy) {
     logEvents(`Issue creation failed - Missing required fields by user: ${issuedBy?.name || 'Unknown'}`, "issueLog.log");
@@ -85,8 +119,21 @@ export const createIssue = async (req: Request, res: Response): Promise<void> =>
     const issueIds: number[] = [];
 
     for (const item of items) {
-      const [stockResults] = await connection.execute<StockDetails[]>(
-        'SELECT current_balance, open_quantity, open_amount FROM stock_details WHERE nac_code = ?',
+      // Get the latest issue before the current issue date
+      const [previousIssues] = await connection.query<RowDataPacket[]>(
+        `SELECT remaining_balance 
+         FROM issue_details 
+         WHERE nac_code = ? 
+         AND issue_date < ? 
+         AND approval_status = 'APPROVED'
+         ORDER BY issue_date DESC, id DESC 
+         LIMIT 1`,
+        [item.nacCode, formattedIssueDate]
+      );
+
+      // Get current stock balance
+      const [stockResults] = await connection.query<RowDataPacket[]>(
+        'SELECT current_balance FROM stock_details WHERE nac_code = ?',
         [item.nacCode]
       );
 
@@ -96,12 +143,35 @@ export const createIssue = async (req: Request, res: Response): Promise<void> =>
       }
 
       const stockDetails = stockResults[0];
-      const issueCost = calculateIssueCost(
-        stockDetails.open_amount,
-        stockDetails.open_quantity,
-        item.quantity
+      const issueCost = await calculateIssueCost(connection, item.nacCode, item.quantity);
+
+      // Get all issues for this NAC code ordered by date
+      const [allIssues] = await connection.execute<RowDataPacket[]>(
+        `SELECT id, issue_date, issue_quantity, remaining_balance
+         FROM issue_details
+         WHERE nac_code = ?
+         ORDER BY issue_date ASC`,
+        [item.nacCode]
       );
 
+      // Split issues into before and after current issue date
+      const beforeIssues = allIssues.filter(issue => issue.issue_date < formattedIssueDate!);
+      const afterIssues = allIssues.filter(issue => issue.issue_date >= formattedIssueDate!);
+
+      // Calculate adjusted balance
+      let adjustedBalance;
+      if (beforeIssues.length === 0) {
+        // If no previous issues, use the minimum balance from after issues
+        adjustedBalance = afterIssues.length > 0 
+          ? Math.min(...afterIssues.map(issue => issue.remaining_balance))
+          : stockDetails.current_balance;
+      } else {
+        // Use max balance from before issues minus current issue quantity
+        const maxBalance = Math.max(...beforeIssues.map(issue => issue.remaining_balance));
+        adjustedBalance = maxBalance - item.quantity;
+      }
+
+      // Insert the new issue record
       const [result] = await connection.execute(
         `INSERT INTO issue_details (
           issue_date,
@@ -123,7 +193,7 @@ export const createIssue = async (req: Request, res: Response): Promise<void> =>
           item.partNumber,
           item.quantity,
           item.equipmentNumber,
-          stockDetails.current_balance,
+          0,
           issueCost,
           JSON.stringify(issuedBy),
           JSON.stringify(issuedBy),
@@ -134,6 +204,12 @@ export const createIssue = async (req: Request, res: Response): Promise<void> =>
 
       const issueId = (result as any).insertId;
       issueIds.push(issueId);
+
+      // Update stock balance immediately
+      await connection.execute(
+        'UPDATE stock_details SET current_balance = current_balance - ? WHERE nac_code = ?',
+        [item.quantity, item.nacCode]
+      );
 
       logEvents(`Item issued successfully - NAC: ${item.nacCode}, Quantity: ${item.quantity} by user: ${issuedByName}`, "issueLog.log");
     }
@@ -149,10 +225,10 @@ export const createIssue = async (req: Request, res: Response): Promise<void> =>
   } catch (error) {
     await connection.rollback();
     const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
-    logEvents(`Error creating issue: ${errorMessage} by user: ${issuedBy.name}`, "issueLog.log");
+    logEvents(`Error in createIssue: ${errorMessage}`, "issueLog.log");
     res.status(500).json({
       error: 'Internal Server Error',
-      message: error instanceof Error ? error.message : 'An error occurred while creating the issue'
+      message: errorMessage
     });
   } finally {
     connection.release();
@@ -162,20 +238,25 @@ export const createIssue = async (req: Request, res: Response): Promise<void> =>
 export const approveIssue = async (req: Request, res: Response): Promise<void> => {
   const { itemIds, approvedBy } = req.body;
   const connection = await pool.getConnection();
+  const issueIds = Array.isArray(itemIds) ? itemIds : [itemIds];
 
   try {
     await connection.beginTransaction();
+
+    if (!issueIds.length) {
+      throw new Error('No issue IDs provided');
+    }
 
     // First check if the issues exist and are pending
     const [issueCheck] = await connection.execute<RowDataPacket[]>(
       `SELECT id, approval_status 
        FROM issue_details 
-       WHERE id IN (?)`,
-      [itemIds]
+       WHERE id IN (${issueIds.map(() => '?').join(',')})`,
+      issueIds
     );
 
     if (issueCheck.length === 0) {
-      logEvents(`Failed to approve issues - No issues found with IDs: ${itemIds.join(', ')}`, "issueLog.log");
+      logEvents(`Failed to approve issues - No issues found with IDs: ${issueIds.join(', ')}`, "issueLog.log");
       throw new Error('Issue records not found');
     }
 
@@ -186,19 +267,66 @@ export const approveIssue = async (req: Request, res: Response): Promise<void> =
       throw new Error(`Issues ${alreadyApproved.map(i => i.id).join(', ')} are already approved`);
     }
 
-    // Get all issue details with stock information
+    // Get all issue details
     const [issueDetails] = await connection.execute<RowDataPacket[]>(
       `SELECT 
         i.id,
         i.nac_code,
         i.issue_quantity,
+        i.issue_date,
         i.issue_slip_number,
         s.current_balance
       FROM issue_details i
       LEFT JOIN stock_details s ON i.nac_code COLLATE utf8mb4_unicode_ci = s.nac_code COLLATE utf8mb4_unicode_ci
-      WHERE i.id IN (?)`,
-      [itemIds]
+      WHERE i.id IN (${issueIds.map(() => '?').join(',')})`,
+      issueIds
     );
+
+    // Process each issue
+    for (const issue of issueDetails) {
+      // Get all issues for this NAC code ordered by date
+      const [allIssues] = await connection.execute<RowDataPacket[]>(
+        `SELECT id, issue_date, issue_quantity, remaining_balance
+         FROM issue_details
+         WHERE nac_code = ?
+         ORDER BY issue_date ASC`,
+        [issue.nac_code]
+      );
+
+      // Split issues into before and after current issue date
+      const beforeIssues = allIssues.filter(i => i.issue_date < issue.issue_date);
+      const afterIssues = allIssues.filter(i => i.issue_date >= issue.issue_date);
+
+      // Calculate adjusted balance
+      let adjustedBalance;
+      if (beforeIssues.length === 0) {
+        // If no previous issues, use the minimum balance from after issues
+        adjustedBalance = afterIssues.length > 0 
+          ? Math.min(...afterIssues.map(i => i.remaining_balance))
+          : issue.current_balance;
+      } else {
+        // Use max balance from before issues minus current issue quantity
+        const maxBalance = Math.max(...beforeIssues.map(i => i.remaining_balance));
+        adjustedBalance = maxBalance - issue.issue_quantity;
+      }
+
+      // Update the current issue's remaining balance
+      await connection.execute(
+        'UPDATE issue_details SET remaining_balance = ? WHERE id = ?',
+        [adjustedBalance, issue.id]
+      );
+
+      // Update subsequent issues' remaining balances
+      let runningBalance = adjustedBalance;
+      for (const afterIssue of afterIssues) {
+        if (afterIssue.id === issue.id) continue; // Skip the current issue
+        runningBalance -= afterIssue.issue_quantity;
+        await connection.execute(
+          'UPDATE issue_details SET remaining_balance = ? WHERE id = ?',
+          [runningBalance, afterIssue.id]
+        );
+      }
+    }
 
     // Update all issues status
     await connection.execute(
@@ -206,30 +334,12 @@ export const approveIssue = async (req: Request, res: Response): Promise<void> =
       SET approval_status = 'APPROVED',
           approved_by = ?,
           updated_at = CURRENT_TIMESTAMP
-      WHERE id IN (?)`,
-      [approvedBy, itemIds]
+      WHERE id IN (${issueIds.map(() => '?').join(',')})`,
+      [approvedBy, ...issueIds]
     );
 
-    // Update stock balance for each issue
-    for (const issue of issueDetails) {
-      if (!issue.current_balance) {
-        throw new Error(`Stock details not found for item ${issue.nac_code}`);
-      }
-
-      const newBalance = issue.current_balance - issue.issue_quantity;
-
-      if (newBalance < 0) {
-        throw new Error(`Insufficient balance for item ${issue.nac_code}`);
-      }
-
-      await connection.execute(
-        'UPDATE stock_details SET current_balance = ? WHERE nac_code = ?',
-        [newBalance, issue.nac_code]
-      );
-    }
-
     await connection.commit();
-    logEvents(`Successfully approved issues with IDs: ${itemIds.join(', ')} by user: ${approvedBy}`, "issueLog.log");
+    logEvents(`Successfully approved issues with IDs: ${issueIds.join(', ')} by user: ${approvedBy}`, "issueLog.log");
     res.status(200).json({
       message: 'Issues approved and stock updated successfully',
       approvedCount: issueDetails.length
@@ -237,7 +347,7 @@ export const approveIssue = async (req: Request, res: Response): Promise<void> =
   } catch (error) {
     await connection.rollback();
     const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
-    logEvents(`Error approving issues: ${errorMessage} for IDs: ${itemIds.join(', ')}`, "issueLog.log");
+    logEvents(`Error approving issues: ${errorMessage} for IDs: ${issueIds.join(', ')}`, "issueLog.log");
     res.status(500).json({
       error: 'Internal Server Error',
       message: error instanceof Error ? error.message : 'An error occurred while approving issues'
@@ -254,16 +364,22 @@ export const rejectIssue = async (req: Request, res: Response): Promise<void> =>
   try {
     await connection.beginTransaction();
 
-    // Get issue details for notifications and logging
+    // Get issue details for notifications, logging, and stock updates
     const [issueDetails] = await connection.execute<RowDataPacket[]>(
-      `SELECT id, issue_slip_number, issued_by, issue_date 
-      FROM issue_details 
-      WHERE id IN (${itemIds.join(',')})`,
-      []
+      `SELECT 
+        i.id, 
+        i.issue_slip_number, 
+        i.issued_by, 
+        i.issue_date,
+        i.nac_code,
+        i.issue_quantity
+      FROM issue_details i
+      WHERE i.id IN (${Array.isArray(itemIds) ? itemIds.map(() => '?').join(',') : '?'})`,
+      Array.isArray(itemIds) ? itemIds : [itemIds]
     );
 
     if (issueDetails.length === 0) {
-      logEvents(`Failed to reject issues - No issues found with IDs: ${itemIds.join(', ')}`, "issueLog.log");
+      logEvents(`Failed to reject issues - No issues found with IDs: ${Array.isArray(itemIds) ? itemIds.join(', ') : itemIds}`, "issueLog.log");
       throw new Error('Issue records not found');
     }
 
@@ -295,14 +411,22 @@ export const rejectIssue = async (req: Request, res: Response): Promise<void> =>
       );
     }
 
+    // Add back quantities to stock for each issue
+    for (const issue of issueDetails) {
+      await connection.execute(
+        'UPDATE stock_details SET current_balance = current_balance + ? WHERE nac_code = ?',
+        [issue.issue_quantity, issue.nac_code]
+      );
+    }
+
     // Delete all the issue records
     await connection.execute(
-      `DELETE FROM issue_details WHERE id IN (${itemIds.join(',')})`,
-      []
+      `DELETE FROM issue_details WHERE id IN (${Array.isArray(itemIds) ? itemIds.map(() => '?').join(',') : '?'})`,
+      Array.isArray(itemIds) ? itemIds : [itemIds]
     );
 
     await connection.commit();
-    logEvents(`Successfully rejected issues with IDs: ${itemIds.join(', ')} by user: ${rejectedBy}`, "issueLog.log");
+    logEvents(`Successfully rejected issues with IDs: ${Array.isArray(itemIds) ? itemIds.join(', ') : itemIds} by user: ${rejectedBy}`, "issueLog.log");
     res.status(200).json({
       message: 'Issues rejected successfully',
       rejectedCount: issueDetails.length
@@ -310,7 +434,7 @@ export const rejectIssue = async (req: Request, res: Response): Promise<void> =>
   } catch (error) {
     await connection.rollback();
     const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
-    logEvents(`Error rejecting issues: ${errorMessage} for IDs: ${itemIds.join(', ')}`, "issueLog.log");
+    logEvents(`Error rejecting issues: ${errorMessage} for IDs: ${Array.isArray(itemIds) ? itemIds.join(', ') : itemIds}`, "issueLog.log");
     res.status(500).json({
       error: 'Internal Server Error',
       message: error instanceof Error ? error.message : 'An error occurred while rejecting issues'
@@ -374,14 +498,12 @@ export const updateIssueItem = async (req: Request, res: Response): Promise<void
     await connection.beginTransaction();
 
     // Get the current issue details
-    const [issueDetails] = await connection.execute<RowDataPacket[]>(
+    const [issueDetails] = await connection.query<RowDataPacket[]>(
       `SELECT 
         i.nac_code,
         i.issue_quantity,
         i.issue_slip_number,
-        s.current_balance,
-        s.open_quantity,
-        s.open_amount
+        s.current_balance
       FROM issue_details i
       LEFT JOIN stock_details s ON i.nac_code COLLATE utf8mb4_unicode_ci = s.nac_code COLLATE utf8mb4_unicode_ci
       WHERE i.id = ?`,
@@ -396,11 +518,7 @@ export const updateIssueItem = async (req: Request, res: Response): Promise<void
     const quantityDifference = quantity - issue.issue_quantity;
 
     // Calculate new issue cost
-    const issueCost = calculateIssueCost(
-      issue.open_amount,
-      issue.open_quantity,
-      quantity
-    );
+    const issueCost = await calculateIssueCost(connection, issue.nac_code, quantity);
 
     // Update the issue details
     await connection.execute(
@@ -412,16 +530,15 @@ export const updateIssueItem = async (req: Request, res: Response): Promise<void
       [quantity, issueCost, id]
     );
 
-    // Update stock balance
-    const newBalance = issue.current_balance - quantityDifference;
-    if (newBalance < 0) {
-      throw new Error('Insufficient stock balance');
+    // Update stock balance based on quantity difference
+    if (quantityDifference !== 0) {
+      // If quantity increased, subtract the difference
+      // If quantity decreased, add back the difference
+      await connection.execute(
+        'UPDATE stock_details SET current_balance = current_balance - ? WHERE nac_code = ?',
+        [quantityDifference, issue.nac_code]
+      );
     }
-
-    await connection.execute(
-      'UPDATE stock_details SET current_balance = ? WHERE nac_code = ?',
-      [newBalance, issue.nac_code]
-    );
 
     await connection.commit();
     logEvents(`Successfully updated issue item ID: ${id} with new quantity: ${quantity}`, "issueLog.log");
@@ -474,11 +591,10 @@ export const deleteIssueItem = async (req: Request, res: Response): Promise<void
       [id]
     );
 
-    // Update stock balance
-    const newBalance = issue.current_balance + issue.issue_quantity;
+    // Add back the quantity to stock balance
     await connection.execute(
-      'UPDATE stock_details SET current_balance = ? WHERE nac_code = ?',
-      [newBalance, issue.nac_code]
+      'UPDATE stock_details SET current_balance = current_balance + ? WHERE nac_code = ?',
+      [issue.issue_quantity, issue.nac_code]
     );
 
     await connection.commit();

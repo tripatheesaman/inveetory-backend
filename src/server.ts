@@ -20,6 +20,7 @@ import roleRoutes from './routes/roleRoutes';
 import permissionRoutes from './routes/permissionRoutes';
 import reportRoutes from './routes/reportRoutes';
 import settingsRoutes from './routes/settingsRoutes';
+import fuelRoutes from './routes/fuelRoutes';
 
 const app = express();
 const PORT = process.env.PORT || 3500;
@@ -50,6 +51,7 @@ app.use('/api/role', verifyJWT, roleRoutes);
 app.use('/api/permission', verifyJWT, permissionRoutes);
 app.use('/api/report', verifyJWT, reportRoutes);
 app.use('/api/settings', verifyJWT, settingsRoutes);
+app.use('/api/fuel', verifyJWT, fuelRoutes);
 
 
 app.get('/health', (req: Request, res: Response) => {

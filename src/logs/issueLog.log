@@ -406,3 +406,188 @@
 20250612	16:51:58	9c02dccf-7e2b-4385-a8d4-624f8ba1a671	Successfully retrieved 0 pending issues
 20250612	17:30:07	16f62447-6a56-46b6-9b5b-68f12f8c9aa2	Successfully retrieved 0 pending issues
 20250612	17:30:07	8a0f3b45-bc6c-421f-b042-f9dcb8496b9d	Successfully retrieved 0 pending issues
+20250613	11:29:59	bae2bdd1-3a19-4ee7-8b5a-95f47f1a717a	Successfully retrieved 0 pending issues
+20250613	11:29:59	78b2a0ef-1e40-4de8-a702-1d9fedabd8fc	Successfully retrieved 0 pending issues
+20250613	12:26:53	71157082-210f-4b1c-b72e-d835bc9e1bfe	Issue creation failed - Missing required fields by user: Unknown
+20250613	12:27:56	cbf503a2-5a45-42d9-814d-b5e6a29057cc	Issue creation failed - Missing required fields by user: Unknown
+20250613	12:29:50	07460d69-942f-4780-acb4-6b55519dd2f4	Issue creation failed - Missing required fields by user: Unknown
+20250613	12:30:39	abcaf077-c7e9-4893-87b5-b8aa49eaac64	Issue creation failed - Missing required fields by user: Unknown
+20250614	11:27:17	c1f048e7-eea8-45b2-a501-5a342dd2682d	Successfully retrieved 0 pending issues
+20250614	11:27:17	bd0287c4-f861-4cc3-8fda-a74acedb2b73	Successfully retrieved 0 pending issues
+20250614	11:27:41	3d97cf7d-099c-4669-ac4d-2bc5dde4d692	Successfully retrieved 0 pending issues
+20250614	11:27:41	d27aec2d-2fb2-4e59-bf55-764d8d590aab	Successfully retrieved 0 pending issues
+20250614	11:27:58	9da3aa06-e254-4772-95d3-e12066cdf9bd	Issue creation failed - Missing required fields by user: Unknown
+20250614	11:29:54	6112d2ba-30ca-45ff-8eab-c4a534186f20	Issue creation failed - Item not found: 109 by user: superadmin@god.com
+20250614	11:29:54	353807fd-22ae-42b1-b56c-a25ab04a3c4a	Error in createIssue: Item with NAC code 109 not found
+20250614	11:31:11	b4dd5a46-c936-441c-ab90-211f79c6d27b	Issue creation failed - Item not found: 109 by user: superadmin@god.com
+20250614	11:31:11	90488363-5def-4347-81b2-455215222dd9	Error in createIssue: Item with NAC code 109 not found
+20250614	11:37:13	82ccf40d-343e-46d8-b40c-7f6668837836	Issue creation failed - Item not found: 109 by user: superadmin@god.com
+20250614	11:37:13	07e504c8-0fa8-4c47-8201-03321d9bc43b	Error in createIssue: Item with NAC code 109 not found
+20250614	11:38:25	f833e0d8-bbeb-421b-92a8-a8109d158262	Issue creation failed - Item not found: 109 by user: superadmin@god.com
+20250614	11:38:25	62bddecc-a89f-4ef0-bf86-07604bbe6ad7	Error in createIssue: Item with NAC code 109 not found
+20250614	11:39:27	a7b7019e-ef2c-4187-a998-f859546ca3a2	Issue creation failed - Item not found: 109 by user: superadmin@god.com
+20250614	11:39:27	5b464479-1a2d-408f-90bb-3812d44dbedc	Error in createIssue: Item with NAC code 109 not found
+20250614	11:43:28	da45870d-e2e9-4bb8-b238-13625371b5f4	Item issued successfully - NAC: GT 07986, Quantity: 12 by user: superadmin@god.com
+20250614	11:43:28	9fd8b152-3c5e-4e99-a2ff-26ca8df0ab1a	Issue created successfully for date: 2025/06/14 by user: superadmin@god.com
+20250614	11:45:12	3376ff73-915d-49fb-86fb-c47b0a23fb7d	Successfully retrieved 1 pending issues
+20250614	11:45:12	a3ceb3f6-480c-4b8c-99c3-5e7633557ea8	Successfully retrieved 1 pending issues
+20250614	11:45:47	5b2d69f5-1caa-443d-bb20-532995caa8ad	Successfully rejected issues with IDs: 17 by user: superadmin@god.com
+20250614	11:45:47	4812775c-c2ab-4782-aaca-4e745241b120	Successfully retrieved 0 pending issues
+20250614	11:54:51	17dd5058-b349-4703-a048-81f317a7e31d	Item issued successfully - NAC: GT 07986, Quantity: 100 by user: superadmin@god.com
+20250614	11:54:51	3868704b-aa40-429a-812a-341b02df53cf	Issue created successfully for date: 2025/06/14 by user: superadmin@god.com
+20250614	11:56:02	6810d281-160a-4c54-a131-63b641cc4d19	Item issued successfully - NAC: GT 07986, Quantity: 100 by user: superadmin@god.com
+20250614	11:56:02	53cdc350-4acb-457c-825c-b2331032e88d	Issue created successfully for date: 2025/06/14 by user: superadmin@god.com
+20250614	11:56:03	ec508563-5fea-4516-9b3a-b76dda788d86	Item issued successfully - NAC: GT 07986, Quantity: 100 by user: superadmin@god.com
+20250614	11:56:03	c3d0add1-468b-486a-894f-1e2a999fbc79	Issue created successfully for date: 2025/06/14 by user: superadmin@god.com
+20250614	11:56:03	6b843b26-3406-48af-8b02-1e431a5231ac	Item issued successfully - NAC: GT 07986, Quantity: 100 by user: superadmin@god.com
+20250614	11:56:03	a4202671-d79c-4ed2-94e1-01d22c355fb2	Issue created successfully for date: 2025/06/14 by user: superadmin@god.com
+20250614	11:59:36	0df4bdc4-c704-4f9f-8044-0d3db9ddd368	Item issued successfully - NAC: GT 07986, Quantity: 100 by user: superadmin@god.com
+20250614	11:59:36	854c8bcf-8e5a-43f6-8003-9f8df856edda	Issue created successfully for date: 2025/06/14 by user: superadmin@god.com
+20250614	12:01:48	2a50de56-1f41-4758-98f0-18b24121b2ca	Item issued successfully - NAC: GT 07986, Quantity: 100 by user: superadmin@god.com
+20250614	12:01:48	794a80e3-8b55-48ba-8fe4-59784b79a3f3	Issue created successfully for date: 2025/06/14 by user: superadmin@god.com
+20250614	12:04:36	78e468de-0c1e-45bf-bc3d-4d48463360e9	Item issued successfully - NAC: GT 07986, Quantity: 100 by user: superadmin@god.com
+20250614	12:04:36	d1863bad-a996-42b4-a55e-4e47323840a0	Issue created successfully for date: 2025/06/14 by user: superadmin@god.com
+20250614	12:07:22	85af3fea-a816-4986-ab6b-a3f904417ec1	Item issued successfully - NAC: GT 07986, Quantity: 100 by user: superadmin@god.com
+20250614	12:07:22	b5fcbe76-3090-4739-900c-e27ae73f6225	Issue created successfully for date: 2025/06/14 by user: superadmin@god.com
+20250614	12:07:23	ab5c40aa-9357-4d1d-904c-590cc73db62a	Item issued successfully - NAC: GT 07986, Quantity: 100 by user: superadmin@god.com
+20250614	12:07:23	7a73cc96-63cc-4406-a74b-ac08ec6689d9	Issue created successfully for date: 2025/06/14 by user: superadmin@god.com
+20250614	12:07:24	0481d6a2-5395-44c9-bba6-0f73ef3b2990	Item issued successfully - NAC: GT 07986, Quantity: 100 by user: superadmin@god.com
+20250614	12:07:24	894542f6-5209-47bf-bf8e-c4f3bc3669d5	Issue created successfully for date: 2025/06/14 by user: superadmin@god.com
+20250614	12:07:24	1fdd5322-b35b-4a9e-a3d1-e55d4d944720	Item issued successfully - NAC: GT 07986, Quantity: 100 by user: superadmin@god.com
+20250614	12:07:24	7ae22303-97be-4b0f-b432-156af4f34941	Issue created successfully for date: 2025/06/14 by user: superadmin@god.com
+20250614	12:07:24	35c9cfaf-9130-4ce0-8871-d360cda0eff7	Item issued successfully - NAC: GT 07986, Quantity: 100 by user: superadmin@god.com
+20250614	12:07:24	e92773c5-900c-4c53-a6ab-32cbbb1098ea	Issue created successfully for date: 2025/06/14 by user: superadmin@god.com
+20250614	12:07:24	0e9b0aea-28e9-4c2b-8973-a29435ccf710	Item issued successfully - NAC: GT 07986, Quantity: 100 by user: superadmin@god.com
+20250614	12:07:24	89beab13-05cf-47f7-8f94-eb33349af295	Issue created successfully for date: 2025/06/14 by user: superadmin@god.com
+20250614	12:10:18	2a0c3ada-91de-4d60-abdc-0ee6df6928b2	Item issued successfully - NAC: GT 07986, Quantity: 100 by user: superadmin@god.com
+20250614	12:10:18	de4d083a-78d8-4a94-9221-beffad29afc3	Issue created successfully for date: 2025/06/14 by user: superadmin@god.com
+20250614	12:11:15	2608da66-df34-4516-805c-5854dd97c617	Item issued successfully - NAC: GT 07986, Quantity: 100 by user: superadmin@god.com
+20250614	12:11:15	b528b6a6-381a-4229-ae58-ea78eea234e2	Issue created successfully for date: 2025/06/14 by user: superadmin@god.com
+20250614	12:12:16	56a70a68-7b2f-4957-871c-67eb07a1279b	Item issued successfully - NAC: GT 07986, Quantity: 100 by user: superadmin@god.com
+20250614	12:12:16	8289ffbb-d3b4-4e06-9438-77aecabbc48d	Issue created successfully for date: 2025/06/14 by user: superadmin@god.com
+20250614	12:13:13	88ea9fca-4c2a-401d-8cec-2300f7172f89	Item issued successfully - NAC: GT 07986, Quantity: 100 by user: superadmin@god.com
+20250614	12:13:13	0fe6e070-ba76-49b9-8033-af25f5adaef3	Issue created successfully for date: 2025/06/14 by user: superadmin@god.com
+20250614	12:13:25	f52da4e4-c7a8-4ee4-835f-08592f24ba32	Item issued successfully - NAC: GT 07986, Quantity: 100 by user: superadmin@god.com
+20250614	12:13:25	71704e55-4284-485c-a56c-065c791e0849	Issue created successfully for date: 2025/06/14 by user: superadmin@god.com
+20250614	12:14:24	2b653257-47cf-49e1-ad12-f39e45849753	Item issued successfully - NAC: GT 07986, Quantity: 100 by user: superadmin@god.com
+20250614	12:14:24	7974eff4-6ff3-4b5e-a96d-7bb0624c3b33	Issue created successfully for date: 2025/06/14 by user: superadmin@god.com
+20250614	12:18:59	2b7df6f8-4da3-45c7-b12b-0813316b0cb7	Item issued successfully - NAC: GT 07986, Quantity: 100 by user: superadmin@god.com
+20250614	12:18:59	d5c20ae5-94e6-4f04-842b-639adbbaab18	Issue created successfully for date: 2025/06/14 by user: superadmin@god.com
+20250614	12:21:01	e6b0a37d-f131-4d1d-9185-e0dd9b3bc02f	Item issued successfully - NAC: GT 07986, Quantity: 100 by user: superadmin@god.com
+20250614	12:21:01	7d031f65-8f84-4358-936f-06ef9730d1a7	Issue created successfully for date: 2025/06/14 by user: superadmin@god.com
+20250614	12:24:05	5da517d5-f669-43ee-9b93-150da65c3de2	Item issued successfully - NAC: GT 07986, Quantity: 100 by user: superadmin@god.com
+20250614	12:24:05	c2b636fc-8204-4200-9101-d278f56ec672	Issue created successfully for date: 2025/06/14 by user: superadmin@god.com
+20250614	12:24:05	40d6460a-32b8-4faf-ae10-c2e76ba206ec	Item issued successfully - NAC: GT 07986, Quantity: 100 by user: superadmin@god.com
+20250614	12:24:05	ee826885-eb5c-4608-8f28-f21a641e0368	Issue created successfully for date: 2025/06/14 by user: superadmin@god.com
+20250614	12:31:56	fdc6900e-e293-4144-958c-b8dc1e417e44	Item issued successfully - NAC: GT 07986, Quantity: 100 by user: superadmin@god.com
+20250614	12:31:56	013c3da0-7cce-41e3-9573-a5fa36624e7e	Issue created successfully for date: 2025/06/14 by user: superadmin@god.com
+20250614	12:34:37	fa5383fb-caab-44aa-95fa-e2f108626961	Item issued successfully - NAC: GT 07986, Quantity: 100 by user: superadmin@god.com
+20250614	12:34:37	9d4f5155-751a-4b94-9c7a-e435d252f1cf	Issue created successfully for date: 2025/06/14 by user: superadmin@god.com
+20250614	12:34:38	49a4c543-e0b5-46fa-8390-55bc66b48fb5	Item issued successfully - NAC: GT 07986, Quantity: 100 by user: superadmin@god.com
+20250614	12:34:38	c41c9fb1-2ec4-4085-a8a9-8c429b10eaad	Issue created successfully for date: 2025/06/14 by user: superadmin@god.com
+20250614	12:34:38	0942679e-eda7-423f-8bbd-728ab3052524	Item issued successfully - NAC: GT 07986, Quantity: 100 by user: superadmin@god.com
+20250614	12:34:38	b668f398-997f-4a27-8baf-f8e23b74668b	Issue created successfully for date: 2025/06/14 by user: superadmin@god.com
+20250614	12:34:39	b6904bd8-240d-4096-8a27-827e721cf076	Item issued successfully - NAC: GT 07986, Quantity: 100 by user: superadmin@god.com
+20250614	12:34:39	3fb2b269-ff63-4e9b-b515-29469bec65be	Issue created successfully for date: 2025/06/14 by user: superadmin@god.com
+20250614	12:34:39	20ccf66c-4812-4e9d-a895-a71c0f4f82ab	Item issued successfully - NAC: GT 07986, Quantity: 100 by user: superadmin@god.com
+20250614	12:34:39	fd424801-f166-4194-a335-ff0d0f2d08a8	Issue created successfully for date: 2025/06/14 by user: superadmin@god.com
+20250614	12:34:39	b9c4b122-80ce-49a7-8eff-0ecd80e4df23	Item issued successfully - NAC: GT 07986, Quantity: 100 by user: superadmin@god.com
+20250614	12:34:39	d96ce4b0-57b3-4739-b2c1-7dd772a990d0	Issue created successfully for date: 2025/06/14 by user: superadmin@god.com
+20250614	12:34:39	386e93e7-e8c3-41e4-a408-093b264fd4a2	Item issued successfully - NAC: GT 07986, Quantity: 100 by user: superadmin@god.com
+20250614	12:34:39	e0e578ab-4edd-469f-8189-2f5012832783	Issue created successfully for date: 2025/06/14 by user: superadmin@god.com
+20250614	12:34:40	553c31ee-d559-4547-9fdc-a512b1933399	Item issued successfully - NAC: GT 07986, Quantity: 100 by user: superadmin@god.com
+20250614	12:34:40	6674273f-a35d-4ddb-898a-1b8157adcb09	Issue created successfully for date: 2025/06/14 by user: superadmin@god.com
+20250614	12:34:40	71512c87-85d2-411f-b81c-0c061f1d94fc	Item issued successfully - NAC: GT 07986, Quantity: 100 by user: superadmin@god.com
+20250614	12:34:40	56e370f8-02cf-4806-8c81-3c2d4be9f54e	Issue created successfully for date: 2025/06/14 by user: superadmin@god.com
+20250614	12:34:40	279c224a-0a4f-4640-a9cb-9d6d926c1163	Item issued successfully - NAC: GT 07986, Quantity: 100 by user: superadmin@god.com
+20250614	12:34:40	ae4b7bfd-7daa-45ca-be64-bc55639668d6	Issue created successfully for date: 2025/06/14 by user: superadmin@god.com
+20250614	12:44:57	aba7bdfc-066e-4ebc-8147-953c78ee817d	Item issued successfully - NAC: GT 07986, Quantity: 100 by user: superadmin@god.com
+20250614	12:44:57	0064fe40-415c-4efe-9340-e304bdf8f5ac	Issue created successfully for date: 2025/06/14 by user: superadmin@god.com
+20250614	12:44:58	fa54c31f-e758-4d96-afb3-ec062a567d02	Item issued successfully - NAC: GT 07986, Quantity: 100 by user: superadmin@god.com
+20250614	12:44:58	66ee13de-84d8-45ba-9536-fafa588306b8	Issue created successfully for date: 2025/06/14 by user: superadmin@god.com
+20250614	12:44:58	ccc550bc-d24f-4d46-be3d-a7a5a3aa1129	Item issued successfully - NAC: GT 07986, Quantity: 100 by user: superadmin@god.com
+20250614	12:44:58	0abe85a6-9761-4b15-8369-02d3f8234e8d	Issue created successfully for date: 2025/06/14 by user: superadmin@god.com
+20250614	12:44:59	d2ccfbae-873b-4d6a-9515-f828fdedc9b1	Item issued successfully - NAC: GT 07986, Quantity: 100 by user: superadmin@god.com
+20250614	12:44:59	71f5e7c6-6b09-4f1b-8950-ba323194f351	Issue created successfully for date: 2025/06/14 by user: superadmin@god.com
+20250614	13:03:09	3242a6a6-7b95-4111-a156-760d2e304795	Item issued successfully - NAC: GT 07986, Quantity: 100 by user: superadmin@god.com
+20250614	13:03:09	08510eb4-58f3-4f3c-ba05-7809698f7d1b	Issue created successfully for date: 2025/06/14 by user: superadmin@god.com
+20250614	13:06:00	482747d9-6492-4823-8786-662de8c91b7e	Successfully retrieved 39 pending issues
+20250614	13:06:00	dbf283b0-8b6a-4965-ada4-a889cab3844f	Successfully retrieved 39 pending issues
+20250614	13:06:19	37abc334-f778-4cfd-8bf9-32c4a5411c77	Successfully retrieved 39 pending issues
+20250614	13:06:19	c181f7cc-2032-412f-b326-c31aa13ff724	Successfully retrieved 39 pending issues
+20250614	13:09:37	e0149fa4-6ec4-4ad7-b80d-2ff5ff9014aa	Successfully deleted issue item ID: 55
+20250614	13:09:38	f4fef76c-2943-474f-8777-d1ad58c81754	Successfully deleted issue item ID: 54
+20250614	13:09:39	e22a7437-acfc-4548-8436-3cc71ebe4c24	Successfully deleted issue item ID: 53
+20250614	13:09:39	c48f9b37-c279-4517-993b-fc4e774bb6fe	Successfully deleted issue item ID: 51
+20250614	13:09:40	bc324df8-e70c-4bd2-a325-8c0e95852fcf	Successfully deleted issue item ID: 49
+20250614	13:09:40	b424f618-aed8-43a4-a24a-c900f98c7b4a	Successfully deleted issue item ID: 47
+20250614	13:09:41	2421c49a-26ca-423e-a1c9-ca5326c338a5	Successfully deleted issue item ID: 45
+20250614	13:09:41	f112c348-328e-4b1c-b593-8b6a28aca420	Successfully deleted issue item ID: 44
+20250614	13:09:41	b10e84be-ae72-4c43-a923-b3ced7522449	Successfully deleted issue item ID: 43
+20250614	13:09:41	dac53705-92e2-4630-83e5-adf18a2e75fc	Successfully deleted issue item ID: 42
+20250614	13:09:41	cb6ba433-b485-4196-b669-18ddebfdfe15	Successfully deleted issue item ID: 41
+20250614	13:09:42	97dade71-8d9a-4f63-95df-dd72d522b258	Successfully deleted issue item ID: 40
+20250614	13:09:42	685f7454-4a13-4b4b-ab4b-2f9f24c0fe0f	Successfully deleted issue item ID: 39
+20250614	13:09:42	217c6c9a-3b5e-4ce6-ab35-9c878d0fb58f	Successfully deleted issue item ID: 38
+20250614	13:09:42	2a52ce1f-2496-4a44-a9ed-439c84e991d7	Successfully deleted issue item ID: 37
+20250614	13:09:42	1c056ee5-43a9-486f-8782-661a804a02e4	Successfully deleted issue item ID: 36
+20250614	13:09:42	b0c60c13-9f57-4134-9643-98d7b2e8caf1	Successfully deleted issue item ID: 35
+20250614	13:09:43	9d3fde31-f154-4540-bc0c-0e9d293206cf	Successfully deleted issue item ID: 34
+20250614	13:09:43	a749ad7c-de3d-4afe-b142-699797863bf8	Successfully deleted issue item ID: 33
+20250614	13:09:43	05246b53-0237-4ae4-8ffa-e2b0e379c3d8	Successfully deleted issue item ID: 32
+20250614	13:09:43	350070f6-f835-42f5-8d08-cc3a84c680df	Successfully deleted issue item ID: 31
+20250614	13:09:43	ff53c10d-b120-4930-a4a8-4dc96501d453	Successfully deleted issue item ID: 30
+20250614	13:09:43	44f2076d-ce8c-4a82-9cf4-516712ab63cf	Successfully deleted issue item ID: 29
+20250614	13:09:44	b4b6c3d3-8fbe-4e58-9e9e-8d6f2bfc7a71	Successfully deleted issue item ID: 28
+20250614	13:09:44	dc29a24e-d7f7-4052-a047-e7bcc9d31830	Successfully deleted issue item ID: 27
+20250614	13:09:44	ab92ccbb-48cf-49dd-81ca-6f85d1f9193d	Successfully deleted issue item ID: 26
+20250614	13:09:44	67104af7-0983-4264-9db9-4294212415a5	Successfully deleted issue item ID: 25
+20250614	13:09:44	cd20669f-7dc8-4ca7-8000-ae3bb748815d	Successfully deleted issue item ID: 24
+20250614	13:09:44	d1ee9d76-c781-44b4-9392-dc3cbb9258ce	Successfully deleted issue item ID: 23
+20250614	13:09:45	61bfdece-6ca7-4237-b3d4-b4702d64020e	Successfully deleted issue item ID: 22
+20250614	13:09:45	149dca00-c257-44df-9919-09eac457ceb4	Successfully deleted issue item ID: 21
+20250614	13:09:45	21324c17-f3ee-41d8-850a-366b32171e0f	Successfully deleted issue item ID: 20
+20250614	13:09:45	56ffab99-e6e2-44ff-8198-fb748288ebff	Successfully deleted issue item ID: 19
+20250614	13:09:46	56100e9e-dadc-4f2a-81fd-df77c8f39370	Successfully deleted issue item ID: 18
+20250614	13:09:47	a9d72f38-a89e-4bdc-bb0c-95b2256d78fa	Successfully deleted issue item ID: 46
+20250614	13:09:47	48e95161-d663-49dd-88be-90e1a6f61dd6	Successfully deleted issue item ID: 48
+20250614	13:09:48	381d8fa6-731f-4e04-b7b6-c06d9baa0c8a	Successfully deleted issue item ID: 50
+20250614	13:09:48	45377c13-1f0d-4bfc-abb7-66f82cecafa3	Successfully deleted issue item ID: 52
+20250614	13:09:49	b8c33bf6-ab92-43dd-a118-b7595262faef	Successfully approved issues with IDs: 56 by user: superadmin@god.com
+20250614	13:09:49	4ec64175-7fbb-45f0-80b8-1ccc1b0afb6b	Successfully retrieved 0 pending issues
+20250614	13:10:10	97deebb9-b48d-4586-829a-610d57ace3ab	Item issued successfully - NAC: GT 07986, Quantity: 10 by user: superadmin@god.com
+20250614	13:10:10	a04bc4e4-c21e-48d8-b5e6-10e3df9c2dc1	Issue created successfully for date: 2025/06/14 by user: superadmin@god.com
+20250614	13:10:15	3a0e5ed9-deee-42ea-971c-8ecf8d0f9669	Successfully retrieved 1 pending issues
+20250614	13:10:15	315a301c-a3c4-4081-9f24-dc90d37635c5	Successfully retrieved 1 pending issues
+20250614	13:10:51	ef2d02b1-a37f-43bb-93f8-1657c468a34f	Successfully rejected issues with IDs: 57 by user: superadmin@god.com
+20250614	13:10:51	f4941b8d-258e-4613-859e-ba41da5d0f32	Successfully retrieved 0 pending issues
+20250614	13:22:41	d6b90908-d37e-4e34-857b-f0116f7db6ab	Successfully retrieved 0 pending issues
+20250614	13:22:41	f1046a69-d284-4d34-8737-06becd15d0da	Successfully retrieved 0 pending issues
+20250614	15:24:06	7856fd8b-b94a-4494-90a6-b66a2a345019	Item issued successfully - NAC: GT 07986, Quantity: 100 by user: superadmin@god.com
+20250614	15:24:06	3cbc0335-92d5-46a3-bf3f-ff974bebfc6b	Issue created successfully for date: 2025/06/14 by user: superadmin@god.com
+20250614	15:25:18	bc888f4b-59b3-4f2d-8b3e-075d30d219e1	Item issued successfully - NAC: GT 07986, Quantity: 100 by user: superadmin@god.com
+20250614	15:25:18	57e97cad-64da-4eb0-89e7-3d91aceeab58	Issue created successfully for date: 2025/06/14 by user: superadmin@god.com
+20250614	15:26:47	af4342e9-746f-43f6-8d71-552717410deb	Item issued successfully - NAC: GT 07986, Quantity: 100 by user: superadmin@god.com
+20250614	15:26:47	7e3b9c0c-08d4-4574-942f-1c948fa41d2a	Issue created successfully for date: 2025/06/14 by user: superadmin@god.com
+20250614	15:27:17	696584ba-bcdf-4d23-bea2-a052b0d2f33a	Item issued successfully - NAC: GT 07986, Quantity: 100 by user: superadmin@god.com
+20250614	15:27:17	72b6d0a2-1631-4cf9-a0aa-beb7a6cd5f83	Issue created successfully for date: 2025/06/14 by user: superadmin@god.com
+20250614	15:27:55	09b4404f-c8de-47a7-84ea-bd594c13cefc	Item issued successfully - NAC: GT 07986, Quantity: 100 by user: superadmin@god.com
+20250614	15:27:55	a4ea2d4a-d544-4301-a8f9-975d44e24a66	Issue created successfully for date: 2025/06/14 by user: superadmin@god.com
+20250614	15:27:58	2dfd005b-20c3-4dbd-a592-ebd411bd5235	Successfully retrieved 5 pending issues
+20250614	15:27:58	7d280bd8-67c4-4f85-8207-5fff48b29bf3	Successfully retrieved 5 pending issues
+20250614	15:28:04	d5c288fe-8587-494c-8a02-a9ccbb0d62e3	Successfully deleted issue item ID: 62
+20250614	15:28:04	6e34a518-fdb2-49b5-9a94-4cb25c2aa633	Successfully deleted issue item ID: 61
+20250614	15:28:05	1986a25a-d469-4168-974f-faa09586e951	Successfully deleted issue item ID: 60
+20250614	15:28:05	4156a668-51a8-4995-8618-7cca2b5347b6	Successfully deleted issue item ID: 59
+20250614	15:28:07	725daa96-6182-46e6-9ad7-e1587a30de00	Successfully approved issues with IDs: 58 by user: superadmin@god.com
+20250614	15:28:07	deec658c-4c99-4f16-99c7-27b0dbf452e4	Successfully retrieved 0 pending issues
+20250614	15:28:32	3d51a5b7-c45f-44b0-9b07-7dcf3edf04f2	Item issued successfully - NAC: GT 07986, Quantity: 100 by user: superadmin@god.com
+20250614	15:28:32	745c9276-77a6-4f86-b177-dedb7b6415e0	Issue created successfully for date: 2025/06/14 by user: superadmin@god.com
+20250614	15:28:43	c12790c6-8103-4975-8f4c-d8e0610fb097	Successfully retrieved 1 pending issues
+20250614	15:28:43	7b3f3f15-49a6-4f34-9e99-b19f84d1c9c8	Successfully retrieved 1 pending issues
+20250614	15:28:46	d29c5e42-3baf-41fa-a044-c42a7cc8eca3	Successfully approved issues with IDs: 63 by user: superadmin@god.com
+20250614	15:28:46	df73daf4-0475-483f-80d8-af2c5551f53c	Successfully retrieved 0 pending issues
+20250614	15:29:30	eaa16ea9-d1af-40f1-885a-83e4281feea9	Item issued successfully - NAC: GT 07986, Quantity: 100 by user: superadmin@god.com
+20250614	15:29:30	c681df03-9b1f-4544-9df4-6ced96fca68b	Issue created successfully for date: 2025/06/14 by user: superadmin@god.com
+20250614	15:30:20	81fff2da-afc8-44a9-a0b6-447740ad7cc6	Item issued successfully - NAC: GT 07986, Quantity: 100 by user: superadmin@god.com
+20250614	15:30:20	39d4fc1c-69c9-4cef-8ae1-50c8e334a452	Issue created successfully for date: 2025/06/14 by user: superadmin@god.com

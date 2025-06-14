@@ -9,66 +9,164 @@ interface FuelRecordResult {
   fuel_id: number | null;
 }
 
+interface FuelRecord {
+  equipment_number: string;
+  kilometers: number;
+  quantity: number;
+  is_kilometer_reset: boolean;
+}
+
+interface FuelPayload {
+  issue_date: string;
+  issued_by: string;
+  fuel_type: string;
+  price: number;
+  records: FuelRecord[];
+}
+
 export const createFuelRecord = async (req: Request, res: Response): Promise<void> => {
-  const { issue_date, issued_by, fuel_type, records } = req.body;
+  const payload: FuelPayload = req.body;
   const connection = await pool.getConnection();
 
   try {
     await connection.beginTransaction();
 
-    const results: FuelRecordResult[] = [];
+    // Get the correct NAC code based on fuel type
+    const getNacCode = (fuelType: string) => {
+      switch (fuelType.toLowerCase()) {
+        case 'diesel':
+          return 'GT 07986';
+        case 'petrol':
+          return 'GT 00000';
+        default:
+          throw new Error(`Invalid fuel type: ${fuelType}`);
+      }
+    };
 
-    for (const record of records) {
-      const { quantity, equipment_number, kilometers, is_kilometer_reset } = record;
-      const nac_code = fuel_type === 'Diesel' ? 'GT 07986' : 'GT 00000';
-
-      // Create issue record using createIssue function
-      const issueReq = {
-        body: {
-          issue_date,
-          issued_by,
-          records: [{
-            quantity,
-            nac_code,
-            equipment_number
-          }]
-        }
-      } as Request;
-
-      const issueRes = {
-        status: (code: number) => ({
-          json: (data: any) => {
-            if (code === 201) {
-              results.push({
-                issue_id: data.records[0].id,
-                fuel_id: null
-              });
-            }
-          }
-        })
-      } as Response;
-
-      await createIssue(issueReq, issueRes);
-
-      // Get the last inserted issue ID
-      const issueId = results[results.length - 1].issue_id;
-
-      // Create the fuel record
-      const [fuelResult] = await connection.execute(
-        `INSERT INTO fuel_records 
-        (fuel_type, kilometers, issue_fk, is_kilometer_reset)
-        VALUES (?, ?, ?, ?)`,
-        [fuel_type, kilometers, issueId, is_kilometer_reset || 0]
+    // Check if stock exists for each equipment and create if needed
+    for (const record of payload.records) {
+      const nacCode = getNacCode(payload.fuel_type);
+      
+      // First check with exact match
+      const [stockResults] = await connection.query<RowDataPacket[]>(
+        'SELECT id, nac_code FROM stock_details WHERE nac_code = ? COLLATE utf8mb4_unicode_ci',
+        [nacCode]
       );
 
-      results[results.length - 1].fuel_id = (fuelResult as any).insertId;
+      if (stockResults.length === 0) {
+        // Create stock record if it doesn't exist
+        const [insertResult] = await connection.query(
+          `INSERT INTO stock_details 
+          (nac_code, item_name, part_numbers, applicable_equipments, current_balance, unit) 
+          VALUES (?, ?, ?, ?, ?, ?)`,
+          [
+            nacCode,
+            `${payload.fuel_type.charAt(0).toUpperCase() + payload.fuel_type.slice(1)} Fuel`,
+            'N/A',
+            record.equipment_number,
+            0,
+            'Liters'
+          ]
+        );
+        
+        // Verify the stock was created
+        const [verifyResults] = await connection.query<RowDataPacket[]>(
+          'SELECT id, nac_code FROM stock_details WHERE id = ?',
+          [(insertResult as any).insertId]
+        );
+        
+        if (verifyResults.length === 0) {
+          throw new Error(`Failed to create stock record for fuel type ${payload.fuel_type}`);
+        }
+        
+        logEvents(`Created stock record for fuel type ${payload.fuel_type} with NAC code: ${nacCode}`, "fuelLog.log");
+      } else {
+        logEvents(`Found existing stock record for fuel type ${payload.fuel_type} with NAC code: ${nacCode}`, "fuelLog.log");
+      }
+    }
+
+    // Create issue record using createIssue function
+    const issueReq = {
+      body: {
+        issueDate: payload.issue_date,
+        issuedBy: {
+          name: payload.issued_by,
+          staffId: payload.issued_by
+        },
+        items: payload.records.map(record => ({
+          nacCode: getNacCode(payload.fuel_type),
+          quantity: record.quantity,
+          equipmentNumber: record.equipment_number,
+          partNumber: 'N/A'
+        }))
+      }
+    } as Request;
+
+    let issueIds: number[] = [];
+
+    const issueRes = {
+      status: (code: number) => ({
+        json: (data: any) => {
+          logEvents(`CreateIssue response data: ${JSON.stringify(data)}`, "fuelLog.log");
+          
+          if (code === 201) {
+            if (data.issueIds && Array.isArray(data.issueIds)) {
+              issueIds = data.issueIds;
+              logEvents(`Issue records created successfully with IDs: ${issueIds.join(', ')}`, "fuelLog.log");
+            } else {
+              logEvents(`Failed to find issue IDs in response: ${JSON.stringify(data)}`, "fuelLog.log");
+            }
+          } else {
+            logEvents(`Failed to create issue record. Status: ${code}, Response: ${JSON.stringify(data)}`, "fuelLog.log");
+          }
+        }
+      })
+    } as Response;
+
+    try {
+      logEvents(`Sending createIssue request: ${JSON.stringify(issueReq.body)}`, "fuelLog.log");
+      await createIssue(issueReq, issueRes);
+      
+      if (issueIds.length === 0) {
+        throw new Error('Failed to create issue record - No issue IDs returned');
+      }
+    } catch (error) {
+      logEvents(`Error in createIssue: ${error instanceof Error ? error.message : 'Unknown error'}`, "fuelLog.log");
+      throw new Error('Failed to create issue record');
+    }
+
+    // Create fuel records for each equipment
+    for (let i = 0; i < payload.records.length; i++) {
+      const record = payload.records[i];
+      const issueId = issueIds[i];
+      // Create fuel record
+      const [fuelResult] = await connection.query<RowDataPacket[]>(
+        `INSERT INTO fuel_records 
+        (fuel_type, kilometers, issue_fk, is_kilometer_reset, fuel_price) 
+        VALUES (?, ?, ?, ?, ?)`,
+        [
+          payload.fuel_type,
+          record.kilometers,
+          issueId,
+          record.is_kilometer_reset ? 1 : 0,
+          payload.price
+        ]
+      );
+
+      const fuelId = (fuelResult as any).insertId;
+
+      // Log the creation
+      logEvents(
+        `Fuel record created - Issue ID: ${issueId}, Fuel ID: ${fuelId}, Equipment: ${record.equipment_number}, Fuel Type: ${payload.fuel_type}`,
+        "fuelLog.log"
+      );
     }
 
     await connection.commit();
-    logEvents(`Successfully created fuel records for date: ${issue_date}`, "fuelLog.log");
+
     res.status(201).json({
       message: 'Fuel records created successfully',
-      records: results
+      issue_ids: issueIds
     });
   } catch (error) {
     await connection.rollback();
@@ -265,36 +363,50 @@ export const getFuelConfig = async (req: Request, res: Response): Promise<void> 
 
     // Get latest kilometers for each equipment
     const [kilometerResults] = await connection.query<RowDataPacket[]>(
-      `SELECT f.issue_fk, f.kilometers, i.nac_code
-       FROM fuel_records f
-       JOIN issue_details i ON f.issue_fk = i.id
-       WHERE i.nac_code IN (?)
-       AND f.id IN (
-         SELECT MAX(id)
-         FROM fuel_records
-         GROUP BY issue_fk
+      `SELECT fr.kilometers, fr.is_kilometer_reset, id.issued_for
+       FROM fuel_records fr
+       JOIN issue_details id ON fr.issue_fk = id.id
+       WHERE id.issued_for IN (?)
+       AND (id.issued_for, id.issue_date, fr.id) IN (
+         SELECT id2.issued_for, id2.issue_date, MAX(fr2.id)
+         FROM fuel_records fr2
+         JOIN issue_details id2 ON fr2.issue_fk = id2.id
+         WHERE id2.issued_for IN (?)
+         GROUP BY id2.issued_for, id2.issue_date
        )
-       ORDER BY f.created_datetime DESC`,
-      [equipmentList]
+       ORDER BY id.issue_date DESC, fr.id DESC`,
+      [equipmentList, equipmentList]
     );
+
+    // Get the latest fuel price for the type
+    const [priceResult] = await connection.query<RowDataPacket[]>(
+      `SELECT fuel_price 
+       FROM fuel_records 
+       WHERE fuel_type = ?
+       ORDER BY created_datetime DESC 
+       LIMIT 1`,
+      [type]
+    );
+    const latestFuelPrice = priceResult.length > 0 ? priceResult[0].fuel_price : 0;
 
     // Create equipment-kilometer mapping
     const equipmentKilometers = equipmentList.reduce((acc: { [key: string]: number }, equipment: string) => {
-      const record = kilometerResults.find(r => r.nac_code === equipment);
-      acc[equipment] = record ? record.kilometers : 0;
+      const record = kilometerResults.find(r => r.issued_for === equipment);
+      acc[equipment] = record && !record.is_kilometer_reset ? record.kilometers : 0;
       return acc;
     }, {});
 
     res.status(200).json({
       equipment_list: equipmentList,
-      equipment_kilometers: equipmentKilometers
+      equipment_kilometers: equipmentKilometers,
+      latest_fuel_price: latestFuelPrice
     });
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
     logEvents(`Error getting fuel config: ${errorMessage}`, "fuelLog.log");
     res.status(500).json({
       error: 'Internal Server Error',
-      message: error instanceof Error ? error.message : 'An error occurred while getting fuel configuration'
+      message: error instanceof Error ? error.message : 'An error occurred while getting fuel config'
     });
   } finally {
     connection.release();

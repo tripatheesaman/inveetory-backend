@@ -7,7 +7,7 @@ const router = express.Router();
 router.get('/config/:type', getFuelConfig);
 
 // Create a new fuel record
-router.post('/', createFuelRecord);
+router.post('/create', createFuelRecord);
 
 // Update a fuel record
 router.put('/:id', updateFuelRecord);

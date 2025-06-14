@@ -1,3 +1,163 @@
-20250612	13:43:19	7f47a89e-03e9-49c8-8a18-cf0006dc7b3a	Error getting fuel config: Table 'inventory_system.config' doesn't exist
-20250612	13:46:28	13defdd0-1768-459a-95d1-c638234d0665	Error getting fuel config: Cannot read properties of undefined (reading 'split')
-20250612	13:47:52	23d6e652-9779-4ccd-a04b-14e8bdde55c6	Error getting fuel config: Cannot read properties of undefined (reading 'split')
+20250614	12:13:25	0f53809e-d555-4244-956d-69c35a0f87ac	Current database: [{"db":"inventory_system"}]
+20250614	12:13:25	49c4c042-0665-4236-90b2-2e42116ba8f7	Fuel records table structure: [{"Field":"id","Type":"int","Null":"NO","Key":"PRI","Default":null,"Extra":"auto_increment"},{"Field":"fuel_type","Type":"enum('Petrol','Diesel')","Null":"YES","Key":"","Default":"Diesel","Extra":""},{"Field":"kilometers","Type":"int","Null":"YES","Key":"","Default":null,"Extra":""},{"Field":"issue_fk","Type":"int","Null":"YES","Key":"MUL","Default":null,"Extra":""},{"Field":"created_datetime","Type":"timestamp","Null":"YES","Key":"","Default":"CURRENT_TIMESTAMP","Extra":"DEFAULT_GENERATED"},{"Field":"updated_datetime","Type":"timestamp","Null":"YES","Key":"","Default":"CURRENT_TIMESTAMP","Extra":"DEFAULT_GENERATED on update CURRENT_TIMESTAMP"},{"Field":"is_kilometer_reset","Type":"tinyint(1)","Null":"YES","Key":"","Default":"0","Extra":""}]
+20250614	12:13:25	1eb13990-9dd0-404c-96d0-6d888f403051	All tables: [{"Tables_in_inventory_system":"app_config"},{"Tables_in_inventory_system":"authority_details"},{"Tables_in_inventory_system":"fuel_records"},{"Tables_in_inventory_system":"issue_details"},{"Tables_in_inventory_system":"notifications"},{"Tables_in_inventory_system":"receive"},{"Tables_in_inventory_system":"receive_details"},{"Tables_in_inventory_system":"request_details"},{"Tables_in_inventory_system":"roles"},{"Tables_in_inventory_system":"rrp_details"},{"Tables_in_inventory_system":"stock_details"},{"Tables_in_inventory_system":"transaction_details"},{"Tables_in_inventory_system":"user_permissions"},{"Tables_in_inventory_system":"users"}]
+20250614	12:13:25	ddbbc7a1-1ced-482f-af05-900712eeeffd	Found existing stock record for fuel type diesel with NAC code: GT 07986
+20250614	12:13:25	0301ec51-f782-49ae-95bd-2b00e41e7953	Sending createIssue request: {"issueDate":"2025-06-14","issuedBy":{"name":"superadmin@god.com","staffId":"superadmin@god.com"},"items":[{"nacCode":"GT 07986","quantity":100,"equipmentNumber":"109","partNumber":"GT 07986"}]}
+20250614	12:13:25	79839bc2-e48e-4367-9cfc-a5d8b6dcb2be	CreateIssue response data: {"message":"Issue created successfully","issueDate":"2025/06/14","issueSlipNumber":"6Y2081/82","issueIds":[35]}
+20250614	12:13:25	e502228f-cfe1-48fd-a906-00747209ed9d	Issue record created successfully with ID: 35
+20250614	12:13:25	0dcaa264-25fe-471c-8435-9ed01ca875d6	Error creating fuel records: Unknown column 'issue_fk' in 'field list'
+20250614	12:14:24	160a1165-eea5-4ed4-a0c6-8992d26a2d87	Current database: [{"db":"inventory_system"}]
+20250614	12:14:24	fe9daff1-9f1c-4b4f-871a-b0e05b320ed6	Fuel records table structure: [{"Field":"id","Type":"int","Null":"NO","Key":"PRI","Default":null,"Extra":"auto_increment"},{"Field":"fuel_type","Type":"enum('Petrol','Diesel')","Null":"YES","Key":"","Default":"Diesel","Extra":""},{"Field":"kilometers","Type":"int","Null":"YES","Key":"","Default":null,"Extra":""},{"Field":"issue_fk","Type":"int","Null":"YES","Key":"MUL","Default":null,"Extra":""},{"Field":"created_datetime","Type":"timestamp","Null":"YES","Key":"","Default":"CURRENT_TIMESTAMP","Extra":"DEFAULT_GENERATED"},{"Field":"updated_datetime","Type":"timestamp","Null":"YES","Key":"","Default":"CURRENT_TIMESTAMP","Extra":"DEFAULT_GENERATED on update CURRENT_TIMESTAMP"},{"Field":"is_kilometer_reset","Type":"tinyint(1)","Null":"YES","Key":"","Default":"0","Extra":""}]
+20250614	12:14:24	7fcbacda-d0ac-4c7a-9469-538fc6a2f1dc	All tables: [{"Tables_in_inventory_system":"app_config"},{"Tables_in_inventory_system":"authority_details"},{"Tables_in_inventory_system":"fuel_records"},{"Tables_in_inventory_system":"issue_details"},{"Tables_in_inventory_system":"notifications"},{"Tables_in_inventory_system":"receive"},{"Tables_in_inventory_system":"receive_details"},{"Tables_in_inventory_system":"request_details"},{"Tables_in_inventory_system":"roles"},{"Tables_in_inventory_system":"rrp_details"},{"Tables_in_inventory_system":"stock_details"},{"Tables_in_inventory_system":"transaction_details"},{"Tables_in_inventory_system":"user_permissions"},{"Tables_in_inventory_system":"users"}]
+20250614	12:14:24	edb18cbe-993f-4be1-941e-bc0667c78915	Found existing stock record for fuel type diesel with NAC code: GT 07986
+20250614	12:14:24	6b7cd5d6-ce5d-411a-ae8c-5887ed658377	Sending createIssue request: {"issueDate":"2025-06-14","issuedBy":{"name":"superadmin@god.com","staffId":"superadmin@god.com"},"items":[{"nacCode":"GT 07986","quantity":100,"equipmentNumber":"109","partNumber":"GT 07986"}]}
+20250614	12:14:24	fa71fcef-e564-401d-a653-1f95f5e1dd64	Issue record created successfully with ID: 36
+20250614	12:14:24	bc91daa0-d53f-4034-b031-358b548fc3bb	CreateIssue response data: {"message":"Issue created successfully","issueDate":"2025/06/14","issueSlipNumber":"6Y2081/82","issueIds":[36]}
+20250614	12:14:24	be7a2eb8-7afd-470c-812a-e21a59d70f79	Error creating fuel records: Unknown column 'issue_fk' in 'field list'
+20250614	12:18:59	5fd172a1-d8a5-4031-869d-289c399238ea	Found existing stock record for fuel type diesel with NAC code: GT 07986
+20250614	12:18:59	16c533e1-d612-48ef-b718-ce9a17faa3f4	Sending createIssue request: {"issueDate":"2025-06-14","issuedBy":{"name":"superadmin@god.com","staffId":"superadmin@god.com"},"items":[{"nacCode":"GT 07986","quantity":100,"equipmentNumber":"109","partNumber":"GT 07986"}]}
+20250614	12:18:59	f0a55d7c-3dd7-4cac-a5ee-66d0a7d9a5fc	Issue record created successfully with ID: 37
+20250614	12:18:59	470cae00-b348-4e6b-a3f4-9da9026918d9	CreateIssue response data: {"message":"Issue created successfully","issueDate":"2025/06/14","issueSlipNumber":"6Y2081/82","issueIds":[37]}
+20250614	12:18:59	e450df6f-f5fe-4114-be10-515507674c46	Error creating fuel records: Unknown column 'issue_fk' in 'field list'
+20250614	12:21:01	895aa9c8-5b75-436c-a89c-e32dcaed497b	Found existing stock record for fuel type diesel with NAC code: GT 07986
+20250614	12:21:01	0de76c63-44da-43c6-afcd-14d41dc0b9d2	Sending createIssue request: {"issueDate":"2025-06-14","issuedBy":{"name":"superadmin@god.com","staffId":"superadmin@god.com"},"items":[{"nacCode":"GT 07986","quantity":100,"equipmentNumber":"109","partNumber":"GT 07986"}]}
+20250614	12:21:01	be9a2e94-7c50-479f-a275-85c15b2bf6b5	Issue record created successfully with ID: 38
+20250614	12:21:01	2e88b18f-b1c5-4c24-b3bd-1d9078ee0fc4	CreateIssue response data: {"message":"Issue created successfully","issueDate":"2025/06/14","issueSlipNumber":"6Y2081/82","issueIds":[38]}
+20250614	12:21:01	762cfd38-037e-47e3-b290-b0b66453f9a6	Error creating fuel records: Unknown column 'issue_fk' in 'field list'
+20250614	12:24:05	9ae5029f-7fd4-44f2-8b1e-3b5b791e331b	Found existing stock record for fuel type diesel with NAC code: GT 07986
+20250614	12:24:05	8890d85a-6957-4837-bd5c-9b54007b9dfc	Sending createIssue request: {"issueDate":"2025-06-14","issuedBy":{"name":"superadmin@god.com","staffId":"superadmin@god.com"},"items":[{"nacCode":"GT 07986","quantity":100,"equipmentNumber":"109","partNumber":"GT 07986"}]}
+20250614	12:24:05	15b8248d-134a-4da3-91c5-203d2959224d	CreateIssue response data: {"message":"Issue created successfully","issueDate":"2025/06/14","issueSlipNumber":"6Y2081/82","issueIds":[39]}
+20250614	12:24:05	a1051b2d-80a1-49d1-9b93-2cee200cab29	Issue record created successfully with ID: 39
+20250614	12:24:05	33dc1bde-df16-4e60-90a6-8a5418a19786	Error creating fuel records: Unknown column 'issue_fk' in 'field list'
+20250614	12:24:05	0b36fa6e-e7c2-431f-900a-af1bb30745ec	Found existing stock record for fuel type diesel with NAC code: GT 07986
+20250614	12:24:05	90e46e00-2453-400a-8104-dc47a7c031da	Sending createIssue request: {"issueDate":"2025-06-14","issuedBy":{"name":"superadmin@god.com","staffId":"superadmin@god.com"},"items":[{"nacCode":"GT 07986","quantity":100,"equipmentNumber":"109","partNumber":"GT 07986"}]}
+20250614	12:24:05	6c33d93d-fad3-4cf6-ab94-af478382f707	CreateIssue response data: {"message":"Issue created successfully","issueDate":"2025/06/14","issueSlipNumber":"6Y2081/82","issueIds":[40]}
+20250614	12:24:05	c8b5aeec-fdf1-4e3d-ba45-ffedecdbf646	Issue record created successfully with ID: 40
+20250614	12:24:05	67c29427-fb8a-40d2-87b7-f318d74b2ab5	Error creating fuel records: Unknown column 'issue_fk' in 'field list'
+20250614	12:31:56	0ec187ff-ea2a-4410-ab32-052b211ceeca	Found existing stock record for fuel type diesel with NAC code: GT 07986
+20250614	12:31:56	1058f6cb-d9e3-4e65-b1c4-2ed48b51dc17	Sending createIssue request: {"issueDate":"2025-06-14","issuedBy":{"name":"superadmin@god.com","staffId":"superadmin@god.com"},"items":[{"nacCode":"GT 07986","quantity":100,"equipmentNumber":"109","partNumber":"GT 07986"}]}
+20250614	12:31:56	cb4ec66e-2397-42fc-9e6d-d363b0b43b8e	CreateIssue response data: {"message":"Issue created successfully","issueDate":"2025/06/14","issueSlipNumber":"6Y2081/82","issueIds":[41]}
+20250614	12:31:56	9240960f-1879-46f6-93f5-4b401010a09d	Issue record created successfully with ID: 41
+20250614	12:31:56	0b87a32e-7979-43ec-9a8f-cb4dc38990fa	Error creating fuel records: Unknown column 'issue_fk' in 'field list'
+20250614	12:34:37	7c5e6152-5aa5-4919-81a8-4cbcea730a63	Found existing stock record for fuel type diesel with NAC code: GT 07986
+20250614	12:34:37	45f18c2f-a81f-434f-a1c6-b166155e423e	Sending createIssue request: {"issueDate":"2025-06-14","issuedBy":{"name":"superadmin@god.com","staffId":"superadmin@god.com"},"items":[{"nacCode":"GT 07986","quantity":100,"equipmentNumber":"109","partNumber":"GT 07986"}]}
+20250614	12:34:37	4eeeb6b5-0227-41df-aa96-3b2c17e09ab0	CreateIssue response data: {"message":"Issue created successfully","issueDate":"2025/06/14","issueSlipNumber":"6Y2081/82","issueIds":[42]}
+20250614	12:34:37	14fc9f09-3d33-4725-bd14-f967c5a68b16	Issue record created successfully with ID: 42
+20250614	12:34:37	715f557c-29a4-4e5a-97b5-cf7789bee916	Error creating fuel records: Unknown column 'issue_fk' in 'field list'
+20250614	12:34:38	e1deacdd-54ed-4a7e-a7c9-6d8fbd1ef81e	Found existing stock record for fuel type diesel with NAC code: GT 07986
+20250614	12:34:38	b60d775e-e84a-41ac-8c15-9821fc13ab74	Sending createIssue request: {"issueDate":"2025-06-14","issuedBy":{"name":"superadmin@god.com","staffId":"superadmin@god.com"},"items":[{"nacCode":"GT 07986","quantity":100,"equipmentNumber":"109","partNumber":"GT 07986"}]}
+20250614	12:34:38	3e1a8152-7d58-4035-87fd-358fdf15db78	CreateIssue response data: {"message":"Issue created successfully","issueDate":"2025/06/14","issueSlipNumber":"6Y2081/82","issueIds":[43]}
+20250614	12:34:38	0df6ebbc-ac54-4a14-8c7a-c926fb376ae3	Issue record created successfully with ID: 43
+20250614	12:34:38	00a37ada-d686-4a9a-90aa-6b4ac6a4af33	Error creating fuel records: Unknown column 'issue_fk' in 'field list'
+20250614	12:34:38	df87c0c4-5c34-4c5a-9e83-088c4edbc336	Found existing stock record for fuel type diesel with NAC code: GT 07986
+20250614	12:34:38	e3c89c17-a549-4eff-934a-bb7cd269aa64	Sending createIssue request: {"issueDate":"2025-06-14","issuedBy":{"name":"superadmin@god.com","staffId":"superadmin@god.com"},"items":[{"nacCode":"GT 07986","quantity":100,"equipmentNumber":"109","partNumber":"GT 07986"}]}
+20250614	12:34:38	0959673f-89f6-4336-9df9-bb4cfda61125	CreateIssue response data: {"message":"Issue created successfully","issueDate":"2025/06/14","issueSlipNumber":"6Y2081/82","issueIds":[44]}
+20250614	12:34:38	15a75f9d-9b90-46ad-b047-eaca8b791198	Issue record created successfully with ID: 44
+20250614	12:34:38	bff222ac-9a1a-4592-a0ac-3be3806d18ef	Error creating fuel records: Unknown column 'issue_fk' in 'field list'
+20250614	12:34:39	d8c48a31-c5df-4fe0-bb24-7f827adc0229	Found existing stock record for fuel type diesel with NAC code: GT 07986
+20250614	12:34:39	bf0efb6b-81e1-4f7c-991b-17ca37fec1c8	Sending createIssue request: {"issueDate":"2025-06-14","issuedBy":{"name":"superadmin@god.com","staffId":"superadmin@god.com"},"items":[{"nacCode":"GT 07986","quantity":100,"equipmentNumber":"109","partNumber":"GT 07986"}]}
+20250614	12:34:39	d04e85a3-9cb9-44cc-8b34-737995f1ae4b	Issue record created successfully with ID: 45
+20250614	12:34:39	59a85dbc-74c3-4672-b905-988f7f298bcd	CreateIssue response data: {"message":"Issue created successfully","issueDate":"2025/06/14","issueSlipNumber":"6Y2081/82","issueIds":[45]}
+20250614	12:34:39	b64a59eb-3cef-4b9e-8275-1d8655d81604	Error creating fuel records: Unknown column 'issue_fk' in 'field list'
+20250614	12:34:39	dd2d763d-2f83-4f1a-bbbd-398135fd5000	Found existing stock record for fuel type diesel with NAC code: GT 07986
+20250614	12:34:39	d0e5ea26-d6ce-47dc-83dc-2eb168378af9	Sending createIssue request: {"issueDate":"2025-06-14","issuedBy":{"name":"superadmin@god.com","staffId":"superadmin@god.com"},"items":[{"nacCode":"GT 07986","quantity":100,"equipmentNumber":"109","partNumber":"GT 07986"}]}
+20250614	12:34:39	9402ce65-8c09-4ef8-a8b4-caeccacdbeaf	CreateIssue response data: {"message":"Issue created successfully","issueDate":"2025/06/14","issueSlipNumber":"6Y2081/82","issueIds":[46]}
+20250614	12:34:39	ce38eac3-7ee5-4647-af80-49fab9b7a0a8	Issue record created successfully with ID: 46
+20250614	12:34:39	4714b4b7-b3e0-44b9-a007-2ae32a9c1de4	Error creating fuel records: Unknown column 'issue_fk' in 'field list'
+20250614	12:34:39	7b35f9f4-34df-484b-99f8-8561d6e93119	Found existing stock record for fuel type diesel with NAC code: GT 07986
+20250614	12:34:39	559cb990-a140-45bd-a008-7717939821f5	Sending createIssue request: {"issueDate":"2025-06-14","issuedBy":{"name":"superadmin@god.com","staffId":"superadmin@god.com"},"items":[{"nacCode":"GT 07986","quantity":100,"equipmentNumber":"109","partNumber":"GT 07986"}]}
+20250614	12:34:39	e7388004-f5ae-4412-9fe0-451a2ccaa133	Issue record created successfully with ID: 47
+20250614	12:34:39	c923dee4-25bc-4384-ad60-8602a13f8c59	CreateIssue response data: {"message":"Issue created successfully","issueDate":"2025/06/14","issueSlipNumber":"6Y2081/82","issueIds":[47]}
+20250614	12:34:39	75f087ec-a20e-4a2b-a84f-c7ea74360157	Error creating fuel records: Unknown column 'issue_fk' in 'field list'
+20250614	12:34:39	8781030a-3f28-4c30-84d9-7b6788ce73cd	Found existing stock record for fuel type diesel with NAC code: GT 07986
+20250614	12:34:39	30e58bd7-e7af-47a9-8138-0d7488dc41e5	Sending createIssue request: {"issueDate":"2025-06-14","issuedBy":{"name":"superadmin@god.com","staffId":"superadmin@god.com"},"items":[{"nacCode":"GT 07986","quantity":100,"equipmentNumber":"109","partNumber":"GT 07986"}]}
+20250614	12:34:39	eb21fbf7-f804-4351-ab90-5ed4f76fb2f8	Issue record created successfully with ID: 48
+20250614	12:34:39	ea30be36-b21c-4b07-8b67-e808710f459f	CreateIssue response data: {"message":"Issue created successfully","issueDate":"2025/06/14","issueSlipNumber":"6Y2081/82","issueIds":[48]}
+20250614	12:34:39	56957740-5055-4037-b025-3f9fe96f6dba	Error creating fuel records: Unknown column 'issue_fk' in 'field list'
+20250614	12:34:40	6dd05d9e-0aa7-4132-9db4-967fcd8776ee	Found existing stock record for fuel type diesel with NAC code: GT 07986
+20250614	12:34:40	cc9f6cee-360f-431a-b549-990fb2debf3c	Sending createIssue request: {"issueDate":"2025-06-14","issuedBy":{"name":"superadmin@god.com","staffId":"superadmin@god.com"},"items":[{"nacCode":"GT 07986","quantity":100,"equipmentNumber":"109","partNumber":"GT 07986"}]}
+20250614	12:34:40	9ca26099-2726-4c3e-a1cb-10149713efbe	CreateIssue response data: {"message":"Issue created successfully","issueDate":"2025/06/14","issueSlipNumber":"6Y2081/82","issueIds":[49]}
+20250614	12:34:40	d2178ea6-d0d7-4943-a5b7-0fd48711032a	Issue record created successfully with ID: 49
+20250614	12:34:40	c3bef7ff-1cb2-4c06-8921-598b119ce846	Error creating fuel records: Unknown column 'issue_fk' in 'field list'
+20250614	12:34:40	9ecb5b45-dd7a-4c5f-a480-e16d1f818436	Found existing stock record for fuel type diesel with NAC code: GT 07986
+20250614	12:34:40	33294d0f-0854-4564-94e8-5780ee98cd46	Sending createIssue request: {"issueDate":"2025-06-14","issuedBy":{"name":"superadmin@god.com","staffId":"superadmin@god.com"},"items":[{"nacCode":"GT 07986","quantity":100,"equipmentNumber":"109","partNumber":"GT 07986"}]}
+20250614	12:34:40	fdda051d-30bd-4be5-9f64-583ba64dcb02	CreateIssue response data: {"message":"Issue created successfully","issueDate":"2025/06/14","issueSlipNumber":"6Y2081/82","issueIds":[50]}
+20250614	12:34:40	2c7e8adf-3be4-4fbc-b0fc-210aa2f76d96	Issue record created successfully with ID: 50
+20250614	12:34:40	1a904801-641d-4722-be1f-07fa3465fa2c	Error creating fuel records: Unknown column 'issue_fk' in 'field list'
+20250614	12:34:40	b14b1a33-32b8-475f-872e-78bfee39a1cd	Found existing stock record for fuel type diesel with NAC code: GT 07986
+20250614	12:34:40	d23f3687-66f6-4c22-b412-47182abeb9fc	Sending createIssue request: {"issueDate":"2025-06-14","issuedBy":{"name":"superadmin@god.com","staffId":"superadmin@god.com"},"items":[{"nacCode":"GT 07986","quantity":100,"equipmentNumber":"109","partNumber":"GT 07986"}]}
+20250614	12:34:40	36ff05c4-f217-4ef6-a98c-31d1d8eef921	CreateIssue response data: {"message":"Issue created successfully","issueDate":"2025/06/14","issueSlipNumber":"6Y2081/82","issueIds":[51]}
+20250614	12:34:40	4b20f293-89b8-4c9c-8394-d9325a8e723a	Issue record created successfully with ID: 51
+20250614	12:34:40	0b969d35-dd6b-48b0-a2d0-c791bd05947f	Error creating fuel records: Unknown column 'issue_fk' in 'field list'
+20250614	12:44:57	39306234-d324-435f-b4bb-d26edbd11723	Found existing stock record for fuel type diesel with NAC code: GT 07986
+20250614	12:44:57	c38ebe9c-d946-427f-b57b-04eebe2a511d	Sending createIssue request: {"issueDate":"2025-06-14","issuedBy":{"name":"superadmin@god.com","staffId":"superadmin@god.com"},"items":[{"nacCode":"GT 07986","quantity":100,"equipmentNumber":"109","partNumber":"GT 07986"}]}
+20250614	12:44:57	1460b418-972a-4b2c-886a-519deff97ca0	CreateIssue response data: {"message":"Issue created successfully","issueDate":"2025/06/14","issueSlipNumber":"6Y2081/82","issueIds":[52]}
+20250614	12:44:57	4f327a06-ee12-4ff6-bf6c-1fc3f0a2a5be	Issue record created successfully with ID: 52
+20250614	12:44:57	54d19644-9da6-4a35-86b7-3c322f5fb9a0	Error creating fuel records: Unknown column 'issue_fk' in 'where clause'
+20250614	12:44:58	508295b5-3bef-4a74-8e5b-6c87d1be9d9e	Found existing stock record for fuel type diesel with NAC code: GT 07986
+20250614	12:44:58	cc3e1e53-54d3-4d47-9c8c-47480138866b	Sending createIssue request: {"issueDate":"2025-06-14","issuedBy":{"name":"superadmin@god.com","staffId":"superadmin@god.com"},"items":[{"nacCode":"GT 07986","quantity":100,"equipmentNumber":"109","partNumber":"GT 07986"}]}
+20250614	12:44:58	9729e926-8e2c-4282-a938-d281211333ea	CreateIssue response data: {"message":"Issue created successfully","issueDate":"2025/06/14","issueSlipNumber":"6Y2081/82","issueIds":[53]}
+20250614	12:44:58	e64c9696-f6e4-4e9f-9f96-c4b342437ebf	Issue record created successfully with ID: 53
+20250614	12:44:58	d80c26e1-d1ff-48f0-8c87-2e805d23568d	Error creating fuel records: Unknown column 'issue_fk' in 'where clause'
+20250614	12:44:58	174e153b-c273-4e16-806f-4dfc01bb3e81	Found existing stock record for fuel type diesel with NAC code: GT 07986
+20250614	12:44:58	42fa64b2-631e-46fc-a3de-549e41564a55	Sending createIssue request: {"issueDate":"2025-06-14","issuedBy":{"name":"superadmin@god.com","staffId":"superadmin@god.com"},"items":[{"nacCode":"GT 07986","quantity":100,"equipmentNumber":"109","partNumber":"GT 07986"}]}
+20250614	12:44:58	43870937-6189-493d-9122-a7c45be0c0ce	CreateIssue response data: {"message":"Issue created successfully","issueDate":"2025/06/14","issueSlipNumber":"6Y2081/82","issueIds":[54]}
+20250614	12:44:58	9ad1f0a1-9b58-4d6e-aa79-55dd7bdddaea	Issue record created successfully with ID: 54
+20250614	12:44:58	0ef8f758-375a-497c-a979-8095a419a94c	Error creating fuel records: Unknown column 'issue_fk' in 'where clause'
+20250614	12:44:59	8f87d327-fa3f-437a-af36-f25a320fee3d	Found existing stock record for fuel type diesel with NAC code: GT 07986
+20250614	12:44:59	577f2731-d434-4d78-bf48-e74a75f355d9	Sending createIssue request: {"issueDate":"2025-06-14","issuedBy":{"name":"superadmin@god.com","staffId":"superadmin@god.com"},"items":[{"nacCode":"GT 07986","quantity":100,"equipmentNumber":"109","partNumber":"GT 07986"}]}
+20250614	12:44:59	5adba992-70d4-4988-8b45-053d1eec5e72	CreateIssue response data: {"message":"Issue created successfully","issueDate":"2025/06/14","issueSlipNumber":"6Y2081/82","issueIds":[55]}
+20250614	12:44:59	48aef579-36b5-40f4-b7ef-6a1b4c3af77b	Issue record created successfully with ID: 55
+20250614	12:44:59	3dfa7949-ad7d-4b40-a8ff-78a651ab8def	Error creating fuel records: Unknown column 'issue_fk' in 'where clause'
+20250614	13:03:09	3c75adf0-6a7e-4032-9e2b-950811c007c0	Found existing stock record for fuel type diesel with NAC code: GT 07986
+20250614	13:03:09	c291e2a1-4450-4ecc-a83b-a2faf52c631b	Sending createIssue request: {"issueDate":"2025-06-14","issuedBy":{"name":"superadmin@god.com","staffId":"superadmin@god.com"},"items":[{"nacCode":"GT 07986","quantity":100,"equipmentNumber":"109","partNumber":"N/A"}]}
+20250614	13:03:09	53ac213d-1db6-458a-b8cd-19410b59bb5e	Issue records created successfully with IDs: 56
+20250614	13:03:09	f77948e4-27d5-4c30-9581-b39a861bf07a	CreateIssue response data: {"message":"Issue created successfully","issueDate":"2025/06/14","issueSlipNumber":"6Y2081/82","issueIds":[56]}
+20250614	13:03:09	4f3988ae-ed94-4f19-99a0-3d6d96e2e650	Fuel record created - Issue ID: 56, Fuel ID: 1, Equipment: 109, Fuel Type: diesel
+20250614	13:10:10	52fd3eed-d920-417d-b92a-519e48948bcc	Found existing stock record for fuel type diesel with NAC code: GT 07986
+20250614	13:10:10	1a32208a-51b4-4fd2-85ac-9ec08138725b	Sending createIssue request: {"issueDate":"2025-06-14","issuedBy":{"name":"superadmin@god.com","staffId":"superadmin@god.com"},"items":[{"nacCode":"GT 07986","quantity":10,"equipmentNumber":"109","partNumber":"N/A"}]}
+20250614	13:10:10	9ad53409-d807-42e1-b72d-cd9e6d19202f	CreateIssue response data: {"message":"Issue created successfully","issueDate":"2025/06/14","issueSlipNumber":"6Y2081/82","issueIds":[57]}
+20250614	13:10:10	168ad4a8-0d0c-4879-881f-1ee14d536756	Issue records created successfully with IDs: 57
+20250614	13:10:10	bde9efad-162d-4d92-86db-9463f9a0da0d	Fuel record created - Issue ID: 57, Fuel ID: 2, Equipment: 109, Fuel Type: diesel
+20250614	13:22:47	19268599-e430-4398-92be-a93c2b03e5d2	Error getting fuel config: Unknown column 'i.required_for' in 'where clause'
+20250614	15:13:14	580f9915-81e3-4119-bcf8-582c3e44a47a	Error getting fuel config: Unknown column 'fuel_price' in 'field list'
+20250614	15:24:06	9ead499d-dab4-47ce-a2a2-a305a09f62d7	Found existing stock record for fuel type diesel with NAC code: GT 07986
+20250614	15:24:06	58427875-ba1d-4e84-baf2-8c7096ce8a90	Sending createIssue request: {"issueDate":"2025-06-14","issuedBy":{"name":"superadmin@god.com","staffId":"superadmin@god.com"},"items":[{"nacCode":"GT 07986","quantity":100,"equipmentNumber":"109","partNumber":"N/A"}]}
+20250614	15:24:06	41eb2526-76f2-4990-a536-c8feff6aff8c	CreateIssue response data: {"message":"Issue created successfully","issueDate":"2025/06/14","issueSlipNumber":"6Y2081/82","issueIds":[58]}
+20250614	15:24:06	edf6cc71-7421-48c4-9217-eb58b9558098	Issue records created successfully with IDs: 58
+20250614	15:24:06	4bd9c914-25cd-400d-8d0c-a39bee09cfa8	Error creating fuel records: Unknown column 'quantity' in 'field list'
+20250614	15:25:18	5af3fe91-4387-4e09-86a4-3fd5f190b140	Found existing stock record for fuel type diesel with NAC code: GT 07986
+20250614	15:25:18	e1ff0507-d387-49da-ad9b-02f22a8719d5	Sending createIssue request: {"issueDate":"2025-06-14","issuedBy":{"name":"superadmin@god.com","staffId":"superadmin@god.com"},"items":[{"nacCode":"GT 07986","quantity":100,"equipmentNumber":"109","partNumber":"N/A"}]}
+20250614	15:25:18	08ac4179-48c3-4a8f-8a87-73f7d591aa04	CreateIssue response data: {"message":"Issue created successfully","issueDate":"2025/06/14","issueSlipNumber":"6Y2081/82","issueIds":[59]}
+20250614	15:25:18	9e2a3f60-271c-4c56-ba92-842b54aa54a3	Issue records created successfully with IDs: 59
+20250614	15:25:18	bfb45bdc-c5c3-484e-a85d-b4b36412ffd1	Error creating fuel records: Unknown column 'quantity' in 'field list'
+20250614	15:26:47	e9d7a950-cded-43b4-8364-7c5bcb8cd886	Found existing stock record for fuel type diesel with NAC code: GT 07986
+20250614	15:26:47	ce9c855d-7250-4898-ab3d-adf76ef354cc	Sending createIssue request: {"issueDate":"2025-06-14","issuedBy":{"name":"superadmin@god.com","staffId":"superadmin@god.com"},"items":[{"nacCode":"GT 07986","quantity":100,"equipmentNumber":"109","partNumber":"N/A"}]}
+20250614	15:26:47	82868fee-6810-4b22-8772-1966f91ca988	CreateIssue response data: {"message":"Issue created successfully","issueDate":"2025/06/14","issueSlipNumber":"6Y2081/82","issueIds":[60]}
+20250614	15:26:47	9b9af048-7984-4803-9379-36d5e5e1792e	Issue records created successfully with IDs: 60
+20250614	15:26:47	aa10e0d4-f937-4132-8a46-9e0e72191074	Error creating fuel records: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '?)' at line 3
+20250614	15:27:17	85c8fd76-b91f-4d6b-ad93-4f725b7ac89c	Found existing stock record for fuel type diesel with NAC code: GT 07986
+20250614	15:27:17	b315d34e-5cee-4b76-ba32-702e52661fd3	Sending createIssue request: {"issueDate":"2025-06-14","issuedBy":{"name":"superadmin@god.com","staffId":"superadmin@god.com"},"items":[{"nacCode":"GT 07986","quantity":100,"equipmentNumber":"109","partNumber":"N/A"}]}
+20250614	15:27:17	d0ece9e6-5e32-4cef-a6f6-10f96ec51bf7	CreateIssue response data: {"message":"Issue created successfully","issueDate":"2025/06/14","issueSlipNumber":"6Y2081/82","issueIds":[61]}
+20250614	15:27:17	e4ddfda6-eb74-4115-9a12-a7007c102694	Issue records created successfully with IDs: 61
+20250614	15:27:17	c2ed23de-9117-4220-a8d5-695b758022fd	Error creating fuel records: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '?)' at line 3
+20250614	15:27:55	6705e974-1df0-4c1f-be0f-3ec8853af793	Found existing stock record for fuel type diesel with NAC code: GT 07986
+20250614	15:27:55	85ac8c67-bd39-485b-9a08-b58728044d9a	Sending createIssue request: {"issueDate":"2025-06-14","issuedBy":{"name":"superadmin@god.com","staffId":"superadmin@god.com"},"items":[{"nacCode":"GT 07986","quantity":100,"equipmentNumber":"109","partNumber":"N/A"}]}
+20250614	15:27:55	dc4b9950-ec72-45d7-b378-c3ac4f6cd3fa	CreateIssue response data: {"message":"Issue created successfully","issueDate":"2025/06/14","issueSlipNumber":"6Y2081/82","issueIds":[62]}
+20250614	15:27:55	7145eb5e-fb45-425f-bb91-16a41f049706	Issue records created successfully with IDs: 62
+20250614	15:27:55	5576e13e-5d91-460c-a4bc-1b306f9041ae	Fuel record created - Issue ID: 62, Fuel ID: 1, Equipment: 109, Fuel Type: diesel
+20250614	15:28:32	2b8c49ad-9613-4078-9748-2766d221bb55	Found existing stock record for fuel type diesel with NAC code: GT 07986
+20250614	15:28:32	5b6ad336-41ea-4278-baea-dc01200e222d	Sending createIssue request: {"issueDate":"2025-06-14","issuedBy":{"name":"superadmin@god.com","staffId":"superadmin@god.com"},"items":[{"nacCode":"GT 07986","quantity":100,"equipmentNumber":"109","partNumber":"N/A"}]}
+20250614	15:28:32	0b182374-740a-4a34-ad2d-fcf9e8bf9163	CreateIssue response data: {"message":"Issue created successfully","issueDate":"2025/06/14","issueSlipNumber":"6Y2081/82","issueIds":[63]}
+20250614	15:28:32	199ca985-0ecc-42c5-bf25-016bb79cad18	Issue records created successfully with IDs: 63
+20250614	15:28:32	ca7e9bec-4b49-4a0c-8a63-905fe4419f90	Fuel record created - Issue ID: 63, Fuel ID: 2, Equipment: 109, Fuel Type: diesel
+20250614	15:29:29	598a4846-d7f9-4cb0-9ae3-61c5fba08897	Found existing stock record for fuel type diesel with NAC code: GT 07986
+20250614	15:29:29	351bb445-86a7-42e9-89e5-bfb77986c321	Sending createIssue request: {"issueDate":"2025-06-14","issuedBy":{"name":"superadmin@god.com","staffId":"superadmin@god.com"},"items":[{"nacCode":"GT 07986","quantity":100,"equipmentNumber":"109","partNumber":"N/A"}]}
+20250614	15:29:30	05b04d0a-8ef9-4b7b-8a19-892b7926645e	CreateIssue response data: {"message":"Issue created successfully","issueDate":"2025/06/14","issueSlipNumber":"6Y2081/82","issueIds":[64]}
+20250614	15:29:30	877534a3-590e-4f5b-a4c6-52dc884670f6	Issue records created successfully with IDs: 64
+20250614	15:29:30	47d2767c-4ea3-4e90-bee2-ccfca74460f0	Fuel record created - Issue ID: 64, Fuel ID: 3, Equipment: 109, Fuel Type: diesel
+20250614	15:30:20	7fbd2eda-77e6-429b-be2c-ebe5f9cd2e82	Found existing stock record for fuel type diesel with NAC code: GT 07986
+20250614	15:30:20	1096ccab-3dab-420d-b207-d1efb4bf9a7f	Sending createIssue request: {"issueDate":"2025-06-14","issuedBy":{"name":"superadmin@god.com","staffId":"superadmin@god.com"},"items":[{"nacCode":"GT 07986","quantity":100,"equipmentNumber":"109","partNumber":"N/A"}]}
+20250614	15:30:20	a40516ca-41c3-4e44-9de0-23ef6be91070	CreateIssue response data: {"message":"Issue created successfully","issueDate":"2025/06/14","issueSlipNumber":"6Y2081/82","issueIds":[65]}
+20250614	15:30:20	f4231ba7-a0e2-4455-b94d-a45f5eb4a7ba	Issue records created successfully with IDs: 65
+20250614	15:30:20	dbedda55-fb68-43ff-a840-b13cf4cd7b11	Fuel record created - Issue ID: 65, Fuel ID: 4, Equipment: 109, Fuel Type: diesel

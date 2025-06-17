@@ -1,5 +1,17 @@
 import express from 'express';
-import { createFuelRecord, updateFuelRecord, deleteFuelRecord, approveFuelRecord, getFuelConfig } from '../controllers/fuelController';
+import { 
+  createFuelRecord, 
+  updateFuelRecord, 
+  deleteFuelRecord, 
+  approveFuelRecord,
+  getFuelConfig,
+  receiveFuel,
+  getLastReceive
+} from '../controllers/fuelController';
+import {
+  checkFlightCount,
+  generateWeeklyDieselReport
+} from '../controllers/reportController';
 
 const router = express.Router();
 
@@ -16,6 +28,13 @@ router.put('/:id', updateFuelRecord);
 router.delete('/:id', deleteFuelRecord);
 
 // Approve a fuel record
-router.put('/:id/approve', approveFuelRecord);
+router.post('/:id/approve', approveFuelRecord);
+
+router.post('/receive', receiveFuel);
+router.get('/last-receive', getLastReceive);
+
+// Weekly diesel report routes
+router.get('/reports/diesel/weekly/check', checkFlightCount);
+router.get('/reports/diesel/weekly', generateWeeklyDieselReport);
 
 export default router; 

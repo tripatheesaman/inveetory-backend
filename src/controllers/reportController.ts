@@ -4,6 +4,8 @@ import pool from '../config/db';
 import { logEvents } from '../middlewares/logger';
 import { ExcelService, StockCardData } from '../services/excelService';
 import path from 'path';
+import ExcelJS from 'exceljs';
+import fs from 'fs';
 
 export const getDailyIssueReport = async (req: Request, res: Response): Promise<void> => {
   const { fromDate, toDate, equipmentNumber, page = 1, limit = 10 } = req.query;
@@ -431,4 +433,261 @@ export const generateStockCardReport = async (req: Request, res: Response): Prom
   } finally {
     connection.release();
   }
-}; 
+};
+
+export const checkFlightCount = async (req: Request, res: Response): Promise<void> => {
+  const { start_date, end_date } = req.query;
+  const connection = await pool.getConnection();
+
+  try {
+    const [result] = await connection.query<RowDataPacket[]>(
+      `SELECT COUNT(*) as count 
+       FROM fuel_records 
+       WHERE fuel_type = 'diesel'
+       AND created_datetime BETWEEN ? AND ?
+       AND number_of_flights IS NOT NULL`,
+      [start_date, end_date]
+    );
+
+    res.status(200).json({
+      has_flight_count: result[0].count > 0
+    });
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+    logEvents(`Error checking flight count: ${errorMessage}`, "fuelLog.log");
+    res.status(500).json({
+      error: 'Internal Server Error',
+      message: error instanceof Error ? error.message : 'An error occurred while checking flight count'
+    });
+  } finally {
+    connection.release();
+  }
+};
+
+export const generateWeeklyDieselReport = async (req: Request, res: Response): Promise<void> => {
+  const { start_date, end_date, flight_count } = req.query;
+  const connection = await pool.getConnection();
+
+  try {
+    await connection.beginTransaction();
+
+    // Fetch valid equipment list from app_config
+    const [configResult] = await connection.query<RowDataPacket[]>(
+      'SELECT config_value FROM app_config WHERE config_name = ? AND config_type = "fuel"',
+      ['valid_equipment_list_diesel']
+    );
+
+    if (configResult.length === 0) {
+      throw new Error('Valid equipment list configuration not found');
+    }
+
+    // Parse the comma-separated equipment list
+    const equipmentList = configResult[0].config_value
+      .replace(/\r\n/g, '')  // Remove newlines
+      .split(',')
+      .map((item: string) => item.trim())
+      .filter((item: string) => item && !item.includes(' ')); // Remove empty items and items with spaces
+
+    // If flight_count is provided, update all records in the date range
+    if (flight_count) {
+      await connection.query(
+        `UPDATE fuel_records 
+         SET number_of_flights = ? 
+         WHERE fuel_type = 'diesel'
+         AND created_datetime BETWEEN ? AND ?`,
+        [flight_count, start_date, end_date]
+      );
+    }
+
+    // Fetch the actual data from database
+    const [results] = await connection.query<RowDataPacket[]>(
+      `SELECT 
+         SUM(i.issue_quantity * f.fuel_price) as total_cost,
+         SUM(i.issue_quantity) as total_quantity,
+         COUNT(DISTINCT f.issue_fk) as total_issues
+       FROM fuel_records f
+       JOIN issue_details i ON f.issue_fk = i.id
+       WHERE f.fuel_type = 'diesel' 
+       AND f.created_datetime BETWEEN ? AND ?`,
+      [start_date, end_date]
+    );
+
+    const totals = results[0] || { total_cost: 0, total_quantity: 0, total_issues: 0 };
+    
+    await connection.commit();
+
+    const templatePath = path.join(__dirname, '../../public/templates/template_file.xlsx');
+    
+    // Create temp directory if it doesn't exist
+    const tempDir = path.join(__dirname, '../../temp');
+    if (!fs.existsSync(tempDir)) {
+      fs.mkdirSync(tempDir, { recursive: true });
+    }
+
+    // Generate a unique filename
+    const filename = `Diesel_Weekly_Report_${start_date}_to_${end_date}.xlsx`;
+    const outputPath = path.join(tempDir, filename);
+
+    try {
+      // Use xlsx-populate to preserve charts
+      const XlsxPopulate = require('xlsx-populate');
+      
+      // Load template with charts preserved
+      const workbook = await XlsxPopulate.fromFileAsync(templatePath);
+      const sheet = workbook.sheet('Diesel Weekly Template');
+
+      // Process equipment data starting from B11
+      if (equipmentList.length > 0) {
+        const startRow = 11;
+        const columnsToCopy = 10; // A–J
+        const lastRow = sheet.usedRange().endCell().rowNumber();
+      
+        // First, insert all equipment numbers
+        equipmentList.forEach((equipment: string, index: number) => {
+          const currentRow = startRow + index;
+      
+          if (index > 0) {
+            // Shift rows down
+            for (let r = lastRow + index - 1; r >= currentRow; r--) {
+              for (let col = 1; col <= columnsToCopy; col++) {
+                const fromCell = sheet.cell(r, col);
+                const toCell = sheet.cell(r + 1, col);
+      
+                toCell.value(fromCell.value());
+                const formula = fromCell.formula();
+                if (formula) toCell.formula(formula);
+      
+                const styleProps = [
+                  "bold", "italic", "underline", "strikethrough", "fontColor",
+                  "fill", "border", "horizontalAlignment", "verticalAlignment",
+                  "wrapText", "fontSize", "fontFamily", "numberFormat"
+                ];
+      
+                styleProps.forEach((prop) => {
+                  try {
+                    const value = fromCell.style(prop);
+                    if (value !== undefined) {
+                      toCell.style(prop, value);
+                    }
+                  } catch (err:any) {
+                    console.warn(`Skip style "${prop}" from row ${r}, col ${col}: ${err.message}`);
+                  }
+                });
+              }
+            }
+      
+            // Clone styles and formulas from row 11 to currentRow
+            for (let col = 1; col <= columnsToCopy; col++) {
+              const templateCell = sheet.cell(startRow, col);
+              const newCell = sheet.cell(currentRow, col);
+      
+              // Apply individual styles
+              const styleProps = [
+                "bold", "italic", "underline", "strikethrough", "fontColor",
+                "fill", "border", "horizontalAlignment", "verticalAlignment",
+                "wrapText", "fontSize", "fontFamily", "numberFormat"
+              ];
+      
+              styleProps.forEach((prop) => {
+                try {
+                  const value = templateCell.style(prop);
+                  if (value !== undefined) {
+                    newCell.style(prop, value);
+                  }
+                } catch (err:any) {
+                  console.warn(`Skip style "${prop}" at col ${col}: ${err.message}`);
+                }
+              });
+      
+              const formula = templateCell.formula();
+              if (formula && col !== 2) {
+                newCell.formula(formula);
+              } else if (col !== 2) {
+                newCell.value(templateCell.value());
+              }
+            }
+          }
+      
+          // Insert equipment name
+          sheet.cell(currentRow, 2).value(equipment);
+        });
+
+        // Now fetch and insert daily data for each equipment
+        for (let i = 0; i < equipmentList.length; i++) {
+          const equipment = equipmentList[i];
+          const row = startRow + i;
+
+          // Get daily data for this equipment
+          const [dailyData] = await connection.query<RowDataPacket[]>(
+            `SELECT 
+              DATE(f.created_datetime) as date,
+              DAYNAME(f.created_datetime) as day_name,
+              SUM(i.issue_quantity) as total_quantity,
+              f.fuel_price,
+              MAX(f.kilometers) as latest_kilometers
+            FROM fuel_records f
+            JOIN issue_details i ON f.issue_fk = i.id
+            WHERE f.fuel_type = 'diesel'
+            AND i.issued_for = ?
+            AND f.created_datetime BETWEEN ? AND ?
+            GROUP BY DATE(f.created_datetime), f.fuel_price
+            ORDER BY DATE(f.created_datetime)`,
+            [equipment, start_date, end_date]
+          );
+
+          // Insert data for each day
+          const dayColumns = ['C', 'E', 'G', 'I', 'K', 'M', 'O'];
+          dailyData.forEach((day, index) => {
+            if (index < 7) { // Only process first 7 days
+              const col = dayColumns[index];
+              
+              // Insert day name and date in row 7
+              sheet.cell(7, col).value(`${day.day_name}(${day.date})`);
+              
+              // Insert fuel price in row 9
+              sheet.cell(9, col).value(day.fuel_price);
+              
+              // Insert quantity and kilometers in equipment row
+              sheet.cell(row, col).value(day.total_quantity);
+              sheet.cell(row, col + 1).value(day.latest_kilometers);
+            }
+          });
+        }
+      }
+
+      // Save the final file with charts preserved
+      await workbook.toFileAsync(outputPath);
+      
+      console.log('Report generated successfully with charts preserved!');
+      
+    } catch (error) {
+      console.log('Error generating report:', error);
+      // Fallback to simple copy method
+      fs.copyFileSync(templatePath, outputPath);
+    }
+
+    // Send the file
+    res.download(outputPath, filename, (err) => {
+      if (err) {
+        logEvents(`Error sending file: ${err.message}`, "fuelLog.log");
+      }
+      // Clean up the temporary file
+      fs.unlink(outputPath, (unlinkErr) => {
+        if (unlinkErr) {
+          logEvents(`Error deleting temporary file: ${unlinkErr.message}`, "fuelLog.log");
+        }
+      });
+    });
+
+  } catch (error) {
+    await connection.rollback();
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+    logEvents(`Error generating weekly diesel report: ${errorMessage}`, "fuelLog.log");
+    res.status(500).json({
+      error: 'Internal Server Error',
+      message: error instanceof Error ? error.message : 'An error occurred while generating report'
+    });
+  } finally {
+    connection.release();
+  }
+};

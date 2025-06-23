@@ -126,3 +126,28 @@
 20250612	12:03:20	f46aed0f-c6fd-42e8-88d4-c993aacb2b0e	Successfully fetched 2 users for current user: superadmin@god.com
 20250612	12:03:20	1e8f6743-f3a5-4230-a4f1-d3f7a01a2b2d	Fetching users for current user: superadmin@god.com
 20250612	12:03:20	90e86dad-cc80-4a85-8ca8-d6af70b02856	Successfully fetched 2 users for current user: superadmin@god.com
+20250618	15:23:09	57397911-5c5c-422b-90c0-f51087df79ac	Fetching users for current user: superadmin@god.com
+20250618	15:23:09	3abdcda3-9bd6-4308-85d5-e131b9f7a381	Successfully fetched 2 users for current user: superadmin@god.com
+20250618	15:23:09	047d1798-598b-4ca7-9e0f-ae4b47b570ce	Fetching users for current user: superadmin@god.com
+20250618	15:23:09	8792e139-4fbb-446a-b918-e9b549f541a3	Successfully fetched 2 users for current user: superadmin@god.com
+20250620	12:14:33	93d5011f-7356-46ea-8aa7-329e693fbfd0	Fetching users for current user: superadmin@god.com
+20250620	12:14:33	b11eb7e8-828b-423f-aea1-1999b46a67be	Successfully fetched 2 users for current user: superadmin@god.com
+20250620	12:14:33	1aa2f293-9406-48d2-ab17-5c9f0eef2b7b	Fetching users for current user: superadmin@god.com
+20250620	12:14:33	ecb59099-2bf6-4ff2-9a9c-71097bdd78ca	Successfully fetched 2 users for current user: superadmin@god.com
+20250620	12:16:04	e50887c3-404f-48f4-8521-1855200deb27	Starting user creation transaction
+20250620	12:16:04	2eaa9027-97a4-4d3d-95f3-e74d783f0b1d	Creating new user: bhattadipen33085@gmail.com by superadmin@god.com
+20250620	12:16:04	42d14cbd-c5c0-49a9-8b46-b10bd84363e0	Assigning 4 permissions to user: bhattadipen33085@gmail.com
+20250620	12:16:04	e443a19e-3ada-43a3-971d-65339656f8a3	Successfully created user: bhattadipen33085@gmail.com with ID: 8
+20250620	12:16:04	a0d44926-7a4b-4f66-a02f-86e1a39199d0	Fetching users for current user: superadmin@god.com
+20250620	12:16:04	2ce94b6d-a0be-4aa6-80a0-a77527aa0f62	Successfully fetched 3 users for current user: superadmin@god.com
+20250620	12:16:04	2ddcc894-e6e4-4a52-888f-849a496db6be	Fetching users for current user: superadmin@god.com
+20250620	12:16:04	c16eda08-412f-4b86-b585-0848e0014608	Successfully fetched 3 users for current user: superadmin@god.com
+20250620	12:16:32	94c2dde3-00a9-42cf-aa9c-c166d779f236	Starting user permissions update transaction for ID: 8
+20250620	12:16:32	5b44ff61-d2cf-4f41-80ac-064952aad1a0	Updating permissions for user ID: 8 by superadmin@god.com
+20250620	12:16:32	c4be18fb-19ae-42bc-8491-b81b934bf4fb	Successfully updated permissions for user: bhattadipen33085@gmail.com
+20250620	12:16:32	b1ffdad7-555a-452c-806c-da52ec2739cf	Fetching users for current user: superadmin@god.com
+20250620	12:16:32	53c0d168-12a9-4c0f-98e7-c7beab256cac	Successfully fetched 3 users for current user: superadmin@god.com
+20250620	12:16:32	560e3bf9-1d73-41d4-91b7-23ceb77a5de6	Fetching users for current user: superadmin@god.com
+20250620	12:16:32	209dc65f-e8b1-4e68-8bb6-5325c7d2bee1	Successfully fetched 3 users for current user: superadmin@god.com
+20250620	12:16:38	d3fa81f8-de54-4f49-af81-5b67b5aab12c	Starting user deletion transaction for ID: 8
+20250620	12:16:38	71e734e7-5fd7-4072-a0eb-0a43dda78171	Successfully deleted user: bhattadipen33085@gmail.com

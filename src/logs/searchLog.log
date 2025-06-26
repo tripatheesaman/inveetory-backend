@@ -440,3 +440,15 @@
 20250612	12:03:34	b343c528-5a4e-4299-b50e-718b5594a375	Starting stock search with parameters: universal=cotton, equipmentNumber=, partNumber=
 20250612	12:03:34	de388a08-dacd-4dec-bb28-12a63c2ab9f8	Using FULLTEXT search for universal parameter: cotton
 20250612	12:03:34	db9d9e41-089f-4d9b-81a1-47a34d483d38	Successfully found 2 results for search parameters
+20250616	10:44:47	fb87aa0d-78ad-44a9-b123-414e7bf74210	Starting stock search with parameters: universal=00000, equipmentNumber=, partNumber=
+20250616	10:44:47	dc913dad-2b70-4b21-a01f-f5d847739f70	Using FULLTEXT search for universal parameter: 00000
+20250616	10:44:47	143a2c02-9c9a-41a7-9342-2ccd26d37c73	Successfully found 6 results for search parameters
+20250616	10:44:51	8a6dbe1f-1fa0-4455-820d-e240b4416dd9	Starting stock search with parameters: universal=GT 00000, equipmentNumber=, partNumber=
+20250616	10:44:51	8d68ced5-6800-4647-ac3b-6f8fb2281923	Using FULLTEXT search for universal parameter: GT 00000
+20250616	10:44:51	d6c7f95a-9090-42cc-b701-09c438f8e391	Successfully found 6 results for search parameters
+20250616	10:45:06	b5ef2577-fc6d-44a0-b646-7632d0fcb835	Starting stock search with parameters: universal=petrl, equipmentNumber=, partNumber=
+20250616	10:45:06	5c3379d2-2bc0-4c07-b404-9b19651471b1	Using FULLTEXT search for universal parameter: petrl
+20250616	10:45:06	bb939c40-c5b3-4bed-89aa-afd5c69e7c49	No results found for search parameters
+20250616	10:45:07	3958c627-1a1e-4441-bbed-0e1ebd347346	Starting stock search with parameters: universal=pet, equipmentNumber=, partNumber=
+20250616	10:45:07	d4b5ecb2-cf1c-404d-9654-d63c5cc1986f	Using FULLTEXT search for universal parameter: pet
+20250616	10:45:07	28b82ca0-0cee-49fc-acd0-476f6ec47ba8	Successfully found 1 results for search parameters

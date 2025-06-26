@@ -161,3 +161,22 @@
 20250614	15:30:20	a40516ca-41c3-4e44-9de0-23ef6be91070	CreateIssue response data: {"message":"Issue created successfully","issueDate":"2025/06/14","issueSlipNumber":"6Y2081/82","issueIds":[65]}
 20250614	15:30:20	f4231ba7-a0e2-4455-b94d-a45f5eb4a7ba	Issue records created successfully with IDs: 65
 20250614	15:30:20	dbedda55-fb68-43ff-a840-b13cf4cd7b11	Fuel record created - Issue ID: 65, Fuel ID: 4, Equipment: 109, Fuel Type: diesel
+20250616	10:44:34	72ba8d53-38a9-45a8-8fb9-fcba06bf3466	Fuel received successfully - Quantity: 100, Received by: superadmin@god.com
+20250616	13:33:39	e5a3e970-719b-4ca6-ac3a-4b1ad223df71	Error generating weekly diesel report: Unknown column 'quantity' in 'field list'
+20250616	14:46:22	62e342df-cb88-4238-b43e-d1a368c4ea38	Error generating weekly diesel report: Unknown column 'quantity' in 'field list'
+20250616	15:20:39	359a3016-4147-4814-94c9-71cd0514d84a	Error generating weekly diesel report: Unknown column 'quantity' in 'field list'
+20250616	15:22:23	6bd8b06d-0da3-40ac-9691-e0cf807b704a	Error generating weekly diesel report: Unknown column 'fuel_quantity' in 'field list'
+20250616	15:25:04	ef98d7e1-a457-47f8-a302-98071bc01b52	Error generating weekly diesel report: ENOENT: no such file or directory, open 'F:\Inventory 2081-82 developmentfolder\inventory-backend\temp\Diesel_Weekly_Report_2025-06-01_to_2025-06-16.xlsx'
+20250616	15:54:26	072ff996-2f11-453c-b4a2-93909c1d5a98	Error generating weekly diesel report: Unknown column 'fuel_quantity' in 'field list'
+20250616	15:54:27	cb803c9a-0894-40c2-88e6-6eacc34da9fe	Error generating weekly diesel report: Unknown column 'fuel_quantity' in 'field list'
+20250616	16:46:20	bc85f772-6782-426d-aba7-f052dd8aac44	Error generating weekly diesel report: Unknown column 'fuel_quantity' in 'field list'
+20250617	11:05:27	5338bc32-73b4-4a9a-9671-b6ade63941f1	Error generating weekly diesel report: Table 'inventory_system.issues' doesn't exist
+20250617	11:06:36	152d0b95-6f75-452b-99a2-b721d42448c7	Error generating weekly diesel report: Unknown column 'i.issue_description' in 'field list'
+20250617	11:08:05	a028778b-f845-486d-9a12-514a413165eb	Error generating weekly diesel report: Template worksheet not found
+20250617	11:22:40	643f123e-26df-4b78-aea0-4b547921548d	Error generating weekly diesel report: Unknown column 'fuel_quantity' in 'field list'
+20250617	11:41:18	7f8cf812-d312-4692-9e7e-4b1e05d0c11a	Error generating weekly diesel report: Unexpected non-whitespace character after JSON at position 3 (line 1 column 4)
+20250617	11:42:34	eed83332-594f-44bb-9ba3-be8474dddfe6	Error generating weekly diesel report: Unexpected non-whitespace character after JSON at position 3 (line 1 column 4)
+20250617	12:27:03	242f21eb-eb25-437d-8ee0-10fa1af3bfc8	Error generating weekly diesel report: Unknown column 'fuel_quantity' in 'field list'
+20250617	12:36:24	7bd8485c-5626-40dd-a466-0cb722ebd852	Error generating weekly diesel report: Unknown column 'f.fuel_quantity' in 'field list'
+20250617	12:50:50	cb6fdc3c-9e1c-41b0-be91-69760399b16e	Error generating weekly diesel report: Corrupted zip: missing 125147294 bytes.
+20250617	13:08:26	2ef2b727-65fc-435e-9233-db54ab7d9bba	Error generating weekly diesel report: Unknown column 'fuel_quantity' in 'field list'

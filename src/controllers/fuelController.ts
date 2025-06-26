@@ -411,4 +411,180 @@ export const getFuelConfig = async (req: Request, res: Response): Promise<void> 
   } finally {
     connection.release();
   }
+};
+
+export const receiveFuel = async (req: Request, res: Response): Promise<void> => {
+  const { receive_date, received_by, quantity } = req.body;
+  const connection = await pool.getConnection();
+
+  try {
+    await connection.beginTransaction();
+
+    // Insert into transaction_details
+    const [transactionResult] = await connection.query<RowDataPacket[]>(
+      `INSERT INTO transaction_details 
+      (transaction_type, transaction_quantity, transaction_date, transaction_status, transaction_done_by) 
+      VALUES (?, ?, ?, ?, ?)`,
+      ['purchase', quantity, receive_date, 'confirmed', received_by]
+    );
+
+    const transactionId = (transactionResult as any).insertId;
+
+    // Update stock balance
+    const [updateResult] = await connection.query<RowDataPacket[]>(
+      `UPDATE stock_details 
+       SET current_balance = current_balance + ? 
+       WHERE nac_code = ?`,
+      [quantity, 'GT 00000']
+    );
+
+    if ((updateResult as any).affectedRows === 0) {
+      throw new Error('Failed to update stock balance');
+    }
+
+    await connection.commit();
+    logEvents(`Fuel received successfully - Quantity: ${quantity}, Received by: ${received_by}`, "fuelLog.log");
+    
+    res.status(201).json({
+      message: 'Fuel received successfully',
+      transaction_id: transactionId
+    });
+  } catch (error) {
+    await connection.rollback();
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+    logEvents(`Error receiving fuel: ${errorMessage}`, "fuelLog.log");
+    res.status(500).json({
+      error: 'Internal Server Error',
+      message: error instanceof Error ? error.message : 'An error occurred while receiving fuel'
+    });
+  } finally {
+    connection.release();
+  }
+};
+
+export const getLastReceive = async (req: Request, res: Response): Promise<void> => {
+  const connection = await pool.getConnection();
+
+  try {
+    const [result] = await connection.query<RowDataPacket[]>(
+      `SELECT transaction_date as last_receive_date, transaction_quantity as last_receive_quantity
+       FROM transaction_details
+       WHERE transaction_type = 'purchase'
+       AND nac_code = 'GT 00000'
+       ORDER BY transaction_date DESC
+       LIMIT 1`
+    );
+
+    if (result.length === 0) {
+      res.status(200).json({
+        last_receive_date: null,
+        last_receive_quantity: 0
+      });
+      return;
+    }
+
+    res.status(200).json(result[0]);
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+    logEvents(`Error getting last receive: ${errorMessage}`, "fuelLog.log");
+    res.status(500).json({
+      error: 'Internal Server Error',
+      message: error instanceof Error ? error.message : 'An error occurred while getting last receive'
+    });
+  } finally {
+    connection.release();
+  }
+};
+
+export const checkFlightCount = async (req: Request, res: Response): Promise<void> => {
+  const { start_date, end_date } = req.query;
+  const connection = await pool.getConnection();
+
+  try {
+    const [result] = await connection.query<RowDataPacket[]>(
+      `SELECT COUNT(*) as count 
+       FROM fuel_records 
+       WHERE fuel_type = 'diesel'
+       AND created_datetime BETWEEN ? AND ?
+       AND number_of_flights IS NOT NULL`,
+      [start_date, end_date]
+    );
+
+    res.status(200).json({
+      has_flight_count: result[0].count > 0
+    });
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+    logEvents(`Error checking flight count: ${errorMessage}`, "fuelLog.log");
+    res.status(500).json({
+      error: 'Internal Server Error',
+      message: error instanceof Error ? error.message : 'An error occurred while checking flight count'
+    });
+  } finally {
+    connection.release();
+  }
+};
+
+export const generateWeeklyDieselReport = async (req: Request, res: Response): Promise<void> => {
+  const { start_date, end_date, flight_count } = req.query;
+  const connection = await pool.getConnection();
+
+  try {
+    await connection.beginTransaction();
+
+    // If flight_count is provided, update all records in the date range
+    if (flight_count) {
+      await connection.query(
+        `UPDATE fuel_records 
+         SET number_of_flights = ? 
+         WHERE fuel_type = 'diesel'
+         AND created_datetime BETWEEN ? AND ?`,
+        [flight_count, start_date, end_date]
+      );
+    }
+
+    // Get the report data
+    const [reportData] = await connection.query<RowDataPacket[]>(
+      `SELECT 
+        DATE(created_datetime) as date,
+        SUM(quantity) as total_quantity,
+        AVG(fuel_price) as avg_price,
+        SUM(quantity * fuel_price) as total_cost,
+        number_of_flights,
+        COUNT(DISTINCT issue_fk) as number_of_issues
+       FROM fuel_records 
+       WHERE fuel_type = 'diesel'
+       AND created_datetime BETWEEN ? AND ?
+       GROUP BY DATE(created_datetime), number_of_flights
+       ORDER BY date`,
+      [start_date, end_date]
+    );
+
+    // Calculate totals
+    const totals = reportData.reduce((acc, row) => ({
+      total_quantity: acc.total_quantity + row.total_quantity,
+      total_cost: acc.total_cost + row.total_cost,
+      total_issues: acc.total_issues + row.number_of_issues
+    }), { total_quantity: 0, total_cost: 0, total_issues: 0 });
+
+    await connection.commit();
+
+    res.status(200).json({
+      report_data: reportData,
+      totals: {
+        ...totals,
+        avg_price: totals.total_cost / totals.total_quantity
+      }
+    });
+  } catch (error) {
+    await connection.rollback();
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+    logEvents(`Error generating weekly diesel report: ${errorMessage}`, "fuelLog.log");
+    res.status(500).json({
+      error: 'Internal Server Error',
+      message: error instanceof Error ? error.message : 'An error occurred while generating report'
+    });
+  } finally {
+    connection.release();
+  }
 }; 

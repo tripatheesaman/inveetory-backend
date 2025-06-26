@@ -248,3 +248,22 @@
 20250604	12:28:55	1ed32c4d-8f51-42cd-8de6-5d406fab36c3	Successfully generated stock card Excel
 20250604	12:51:31	8c158d9f-a6ab-4e49-8f3f-769a14eb9f0c	Generating stock card Excel for 1 items
 20250604	12:51:31	5b29c8ae-ddb8-4dcd-8604-5b4a244b1b48	Successfully generated stock card Excel
+20250620	12:02:56	cd450d90-a662-433d-a487-f4c474409f18	Generating request Excel for request number: R005
+20250620	12:02:56	f914dbd3-c248-4006-8305-519973772ee1	Fetching request details for request number: R005
+20250620	12:02:56	9ab5db89-0cba-447a-b1fe-b8f2bae85d14	Found 4 items for request: R005
+20250620	12:02:56	dfdb0b99-3c0d-4374-9517-7ad0b7121570	Successfully fetched all details for request: R005
+20250620	12:02:57	83426ad4-28b8-4962-8042-408412e77bf1	Resizing image: /images/request/b6616ff6-ec1d-4db4-8ef1-56ef44e4659f.png
+20250620	12:02:57	223960da-0d62-418e-9e4b-cfbb453377d3	Successfully resized image: /images/request/b6616ff6-ec1d-4db4-8ef1-56ef44e4659f.png
+20250620	12:02:57	31300ab4-7566-4318-b5a1-6a7660ae2d70	Resizing image: /images/request/b6616ff6-ec1d-4db4-8ef1-56ef44e4659f.png
+20250620	12:02:57	e2ccc8d4-3184-4ff8-af8f-b5fdfea8e4c7	Successfully resized image: /images/request/b6616ff6-ec1d-4db4-8ef1-56ef44e4659f.png
+20250620	12:02:57	278b3472-d279-426d-bb86-dce12a616a9f	Resizing image: /images/request/2bfa54c0-883c-4748-b393-db5bae799183.png
+20250620	12:02:57	318a39c3-de66-4c73-9893-0d4e1dd6ed91	Successfully resized image: /images/request/2bfa54c0-883c-4748-b393-db5bae799183.png
+20250620	12:02:57	8c86ef9e-fb1b-418d-9dfc-04218f9d1ec1	Resizing image: /images/request/0a233715-d882-4d88-8293-cc688d0f9e98.png
+20250620	12:02:57	4c2438e5-2cc2-411a-b5ae-99a0cf19b93e	Successfully resized image: /images/request/0a233715-d882-4d88-8293-cc688d0f9e98.png
+20250620	12:02:57	bb927aa8-c0d2-4214-b166-802215f97913	Successfully generated request Excel for: R005
+20250620	12:09:01	c04370e3-519b-4457-9a31-bb88d8d50fbd	Generating RRP Excel for RRP number: L003T1
+20250620	12:09:01	a8ace34b-0fdb-4110-bc27-8a2712131654	Fetching RRP details for RRP number: L003T1
+20250620	12:09:01	f398d1ef-6f57-4960-89e5-d01bab9f6e7e	Successfully fetched all RRP details for: L003T1
+20250620	12:09:01	037179b7-c2ca-4480-9174-f1c852a56efe	Successfully generated RRP Excel for: L003T1
+20250620	12:18:35	581b30de-cf86-4245-9910-ac0eadb32f26	Generating stock card Excel for 1 items
+20250620	12:18:36	31ae299d-f654-4a96-b0e7-82ca3987bdce	Successfully generated stock card Excel

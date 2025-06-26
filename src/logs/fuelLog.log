@@ -180,3 +180,73 @@
 20250617	12:36:24	7bd8485c-5626-40dd-a466-0cb722ebd852	Error generating weekly diesel report: Unknown column 'f.fuel_quantity' in 'field list'
 20250617	12:50:50	cb6fdc3c-9e1c-41b0-be91-69760399b16e	Error generating weekly diesel report: Corrupted zip: missing 125147294 bytes.
 20250617	13:08:26	2ef2b727-65fc-435e-9233-db54ab7d9bba	Error generating weekly diesel report: Unknown column 'fuel_quantity' in 'field list'
+20250618	11:33:19	97f6da97-dd89-4f32-935f-722f081b0144	Error generating weekly diesel report: Expression #1 of ORDER BY clause is not in GROUP BY clause and contains nonaggregated column 'inventory_system.i.issue_date' which is not functionally dependent on columns in GROUP BY clause; this is incompatible with sql_mode=only_full_group_by
+20250618	13:16:51	f9b2b5cf-0b07-42a7-8e31-fa9ee57fabcb	Error generating weekly diesel report: Table 'inventory_system.fuel' doesn't exist
+20250618	13:16:53	e7ab4505-e73c-4b4e-b709-3206fcfe2fd9	Error generating weekly diesel report: Table 'inventory_system.fuel' doesn't exist
+20250618	13:17:23	2dbcac44-4332-48c8-8531-145cb816fc4e	Error generating weekly diesel report: Table 'inventory_system.fuel_issue' doesn't exist
+20250618	13:26:40	e9508ce1-c979-4f20-b3ee-6f36f9ffb6f5	Found existing stock record for fuel type diesel with NAC code: GT 07986
+20250618	13:26:40	7341b4dd-8433-4c9d-b100-7e44f8a496a7	Found existing stock record for fuel type diesel with NAC code: GT 07986
+20250618	13:26:40	76bb4242-f79b-437d-b816-3168da9171a5	Sending createIssue request: {"issueDate":"2025-06-14","issuedBy":{"name":"superadmin@god.com","staffId":"superadmin@god.com"},"items":[{"nacCode":"GT 07986","quantity":100,"equipmentNumber":"112","partNumber":"N/A"},{"nacCode":"GT 07986","quantity":100,"equipmentNumber":"115","partNumber":"N/A"}]}
+20250618	13:26:40	ec1529e7-9204-4deb-aaea-d2430c26a789	CreateIssue response data: {"message":"Issue created successfully","issueDate":"2025/06/14","issueSlipNumber":"6Y2081/82","issueIds":[66,67]}
+20250618	13:26:40	6ec9b24e-a59c-496e-a58c-0eb778d8b1c5	Issue records created successfully with IDs: 66, 67
+20250618	13:26:40	08ae1299-5b94-4670-adbb-fdd710d28340	Fuel record created - Issue ID: 66, Fuel ID: 5, Equipment: 112, Fuel Type: diesel
+20250618	13:26:40	b3301b24-c306-4c59-9aec-e146e5c40e6f	Fuel record created - Issue ID: 67, Fuel ID: 6, Equipment: 115, Fuel Type: diesel
+20250618	13:27:39	2af3ad63-433f-4f6b-8b3c-bdbab2ec891b	Found existing stock record for fuel type diesel with NAC code: GT 07986
+20250618	13:27:39	1005b70c-6329-4900-ac42-619340da0752	Found existing stock record for fuel type diesel with NAC code: GT 07986
+20250618	13:27:39	6f29223c-0dfd-4356-8d8f-6962aea874fe	Found existing stock record for fuel type diesel with NAC code: GT 07986
+20250618	13:27:39	1db5e075-5f8e-443f-b227-e96fa1a5d5bd	Sending createIssue request: {"issueDate":"2025-06-16","issuedBy":{"name":"superadmin@god.com","staffId":"superadmin@god.com"},"items":[{"nacCode":"GT 07986","quantity":200,"equipmentNumber":"109","partNumber":"N/A"},{"nacCode":"GT 07986","quantity":100,"equipmentNumber":"113","partNumber":"N/A"},{"nacCode":"GT 07986","quantity":14,"equipmentNumber":"Cleaning","partNumber":"N/A"}]}
+20250618	13:27:39	5be8aab0-9389-4711-85e4-34e53692ce06	CreateIssue response data: {"message":"Issue created successfully","issueDate":"2025/06/16","issueSlipNumber":"8Y2081/82","issueIds":[68,69,70]}
+20250618	13:27:39	467926aa-71b5-4504-98fc-dc401c4556ae	Issue records created successfully with IDs: 68, 69, 70
+20250618	13:27:39	5540ea9e-9ef7-4ee0-ac8c-81febc7a7304	Fuel record created - Issue ID: 68, Fuel ID: 7, Equipment: 109, Fuel Type: diesel
+20250618	13:27:39	336a18f3-734c-41ce-8bca-06c4ba3ad139	Fuel record created - Issue ID: 69, Fuel ID: 8, Equipment: 113, Fuel Type: diesel
+20250618	13:27:39	fbb1cc31-dbd8-410b-8fb3-266e99b206e3	Fuel record created - Issue ID: 70, Fuel ID: 9, Equipment: Cleaning, Fuel Type: diesel
+20250618	15:22:38	2dfda2b6-0705-4645-9b7b-19c4b0eb7ec5	Found existing stock record for fuel type diesel with NAC code: GT 07986
+20250618	15:22:38	c98e7014-d3f5-49c1-ba2c-09962489401c	Found existing stock record for fuel type diesel with NAC code: GT 07986
+20250618	15:22:38	375a5cb7-8fe3-4842-b80d-d14ece4f7339	Found existing stock record for fuel type diesel with NAC code: GT 07986
+20250618	15:22:38	3555774e-9596-4ac5-9588-5af1441f0ef9	Found existing stock record for fuel type diesel with NAC code: GT 07986
+20250618	15:22:38	8eb8975b-7ed6-4566-a1b4-a7fe5a065f2f	Sending createIssue request: {"issueDate":"2025-06-18","issuedBy":{"name":"superadmin@god.com","staffId":"superadmin@god.com"},"items":[{"nacCode":"GT 07986","quantity":35,"equipmentNumber":"112","partNumber":"N/A"},{"nacCode":"GT 07986","quantity":35,"equipmentNumber":"113","partNumber":"N/A"},{"nacCode":"GT 07986","quantity":30,"equipmentNumber":"115","partNumber":"N/A"},{"nacCode":"GT 07986","quantity":30,"equipmentNumber":"Cleaning","partNumber":"N/A"}]}
+20250618	15:22:38	d1e1836c-286f-4cca-a7fe-10d783bb2419	CreateIssue response data: {"message":"Issue created successfully","issueDate":"2025/06/18","issueSlipNumber":"10Y2081/82","issueIds":[71,72,73,74]}
+20250618	15:22:38	adde1d1c-850f-466f-933e-2e087cb66497	Issue records created successfully with IDs: 71, 72, 73, 74
+20250618	15:22:38	4fa965f2-8698-4fee-adb4-05812f6e9f4b	Fuel record created - Issue ID: 71, Fuel ID: 1, Equipment: 112, Fuel Type: diesel, Week: 1, FY: 2081/82
+20250618	15:22:38	dfe3b7aa-8cd8-4771-b458-2bc72d60d4da	Fuel record created - Issue ID: 72, Fuel ID: 2, Equipment: 113, Fuel Type: diesel, Week: 1, FY: 2081/82
+20250618	15:22:38	6ae5cc28-5a5e-4898-a757-700f6e507a29	Fuel record created - Issue ID: 73, Fuel ID: 3, Equipment: 115, Fuel Type: diesel, Week: 1, FY: 2081/82
+20250618	15:22:38	d8d2b752-8f98-40f7-9176-bc4e6115dda7	Fuel record created - Issue ID: 74, Fuel ID: 4, Equipment: Cleaning, Fuel Type: diesel, Week: 1, FY: 2081/82
+20250618	15:24:20	d26c5ae6-2a83-4f41-8bb0-d8d724dbe3c1	Found existing stock record for fuel type diesel with NAC code: GT 07986
+20250618	15:24:20	e8a8fed6-a630-496c-bee5-550203412c0a	Found existing stock record for fuel type diesel with NAC code: GT 07986
+20250618	15:24:20	a77f9ca8-a062-4b61-947e-1de642f93ef0	Sending createIssue request: {"issueDate":"2025-06-19","issuedBy":{"name":"superadmin@god.com","staffId":"superadmin@god.com"},"items":[{"nacCode":"GT 07986","quantity":12,"equipmentNumber":"115","partNumber":"N/A"},{"nacCode":"GT 07986","quantity":50,"equipmentNumber":"110","partNumber":"N/A"}]}
+20250618	15:24:20	6de9e32e-3825-47b8-98c4-7ba6a47de552	CreateIssue response data: {"message":"Issue created successfully","issueDate":"2025/06/19","issueSlipNumber":"11Y2081/82","issueIds":[75,76]}
+20250618	15:24:20	4287caf4-d48f-4ab4-848f-5ea6e9a09c0b	Issue records created successfully with IDs: 75, 76
+20250618	15:24:20	d48e1ff0-61c7-4d23-aa6a-42f521306e38	Fuel record created - Issue ID: 75, Fuel ID: 5, Equipment: 115, Fuel Type: diesel, Week: 1, FY: 2081/82
+20250618	15:24:20	a9062a6a-5a89-4b65-b963-bd3892e07dcc	Fuel record created - Issue ID: 76, Fuel ID: 6, Equipment: 110, Fuel Type: diesel, Week: 1, FY: 2081/82
+20250618	15:37:34	18482050-446d-4e51-bfca-679f759f38ab	Found existing stock record for fuel type diesel with NAC code: GT 07986
+20250618	15:37:34	e21e9031-3100-4ae6-b1a1-d03fae54121a	Sending createIssue request: {"issueDate":"2025-06-24","issuedBy":{"name":"superadmin@god.com","staffId":"superadmin@god.com"},"items":[{"nacCode":"GT 07986","quantity":10,"equipmentNumber":"110","partNumber":"N/A"}]}
+20250618	15:37:34	0b8e9b82-c92d-4048-a6ec-065bdc25e4e7	CreateIssue response data: {"message":"Issue created successfully","issueDate":"2025/06/24","issueSlipNumber":"16Y2081/82","issueIds":[77]}
+20250618	15:37:34	93b1f0e8-b0cb-4222-ba07-d1f5d7216bf9	Issue records created successfully with IDs: 77
+20250618	15:37:34	aaf152d2-98c8-4bd2-a556-4c31090a9e2f	Fuel record created - Issue ID: 77, Fuel ID: 7, Equipment: 110, Fuel Type: diesel, Week: 1, FY: 2081/82
+20250618	15:37:55	9ba6a4aa-bd47-428b-bdac-19eecaf6a37e	Found existing stock record for fuel type diesel with NAC code: GT 07986
+20250618	15:37:55	375ce7f6-8f7b-4142-85cb-5ca3b80b4d83	Sending createIssue request: {"issueDate":"2025-06-25","issuedBy":{"name":"superadmin@god.com","staffId":"superadmin@god.com"},"items":[{"nacCode":"GT 07986","quantity":10,"equipmentNumber":"115","partNumber":"N/A"}]}
+20250618	15:37:55	76fb14b1-6a42-4f41-a62a-0ef84044d023	CreateIssue response data: {"message":"Issue created successfully","issueDate":"2025/06/25","issueSlipNumber":"17Y2081/82","issueIds":[78]}
+20250618	15:37:55	8bc2ff4f-e525-4960-9bc4-a74d94b3c5ee	Issue records created successfully with IDs: 78
+20250618	15:37:55	ab1a9e1c-fa0c-4e87-84e9-3cb5da45112a	Fuel record created - Issue ID: 78, Fuel ID: 8, Equipment: 115, Fuel Type: diesel, Week: 2, FY: 2081/82
+20250618	16:32:48	b093c0d2-7af3-4f87-927b-1a257a220764	Error generating weekly diesel report: Expression #5 of SELECT list is not in GROUP BY clause and contains nonaggregated column 'inventory_system.f.week_number' which is not functionally dependent on columns in GROUP BY clause; this is incompatible with sql_mode=only_full_group_by
+20250618	16:37:26	1c424104-2364-41bb-a7d0-32c486643c7e	Error generating weekly diesel report: Expression #5 of SELECT list is not in GROUP BY clause and contains nonaggregated column 'inventory_system.f.week_number' which is not functionally dependent on columns in GROUP BY clause; this is incompatible with sql_mode=only_full_group_by
+20250618	16:38:35	dd648cac-45e8-453f-844d-feacb0978e2c	Error generating weekly diesel report: Expression #5 of SELECT list is not in GROUP BY clause and contains nonaggregated column 'inventory_system.f.week_number' which is not functionally dependent on columns in GROUP BY clause; this is incompatible with sql_mode=only_full_group_by
+20250618	16:39:26	c53e7812-510b-4b21-b8d1-eda216a31721	Error generating weekly diesel report: Expression #5 of SELECT list is not in GROUP BY clause and contains nonaggregated column 'inventory_system.f.week_number' which is not functionally dependent on columns in GROUP BY clause; this is incompatible with sql_mode=only_full_group_by
+20250618	16:40:14	9387f064-baed-4443-8f4f-38256aa7a16c	Error generating weekly diesel report: Expression #5 of SELECT list is not in GROUP BY clause and contains nonaggregated column 'inventory_system.f.week_number' which is not functionally dependent on columns in GROUP BY clause; this is incompatible with sql_mode=only_full_group_by
+20250618	16:42:24	adb89e0c-ce1f-43da-8b61-3c1eaafd64be	Error generating weekly diesel report: Expression #5 of SELECT list is not in GROUP BY clause and contains nonaggregated column 'inventory_system.f.week_number' which is not functionally dependent on columns in GROUP BY clause; this is incompatible with sql_mode=only_full_group_by
+20250618	16:45:34	38a947fb-6c0f-4cf2-b312-d7825da2edf7	Error generating weekly diesel report: Expression #5 of SELECT list is not in GROUP BY clause and contains nonaggregated column 'inventory_system.f.week_number' which is not functionally dependent on columns in GROUP BY clause; this is incompatible with sql_mode=only_full_group_by
+20250618	16:47:14	d343699b-eaab-4d88-9864-4328834af4ec	Error generating weekly diesel report: Expression #5 of SELECT list is not in GROUP BY clause and contains nonaggregated column 'inventory_system.f.week_number' which is not functionally dependent on columns in GROUP BY clause; this is incompatible with sql_mode=only_full_group_by
+20250618	17:16:49	bbaf83d9-2fda-4731-9865-08582e87e307	Error generating weekly diesel report: Cannot read properties of undefined (reading 'flight_count')
+20250618	17:21:24	785b46f1-be2d-49f2-be6b-20f0d032dc71	Error generating weekly diesel report: Cannot read properties of undefined (reading 'flight_count')
+20250618	17:22:19	57b68bda-0e49-41a6-b38f-5ad92657e106	Error generating weekly diesel report: Cannot read properties of undefined (reading 'flight_count')
+20250618	17:27:03	46603787-55fb-4188-a9fe-12b539fe398f	Error generating weekly diesel report: Cannot read properties of undefined (reading 'flight_count')
+20250618	17:27:50	8fb9db73-bc4a-4814-a9b1-df90675c8b01	Error generating weekly diesel report: Cannot read properties of undefined (reading 'flight_count')
+20250618	17:28:49	f0d553ab-21b5-4629-8b9f-889f1655f1e1	Error generating weekly diesel report: Cannot read properties of undefined (reading 'flight_count')
+20250620	11:27:14	fc93ac40-df81-4911-8091-3dd2e69841d4	Error generating weekly petrol report: Expression #5 of SELECT list is not in GROUP BY clause and contains nonaggregated column 'inventory_system.f.week_number' which is not functionally dependent on columns in GROUP BY clause; this is incompatible with sql_mode=only_full_group_by
+20250620	11:31:04	6b512e97-8e97-491a-b130-8d7be2be3def	Error generating weekly petrol report: Expression #5 of SELECT list is not in GROUP BY clause and contains nonaggregated column 'inventory_system.f.week_number' which is not functionally dependent on columns in GROUP BY clause; this is incompatible with sql_mode=only_full_group_by
+20250620	12:21:00	1a9be2ee-734d-4f58-b832-4282b7bedd55	Found existing stock record for fuel type diesel with NAC code: GT 07986
+20250620	12:21:00	eca69268-a344-424a-9bc3-3190c0581379	Sending createIssue request: {"issueDate":"2025-06-20","issuedBy":{"name":"superadmin@god.com","staffId":"superadmin@god.com"},"items":[{"nacCode":"GT 07986","quantity":12,"equipmentNumber":"110","partNumber":"N/A"}]}
+20250620	12:21:00	6d29968a-f917-4bbd-bb50-bdce6a26778d	CreateIssue response data: {"message":"Issue created successfully","issueDate":"2025/06/20","issueSlipNumber":"12Y2081/82","issueIds":[80]}
+20250620	12:21:00	08acf8a7-3ba3-4374-b7cb-f8f69ab6c6b9	Issue records created successfully with IDs: 80
+20250620	12:21:00	356e0b6d-796e-4f29-9d17-eb73d7ecf1c2	Fuel record created - Issue ID: 80, Fuel ID: 9, Equipment: 110, Fuel Type: diesel, Week: 1, FY: 2081/82
+20250623	10:48:51	b7d18784-512b-40f2-bd8a-1e5ebd564393	Error generating oil consumption report: ENOENT: no such file or directory, copyfile 'F:\Inventory 2081-82 developmentfolder\inventory-backend\public\templates\oil_consumption_report.xlsx' -> 'F:\Inventory 2081-82 developmentfolder\inventory-backend\temp\oil_consumption_report_2025-06-18_to_2025-06-26.xlsx'

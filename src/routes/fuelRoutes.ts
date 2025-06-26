@@ -10,7 +10,9 @@ import {
 } from '../controllers/fuelController';
 import {
   checkFlightCount,
-  generateWeeklyDieselReport
+  generateWeeklyDieselReport,
+  generateWeeklyPetrolReport,
+  generateOilConsumptionReport
 } from '../controllers/reportController';
 
 const router = express.Router();
@@ -36,5 +38,11 @@ router.get('/last-receive', getLastReceive);
 // Weekly diesel report routes
 router.get('/reports/diesel/weekly/check', checkFlightCount);
 router.get('/reports/diesel/weekly', generateWeeklyDieselReport);
+
+// Weekly petrol report routes
+router.get('/reports/petrol/weekly', generateWeeklyPetrolReport);
+
+// Oil Consumption Report
+router.get('/reports/oil/consumption', generateOilConsumptionReport);
 
 export default router; 

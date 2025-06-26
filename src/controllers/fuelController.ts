@@ -31,6 +31,36 @@ export const createFuelRecord = async (req: Request, res: Response): Promise<voi
   try {
     await connection.beginTransaction();
 
+    // Get current FY from app_config
+    const [configRows] = await connection.query<RowDataPacket[]>(
+      'SELECT config_value FROM app_config WHERE config_type = ? AND config_name = ?',
+      ['rrp', 'current_fy']
+    );
+
+    if (configRows.length === 0) {
+      throw new Error('Current FY configuration not found');
+    }
+
+    const currentFY = configRows[0].config_value;
+
+    // Get the first record date in current FY to determine week 1 start
+    const [firstRecordResult] = await connection.query<RowDataPacket[]>(
+      `SELECT MIN(i.issue_date) as first_date
+       FROM fuel_records f
+       JOIN issue_details i ON f.issue_fk = i.id
+       WHERE f.fy = ?`,
+      [currentFY]
+    );
+
+    let weekNumber = 1;
+    const currentDate = new Date(payload.issue_date);
+
+    if (firstRecordResult[0]?.first_date) {
+      const firstDate = new Date(firstRecordResult[0].first_date);
+      const daysDiff = Math.floor((currentDate.getTime() - firstDate.getTime()) / (1000 * 60 * 60 * 24));
+      weekNumber = Math.floor(daysDiff / 7) + 1;
+    }
+
     // Get the correct NAC code based on fuel type
     const getNacCode = (fuelType: string) => {
       switch (fuelType.toLowerCase()) {
@@ -142,14 +172,16 @@ export const createFuelRecord = async (req: Request, res: Response): Promise<voi
       // Create fuel record
       const [fuelResult] = await connection.query<RowDataPacket[]>(
         `INSERT INTO fuel_records 
-        (fuel_type, kilometers, issue_fk, is_kilometer_reset, fuel_price) 
-        VALUES (?, ?, ?, ?, ?)`,
+        (fuel_type, kilometers, issue_fk, is_kilometer_reset, fuel_price, week_number, fy) 
+        VALUES (?, ?, ?, ?, ?, ?, ?)`,
         [
           payload.fuel_type,
           record.kilometers,
           issueId,
           record.is_kilometer_reset ? 1 : 0,
-          payload.price
+          payload.price,
+          weekNumber,
+          currentFY
         ]
       );
 
@@ -157,7 +189,7 @@ export const createFuelRecord = async (req: Request, res: Response): Promise<voi
 
       // Log the creation
       logEvents(
-        `Fuel record created - Issue ID: ${issueId}, Fuel ID: ${fuelId}, Equipment: ${record.equipment_number}, Fuel Type: ${payload.fuel_type}`,
+        `Fuel record created - Issue ID: ${issueId}, Fuel ID: ${fuelId}, Equipment: ${record.equipment_number}, Fuel Type: ${payload.fuel_type}, Week: ${weekNumber}, FY: ${currentFY}`,
         "fuelLog.log"
       );
     }
@@ -490,99 +522,6 @@ export const getLastReceive = async (req: Request, res: Response): Promise<void>
     res.status(500).json({
       error: 'Internal Server Error',
       message: error instanceof Error ? error.message : 'An error occurred while getting last receive'
-    });
-  } finally {
-    connection.release();
-  }
-};
-
-export const checkFlightCount = async (req: Request, res: Response): Promise<void> => {
-  const { start_date, end_date } = req.query;
-  const connection = await pool.getConnection();
-
-  try {
-    const [result] = await connection.query<RowDataPacket[]>(
-      `SELECT COUNT(*) as count 
-       FROM fuel_records 
-       WHERE fuel_type = 'diesel'
-       AND created_datetime BETWEEN ? AND ?
-       AND number_of_flights IS NOT NULL`,
-      [start_date, end_date]
-    );
-
-    res.status(200).json({
-      has_flight_count: result[0].count > 0
-    });
-  } catch (error) {
-    const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
-    logEvents(`Error checking flight count: ${errorMessage}`, "fuelLog.log");
-    res.status(500).json({
-      error: 'Internal Server Error',
-      message: error instanceof Error ? error.message : 'An error occurred while checking flight count'
-    });
-  } finally {
-    connection.release();
-  }
-};
-
-export const generateWeeklyDieselReport = async (req: Request, res: Response): Promise<void> => {
-  const { start_date, end_date, flight_count } = req.query;
-  const connection = await pool.getConnection();
-
-  try {
-    await connection.beginTransaction();
-
-    // If flight_count is provided, update all records in the date range
-    if (flight_count) {
-      await connection.query(
-        `UPDATE fuel_records 
-         SET number_of_flights = ? 
-         WHERE fuel_type = 'diesel'
-         AND created_datetime BETWEEN ? AND ?`,
-        [flight_count, start_date, end_date]
-      );
-    }
-
-    // Get the report data
-    const [reportData] = await connection.query<RowDataPacket[]>(
-      `SELECT 
-        DATE(created_datetime) as date,
-        SUM(quantity) as total_quantity,
-        AVG(fuel_price) as avg_price,
-        SUM(quantity * fuel_price) as total_cost,
-        number_of_flights,
-        COUNT(DISTINCT issue_fk) as number_of_issues
-       FROM fuel_records 
-       WHERE fuel_type = 'diesel'
-       AND created_datetime BETWEEN ? AND ?
-       GROUP BY DATE(created_datetime), number_of_flights
-       ORDER BY date`,
-      [start_date, end_date]
-    );
-
-    // Calculate totals
-    const totals = reportData.reduce((acc, row) => ({
-      total_quantity: acc.total_quantity + row.total_quantity,
-      total_cost: acc.total_cost + row.total_cost,
-      total_issues: acc.total_issues + row.number_of_issues
-    }), { total_quantity: 0, total_cost: 0, total_issues: 0 });
-
-    await connection.commit();
-
-    res.status(200).json({
-      report_data: reportData,
-      totals: {
-        ...totals,
-        avg_price: totals.total_cost / totals.total_quantity
-      }
-    });
-  } catch (error) {
-    await connection.rollback();
-    const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
-    logEvents(`Error generating weekly diesel report: ${errorMessage}`, "fuelLog.log");
-    res.status(500).json({
-      error: 'Internal Server Error',
-      message: error instanceof Error ? error.message : 'An error occurred while generating report'
     });
   } finally {
     connection.release();

@@ -4,8 +4,9 @@ import pool from '../config/db';
 import { logEvents } from '../middlewares/logger';
 import { ExcelService, StockCardData } from '../services/excelService';
 import path from 'path';
-import ExcelJS from 'exceljs';
 import fs from 'fs';
+import { normalizeEquipmentNumbers, processPartNumbers, processItemName } from '../utils/utils';
+const BS = require('bikram-sambat-js');
 
 export const getDailyIssueReport = async (req: Request, res: Response): Promise<void> => {
   const { fromDate, toDate, equipmentNumber, page = 1, limit = 10 } = req.query;
@@ -157,64 +158,6 @@ interface StockMovement {
   balance_amount: number;
 }
 
-function normalizeEquipmentNumbers(equipmentNumbers: string): string {
-  let normalized = String(equipmentNumbers);
-  normalized = normalized.replace(/\b(ge|GE)\b/g, '');
-  const items = normalized.split(',').map(item => item.trim());
-  const numbers: number[] = [];
-  const descriptions = new Set<string>();
-
-  for (const item of items) {
-    if (/^\d+$/.test(item)) {
-      numbers.push(parseInt(item, 10));
-    } else {
-      const cleanedItem = item.replace(/[^a-zA-Z0-9\s]/g, '').trim();
-      if (cleanedItem) {
-        descriptions.add(cleanedItem.toLowerCase());
-      }
-    }
-  }
-
-  numbers.sort((a, b) => a - b);
-  const rangeNumbers: string[] = [];
-  let tempRange: string[] = [];
-
-  for (let i = 0; i < numbers.length; i++) {
-    if (i === 0 || numbers[i] === numbers[i - 1] + 1) {
-      tempRange.push(numbers[i].toString());
-    } else {
-      if (tempRange.length > 1) {
-        rangeNumbers.push(`${tempRange[0]}-${tempRange[tempRange.length - 1]}`);
-      } else {
-        rangeNumbers.push(tempRange[0]);
-      }
-      tempRange = [numbers[i].toString()];
-    }
-  }
-
-  if (tempRange.length > 0) {
-    if (tempRange.length > 1) {
-      rangeNumbers.push(`${tempRange[0]}-${tempRange[tempRange.length - 1]}`);
-    } else {
-      rangeNumbers.push(tempRange[0]);
-    }
-  }
-
-  return [...rangeNumbers, ...Array.from(descriptions)].join(', ').toUpperCase();
-}
-
-function processPartNumbers(partNumbers: string): { primary: string; secondary: string[] } {
-  const parts = String(partNumbers).split(',').map(p => p.trim().toUpperCase());
-  return {
-    primary: parts[0] || '',
-    secondary: parts.slice(1)
-  };
-}
-
-function processItemName(itemName: string): string {
-  return String(itemName).split(',')[0].trim().toUpperCase();
-}
-
 export const generateStockCardReport = async (req: Request, res: Response): Promise<void> => {
   const { fromDate, toDate, naccodes, generateByIssueDate } = req.body as StockCardRequest;
   const connection = await pool.getConnection();
@@ -278,23 +221,41 @@ export const generateStockCardReport = async (req: Request, res: Response): Prom
       let openingBalanceAmt = stock.open_amount;
       let openingBalanceDate: Date;
 
+      let totalReceiveQty = 0;
+      let totalReceiveAmt = 0;
       if (fromDate && !generateByIssueDate) {
-        openingBalanceDate = new Date(fromDate);
+        openingBalanceDate = new Date(String(fromDate));
         openingBalanceDate.setDate(openingBalanceDate.getDate() - 1);
 
-        const [preDateReceives] = await connection.execute<RowDataPacket[]>(`
-          SELECT 
-            COALESCE(SUM(rd.received_quantity), 0) as total_quantity,
-            COALESCE(SUM(rrp.total_amount), 0) as total_amount
-          FROM receive_details rd
-          JOIN rrp_details rrp ON rd.rrp_fk = rrp.id
-          WHERE rd.nac_code = ?
-          AND rd.approval_status = 'APPROVED'
-          AND DATE(rd.receive_date) < DATE(?)
-        `, [stock.nac_code, fromDate]);
+        if (stock.nac_code === 'GT 00000') {
+          // Petrol: get receives from transaction_details
+          const [preDateReceives] = await connection.execute<RowDataPacket[]>(
+            `SELECT 
+              COALESCE(SUM(transaction_quantity), 0) as total_quantity
+            FROM transaction_details
+            WHERE transaction_type = 'purchase'
+              AND transaction_status = 'confirmed'
+              AND DATE(transaction_date) < DATE(?)
+          `, [fromDate]);
+          totalReceiveQty = Number(preDateReceives[0]?.total_quantity) || 0;
+          totalReceiveAmt = 0; // No amount for petrol receives
+        } else {
+          const [preDateReceives] = await connection.execute<RowDataPacket[]>(
+            `SELECT 
+              COALESCE(SUM(rd.received_quantity), 0) as total_quantity,
+              COALESCE(SUM(rrp.total_amount), 0) as total_amount
+            FROM receive_details rd
+            JOIN rrp_details rrp ON rd.rrp_fk = rrp.id
+            WHERE rd.nac_code = ?
+            AND rd.approval_status = 'APPROVED'
+            AND DATE(rd.receive_date) < DATE(?)
+          `, [stock.nac_code, fromDate]);
+          totalReceiveQty = Number(preDateReceives[0]?.total_quantity) || 0;
+          totalReceiveAmt = Number(preDateReceives[0]?.total_amount) || 0;
+        }
 
-        const [preDateIssues] = await connection.execute<RowDataPacket[]>(`
-          SELECT 
+        const [preDateIssues] = await connection.execute<RowDataPacket[]>(
+          `SELECT 
             COALESCE(SUM(issue_quantity), 0) as total_quantity,
             COALESCE(SUM(issue_cost), 0) as total_amount
           FROM issue_details
@@ -302,9 +263,6 @@ export const generateStockCardReport = async (req: Request, res: Response): Prom
           AND approval_status = 'APPROVED'
           AND DATE(issue_date) < DATE(?)
         `, [stock.nac_code, fromDate]);
-
-        const totalReceiveQty = Number(preDateReceives[0]?.total_quantity) || 0;
-        const totalReceiveAmt = Number(preDateReceives[0]?.total_amount) || 0;
         const totalIssueQty = Number(preDateIssues[0]?.total_quantity) || 0;
         const totalIssueAmt = Number(preDateIssues[0]?.total_amount) || 0;
 
@@ -321,8 +279,8 @@ export const generateStockCardReport = async (req: Request, res: Response): Prom
       stock.open_quantity = openingBalanceQty;
       stock.open_amount = openingBalanceAmt;
 
-      const [issueRecords] = await connection.execute<RowDataPacket[]>(`
-        SELECT 
+      const [issueRecords] = await connection.execute<RowDataPacket[]>(
+        `SELECT 
           DATE_FORMAT(issue_date, '%Y-%m-%d') as date,
           issue_slip_number as reference,
           issue_quantity as quantity,
@@ -335,42 +293,82 @@ export const generateStockCardReport = async (req: Request, res: Response): Prom
         ORDER BY issue_date ASC
       `, [stock.nac_code, ...(!generateByIssueDate && fromDate && toDate ? [fromDate, toDate] : [])]);
 
-      const [receiveRecords] = await connection.execute<RowDataPacket[]>(`
-        SELECT 
-          DATE_FORMAT(rd.receive_date, '%Y-%m-%d') as date,
-          rd.rrp_fk,
-          rd.received_quantity as quantity,
-          rd.unit,
-          rrp.total_amount,
-          rrp.rrp_number as reference
-        FROM receive_details rd
-        JOIN rrp_details rrp ON rd.rrp_fk = rrp.id
-        WHERE rd.nac_code = ?
-        AND rd.approval_status = 'APPROVED'
-        ${!generateByIssueDate && fromDate && toDate ? 'AND rd.receive_date BETWEEN ? AND ?' : ''}
-        ORDER BY rd.receive_date ASC
-      `, [stock.nac_code, ...(!generateByIssueDate && fromDate && toDate ? [fromDate, toDate] : [])]);
+      let receiveRecords;
+      if (stock.nac_code === 'GT 00000') {
+        // Petrol: get receives from transaction_details
+        const [gtReceiveRecords] = await connection.execute<RowDataPacket[]>(
+          `SELECT 
+            transaction_date as date,
+            transaction_quantity as quantity,
+            0 as total_amount,
+            id as reference
+          FROM transaction_details
+          WHERE transaction_type = 'purchase'
+            AND transaction_status = 'confirmed'
+            ${!generateByIssueDate && fromDate && toDate ? 'AND transaction_date BETWEEN ? AND ?' : ''}
+          ORDER BY transaction_date ASC
+        `, !generateByIssueDate && fromDate && toDate ? [fromDate, toDate] : []);
+        receiveRecords = gtReceiveRecords;
+      } else {
+        const [normalReceiveRecords] = await connection.execute<RowDataPacket[]>(
+          `SELECT 
+            DATE_FORMAT(rd.receive_date, '%Y-%m-%d') as date,
+            rd.rrp_fk,
+            rd.received_quantity as quantity,
+            rd.unit,
+            rrp.total_amount,
+            rrp.rrp_number as reference
+          FROM receive_details rd
+          JOIN rrp_details rrp ON rd.rrp_fk = rrp.id
+          WHERE rd.nac_code = ?
+          AND rd.approval_status = 'APPROVED'
+          ${!generateByIssueDate && fromDate && toDate ? 'AND rd.receive_date BETWEEN ? AND ?' : ''}
+          ORDER BY rd.receive_date ASC
+        `, [stock.nac_code, ...(!generateByIssueDate && fromDate && toDate ? [fromDate, toDate] : [])]);
+        receiveRecords = normalReceiveRecords;
+      }
 
       let movements: StockMovement[] = [
-        ...issueRecords.map(record => ({
-          date: new Date(record.date + 'T00:00:00Z'),
-          reference: record.reference,
-          type: 'issue' as const,
-          quantity: record.quantity, 
-          amount: record.amount, 
-          balance_quantity: 0,
-          balance_amount: 0,
-          equipment_number: record.issued_for 
-        })),
-        ...receiveRecords.map(record => ({
-          date: new Date(record.date + 'T00:00:00Z'),
-          reference: record.reference,
-          type: 'receive' as const,
-          quantity: record.quantity,
-          amount: record.total_amount,
-          balance_quantity: 0, 
-          balance_amount: 0
-        }))
+        ...issueRecords.map(record => {
+          let dateObj: Date;
+          if (record.date instanceof Date) {
+            dateObj = record.date;
+          } else if (typeof record.date === 'string') {
+            // Try to parse as YYYY-MM-DD or ISO string
+            dateObj = new Date(record.date);
+          } else {
+            dateObj = new Date('Invalid');
+          }
+          return {
+            date: dateObj,
+            reference: record.reference,
+            type: 'issue' as const,
+            quantity: record.quantity, 
+            amount: record.amount, 
+            balance_quantity: 0,
+            balance_amount: 0,
+            equipment_number: record.issued_for 
+          };
+        }),
+        ...receiveRecords.map(record => {
+          let dateObj: Date;
+          if (record.date instanceof Date) {
+            dateObj = record.date;
+          } else if (typeof record.date === 'string') {
+            dateObj = new Date(record.date);
+          } else {
+            dateObj = new Date('Invalid');
+          }
+          return {
+            date: dateObj,
+            reference: record.reference,
+            type: 'receive' as const,
+            quantity: record.quantity,
+            amount: record.total_amount,
+            balance_quantity: 0, 
+            balance_amount: 0
+          };
+        })
       ];
 
       if (stock.equipment_number.toLowerCase().includes('consumable')) {
@@ -649,7 +647,9 @@ export const generateWeeklyDieselReport = async (req: Request, res: Response): P
       const sheet = workbook.sheet('Diesel Weekly Template');
 
       // Fill date range in H6
-      sheet.cell('H6').value(`${start_date} to ${end_date}`);
+      const startBsStr = BS.ADToBS(String(start_date));
+      const endBsStr = BS.ADToBS(String(end_date));
+      sheet.cell('H6').value(`${startBsStr} to ${endBsStr}`);
       
       // Get week number and previous week's data
       const [weekData] = await connection.query<RowDataPacket[]>(
@@ -990,17 +990,17 @@ export const generateWeeklyPetrolReport = async (req: Request, res: Response): P
 
     // Fetch all petrol fuel records with issue details for the date range
     const [fuelRecords] = await connection.query<RowDataPacket[]>(
-      `SELECT 
+            `SELECT 
         DATE(i.issue_date) as date,
         DAYNAME(i.issue_date) as day_name,
         i.issued_for,
-        f.fuel_price,
+              f.fuel_price,
         MAX(f.week_number) as week_number,
         SUM(i.issue_quantity) as issue_quantity,
         MAX(f.kilometers) as kilometers,
         SUM(i.issue_quantity * f.fuel_price) as daily_cost
-       FROM fuel_records f
-       JOIN issue_details i ON f.issue_fk = i.id
+            FROM fuel_records f
+            JOIN issue_details i ON f.issue_fk = i.id
        WHERE f.fuel_type = 'Petrol' 
       AND i.issue_date BETWEEN ? AND ?
       AND i.approval_status = 'APPROVED'
@@ -1337,7 +1337,11 @@ export const generateOilConsumptionReport = async (req: Request, res: Response):
       const XlsxPopulate = require('xlsx-populate');
       const workbook = await XlsxPopulate.fromFileAsync(templatePath);
       const sheet = workbook.sheet('Oil Weekly Template');
-      sheet.cell('E13').value(`${start_date} to ${end_date}`);
+      // Convert to Nepali (Bikram Sambat) date range
+      const startBsStr = BS.ADToBS(String(start_date));
+      const endBsStr = BS.ADToBS(String(end_date));
+      sheet.cell('E13').value(`${startBsStr} - ${endBsStr}`);
+      sheet.cell('D13').value(`${start_date} - ${end_date}`);
       sheet.cell('C13').value(weekNumber);
       sheet.cell('E6').value(today);
 

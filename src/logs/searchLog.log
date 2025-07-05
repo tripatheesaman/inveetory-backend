@@ -508,3 +508,290 @@
 20250620	12:23:31	55d18816-644d-449f-9a03-1ac6ecab76c0	Starting stock search with parameters: universal=c, equipmentNumber=, partNumber=
 20250620	12:23:31	46099f39-01c9-44a9-a466-67b2289b10db	Using FULLTEXT search for universal parameter: c
 20250620	12:23:31	f2632571-a98a-4263-b628-7e02d2c7d479	Successfully found 50 results for search parameters
+20250624	10:18:52	5baf3953-0d8a-4e33-8f69-20e0fb73ca90	Starting stock search with parameters: universal= , equipmentNumber=undefined, partNumber=undefined
+20250624	10:18:52	277a758c-0229-4d68-9d6b-55f3dac95840	Using FULLTEXT search for universal parameter:  
+20250624	10:18:53	b334d86c-fbfd-4234-b034-e98a8f837041	Search error: syntax error, unexpected $end, expecting FTS_TERM or FTS_NUMB or '*'
+20250624	10:18:53	dd346854-938d-4729-9864-a2490c99b1af	Database error during search: syntax error, unexpected $end, expecting FTS_TERM or FTS_NUMB or '*'
+20250624	10:18:53	878ce955-a974-4a72-ac15-a4a32453bdb5	Using FULLTEXT search for universal parameter:  
+20250624	10:18:53	f627345c-9819-4a72-9737-5cb75a9f0230	Starting stock search with parameters: universal= , equipmentNumber=undefined, partNumber=undefined
+20250624	10:18:53	4f73c1c2-11b9-4c0d-ae7e-42e922c54847	Search error: syntax error, unexpected $end, expecting FTS_TERM or FTS_NUMB or '*'
+20250624	10:18:53	2398d317-1305-485d-b20e-ca8a79f7c4f1	Database error during search: syntax error, unexpected $end, expecting FTS_TERM or FTS_NUMB or '*'
+20250626	10:29:27	5f29bdb3-c05e-4b7d-b7f9-f2b2445d8915	Starting stock search with parameters: universal=cotton, equipmentNumber=, partNumber=
+20250626	10:29:27	308a702d-42f4-4e85-ad83-780aacad3240	Using FULLTEXT search for universal parameter: cotton
+20250626	10:29:27	07719de0-5616-41ff-9b6f-f110f9b17ce1	Successfully found 2 results for search parameters
+20250626	10:29:30	304e081d-a59d-4b34-9520-d09d5b6e5beb	Fetching item details for ID: 1839
+20250626	10:29:30	b2f8e0b5-c651-452c-80ef-8e4676e9c4ea	Successfully fetched item details for ID: 1839
+20250626	10:29:44	1984fd3d-dde7-4926-b5ae-a40528ad2190	Starting stock search with parameters: universal=filter, equipmentNumber=, partNumber=
+20250626	10:29:44	744aed2d-f650-4224-9c39-8fcfd10752e1	Using FULLTEXT search for universal parameter: filter
+20250626	10:29:44	c617dbe9-846d-46b1-bf90-bb3ae1b80d9c	Successfully found 50 results for search parameters
+20250626	10:29:47	00e1d4cb-9dc1-4e27-b9ed-01f7f7acd201	Fetching item details for ID: 621
+20250626	10:29:47	fd278299-7655-4050-91c6-d8bd9e31adee	Successfully fetched item details for ID: 621
+20250626	10:34:38	cab5c091-15c0-4edb-aef5-27f089079705	Starting stock search with parameters: universal=cotton, equipmentNumber=, partNumber=
+20250626	10:34:38	e386e942-334b-4f0e-8152-56fc8cbdfa23	Using FULLTEXT search for universal parameter: cotton
+20250626	10:34:38	3363b7d4-33cd-43f9-b445-1d2dde814e1a	Successfully found 2 results for search parameters
+20250626	10:36:25	d061268f-2e29-4461-b5fc-ec1be7fb5d67	Starting stock search with parameters: universal=filter, equipmentNumber=, partNumber=
+20250626	10:36:25	f65afffc-8a83-46dd-823a-f4e8b51ac89f	Using FULLTEXT search for universal parameter: filter
+20250626	10:36:25	3f795c3d-5c46-4dfc-86b1-de951b8c3fbc	Successfully found 50 results for search parameters
+20250626	10:56:46	98b2c15b-c7d6-4d7d-a741-c33eb5e54410	Starting stock search with parameters: universal=tw , equipmentNumber=, partNumber=
+20250626	10:56:46	8087619d-a8f2-4a7b-8ac4-f1f11daea256	Using FULLTEXT search for universal parameter: tw 
+20250626	10:56:46	a8f2b171-53a7-4117-ae36-59df38b5799f	Successfully found 4 results for search parameters
+20250626	10:56:48	78e529fa-116d-47eb-8980-3b2625e4d6c4	Starting stock search with parameters: universal=tw 000, equipmentNumber=, partNumber=
+20250626	10:56:48	91e8aa4d-d619-4c79-afc3-5fb35142767e	Using FULLTEXT search for universal parameter: tw 000
+20250626	10:56:48	d73d6f37-2f58-4f06-bfa6-c9110035e26b	Successfully found 50 results for search parameters
+20250626	10:56:51	f5021a77-697e-41ca-9ad0-a6e7a66a10b6	Starting stock search with parameters: universal=tw, equipmentNumber=, partNumber=
+20250626	10:56:51	38e49c15-82c3-40fe-8354-8032f873fa4e	Using FULLTEXT search for universal parameter: tw
+20250626	10:56:51	d66cea65-0997-4743-b6c3-d2c88100f09f	Successfully found 4 results for search parameters
+20250626	10:56:53	57c24d6e-642b-4ad7-a027-d55dd87abe90	Starting stock search with parameters: universal=tw 2000, equipmentNumber=, partNumber=
+20250626	10:56:53	68b175ce-b15f-4921-8549-d19d43722262	Using FULLTEXT search for universal parameter: tw 2000
+20250626	10:56:53	10283021-b47a-4c5f-9bfa-686a86ab6939	Successfully found 23 results for search parameters
+20250626	10:56:55	28f4cb6c-a50a-4cc9-a373-83f142b1124d	Starting stock search with parameters: universal=tw 20000, equipmentNumber=, partNumber=
+20250626	10:56:55	111b2538-fab7-4202-ab9f-58269db9be27	Using FULLTEXT search for universal parameter: tw 20000
+20250626	10:56:55	44927ce0-1fe6-40e3-b8f2-450bf35d6fb4	Successfully found 2 results for search parameters
+20250626	10:57:00	a9c50c1d-3c05-4397-a74b-785fe329dc00	Starting stock search with parameters: universal=TW 20000, equipmentNumber=, partNumber=
+20250626	10:57:00	2d41dec3-2243-4d00-be43-6b8d2419b3d6	Using FULLTEXT search for universal parameter: TW 20000
+20250626	10:57:00	c8cead3a-9fe3-424b-91b2-0b6411e9461e	Successfully found 2 results for search parameters
+20250626	10:57:05	bb7f2a61-255b-4e6a-b189-40a7dcafacb8	Starting stock search with parameters: universal=TW, equipmentNumber=, partNumber=
+20250626	10:57:05	e6b31c87-5be7-4052-a9b7-45f5a8211e34	Using FULLTEXT search for universal parameter: TW
+20250626	10:57:05	377bea05-6daa-459a-8df8-347269292af5	Successfully found 4 results for search parameters
+20250626	10:57:16	cf9d57ab-67ff-46c3-8b0e-c51e332c6b95	Starting stock search with parameters: universal=GS, equipmentNumber=, partNumber=
+20250626	10:57:16	3b3230b3-6dbf-4e9c-898d-2c5881fcce1c	Using FULLTEXT search for universal parameter: GS
+20250626	10:57:16	6ec6b0b6-7a45-46ad-8ef3-304d7be0d9f2	Successfully found 6 results for search parameters
+20250626	10:57:20	20158bef-de87-412d-8615-35f4c3b08ca4	Starting stock search with parameters: universal=TW, equipmentNumber=, partNumber=
+20250626	10:57:20	5488d48c-951a-4659-ada9-81aa76bfaea6	Using FULLTEXT search for universal parameter: TW
+20250626	10:57:20	d8b0a539-0a1f-418f-8b5b-512211c279bb	Successfully found 4 results for search parameters
+20250626	10:57:21	8b9ebe57-52a8-4584-a619-874ffde84f5c	Starting stock search with parameters: universal=T, equipmentNumber=, partNumber=
+20250626	10:57:21	ea9dad3c-af17-4cbe-aeab-ef9f5c32fa21	Using FULLTEXT search for universal parameter: T
+20250626	10:57:21	d5647c8e-ae7b-4328-a6a7-5e89fa532153	Successfully found 50 results for search parameters
+20250626	10:57:22	3296b9fc-0c08-4d2d-a481-6f9dbb9653b2	Starting stock search with parameters: universal=TW, equipmentNumber=, partNumber=
+20250626	10:57:22	69624d47-2b54-432a-a19f-5fd29c9d736e	Using FULLTEXT search for universal parameter: TW
+20250626	10:57:22	cc759c88-111a-416e-8be5-4da69d2a9b56	Successfully found 4 results for search parameters
+20250626	10:57:24	fdf75c13-9253-4631-8cc6-dd59a811f62d	Starting stock search with parameters: universal=Tyre, equipmentNumber=, partNumber=
+20250626	10:57:24	458c8b55-968e-426c-b322-c343c5ff0383	Using FULLTEXT search for universal parameter: Tyre
+20250626	10:57:24	32df195e-7166-4883-8f9c-ce002817810f	Successfully found 50 results for search parameters
+20250626	10:57:38	32532616-3e0f-4f07-83ba-8fa168803f9c	Starting stock search with parameters: universal=new shit, equipmentNumber=, partNumber=
+20250626	10:57:38	7bf84427-fb68-41db-abf2-ec099e73c73a	Using FULLTEXT search for universal parameter: new shit
+20250626	10:57:38	5b52e44d-1f65-43af-bd05-f033f2a39d6c	Successfully found 5 results for search parameters
+20250626	10:57:41	24b29e36-0993-42b6-b97a-79fe8901a4be	Using FULLTEXT search for universal parameter: new shit tem
+20250626	10:57:41	06b71769-da09-4124-abd7-0920004db7a1	Starting stock search with parameters: universal=new shit tem, equipmentNumber=, partNumber=
+20250626	10:57:41	806ea3c3-0d7a-4351-bb0a-fc0e9e54c379	Successfully found 32 results for search parameters
+20250626	10:57:42	3139429d-018f-4bb2-8f91-8c89dace1476	Starting stock search with parameters: universal=new shit, equipmentNumber=, partNumber=
+20250626	10:57:42	9374eb6e-c2b4-4cba-b93b-a89aa27dce16	Using FULLTEXT search for universal parameter: new shit
+20250626	10:57:42	a1da4eda-0969-4929-972f-cfd6047c95c5	Successfully found 5 results for search parameters
+20250626	10:57:43	cf978a56-0a2c-4b9d-a090-1328631c3c63	Starting stock search with parameters: universal=new shit , equipmentNumber=, partNumber=
+20250626	10:57:43	6944d730-c7a8-4ae7-b8ff-4a4d709128c3	Using FULLTEXT search for universal parameter: new shit 
+20250626	10:57:43	8f49079a-a7ec-4e98-b717-5c8fee5a4be2	Successfully found 5 results for search parameters
+20250626	10:58:35	49de548a-bccb-4769-a1d9-c21cc6d0c9cf	Starting stock search with parameters: universal=trw, equipmentNumber=, partNumber=
+20250626	10:58:35	21417565-ddcb-4de2-866c-aa6112005e9d	Using FULLTEXT search for universal parameter: trw
+20250626	10:58:35	1be1c2d5-27ef-4b58-9f38-42d15d5df539	No results found for search parameters
+20250626	10:58:36	c1ccb0ae-733e-4a68-94a9-7dcb0f5f01e6	Starting stock search with parameters: universal=tw, equipmentNumber=, partNumber=
+20250626	10:58:36	6d71bf9c-4561-4ecd-8ce1-16004dc42ee8	Using FULLTEXT search for universal parameter: tw
+20250626	10:58:36	02895420-5760-409e-8786-25f9f06892bb	Successfully found 4 results for search parameters
+20250626	10:58:41	782ee2da-f37b-459a-91bf-1c643393c82a	Starting stock search with parameters: universal=tw , equipmentNumber=, partNumber=
+20250626	10:58:41	025416ef-824b-435a-a4af-6431dd1c242a	Using FULLTEXT search for universal parameter: tw 
+20250626	10:58:41	f2aad2be-be8b-4791-8f44-4e103f234393	Successfully found 4 results for search parameters
+20250626	10:58:43	0013503c-269a-46c5-99ff-a3ce1c3effec	Starting stock search with parameters: universal= tw, equipmentNumber=, partNumber=
+20250626	10:58:43	8d8f6835-b9c3-459f-a19b-52652e4215d9	Using FULLTEXT search for universal parameter:  tw
+20250626	10:58:43	6182982d-bf7f-4050-a760-eb91e4f6f4a1	Successfully found 4 results for search parameters
+20250626	10:58:49	c96f6ab9-baff-4005-b87a-6e87cfb85520	Starting stock search with parameters: universal=tyre, equipmentNumber=, partNumber=
+20250626	10:58:49	88e2046c-ee1c-46f1-a14f-12b77cac5e07	Using FULLTEXT search for universal parameter: tyre
+20250626	10:58:49	d52d3605-1f1c-4467-b12f-7f18b1ca673d	Successfully found 50 results for search parameters
+20250626	10:58:51	cffd8d97-fa0d-4ccb-b4ba-d7a916c3fce7	Starting stock search with parameters: universal=new , equipmentNumber=, partNumber=
+20250626	10:58:51	2bc6f781-55fe-49c1-bdac-9e8bd30afa00	Using FULLTEXT search for universal parameter: new 
+20250626	10:58:51	9a6580fb-1508-4fa5-84de-c5cc61578744	Successfully found 6 results for search parameters
+20250626	10:58:52	7939343a-ae8a-4c40-8c66-7d3fd708001b	Starting stock search with parameters: universal=new s, equipmentNumber=, partNumber=
+20250626	10:58:52	3135548c-9d23-4d74-87d8-94c9de17bc6e	Using FULLTEXT search for universal parameter: new s
+20250626	10:58:52	0ea8f4fd-8029-4f4c-a687-51198dc0ce77	Successfully found 50 results for search parameters
+20250626	10:58:52	86a3b201-24e0-427d-851b-d840fe87e3ca	Starting stock search with parameters: universal=new shit, equipmentNumber=, partNumber=
+20250626	10:58:52	3858fb51-9cdd-4ffe-beae-f87789262ef4	Using FULLTEXT search for universal parameter: new shit
+20250626	10:58:52	fab61af0-0108-43bc-a71f-dc0513bf8efc	Successfully found 7 results for search parameters
+20250626	10:59:01	58a3e7c5-3766-45e2-91c3-5dd04dfca3f8	Starting stock search with parameters: universal=cotton, equipmentNumber=, partNumber=
+20250626	10:59:01	d6dfc31d-e65f-484c-8260-dd95dec87019	Using FULLTEXT search for universal parameter: cotton
+20250626	10:59:01	c3953f12-eaac-4968-99e4-74f423945e3b	Successfully found 2 results for search parameters
+20250626	10:59:07	14208d19-e4c8-4bdc-b1a9-1a54624c24fd	Fetching item details for ID: 1839
+20250626	10:59:07	f53890cb-fac8-4e03-97e2-095af7cbfbd7	Successfully fetched item details for ID: 1839
+20250626	10:59:11	c9537545-cec6-4c55-96b8-3fbd138081a7	Fetching item details for ID: 1839
+20250626	10:59:11	5da45dc3-201b-4296-b4db-8422c3b8f54b	Successfully fetched item details for ID: 1839
+20250626	10:59:17	e3fd3257-7f3b-4c95-ba3c-c22cd8d0545f	Fetching item details for ID: 1839
+20250626	10:59:17	ce7540e6-2171-4a73-89fe-bb85f9d4676f	Successfully fetched item details for ID: 1839
+20250626	10:59:25	12d79366-1bd0-42f5-b605-89f68b17b978	Starting stock search with parameters: universal=new location, equipmentNumber=, partNumber=
+20250626	10:59:25	c20d5991-5241-4faf-82e9-70443ff039f5	Using FULLTEXT search for universal parameter: new location
+20250626	10:59:25	88ced37e-f012-45d4-8fae-ff06f3dc91ec	Successfully found 6 results for search parameters
+20250626	10:59:29	e3a7626d-a9a5-40e6-a418-ad00c9b7823e	Using FULLTEXT search for universal parameter: new location shit
+20250626	10:59:29	b7f6cd97-5f2d-4a05-94f5-495eafcc136d	Starting stock search with parameters: universal=new location shit, equipmentNumber=, partNumber=
+20250626	10:59:29	922f0b64-4641-4c2c-95b7-28598dfdfb1a	Successfully found 7 results for search parameters
+20250626	10:59:32	864461f6-dff0-45a3-8c70-9e8c60634520	Fetching item details for ID: 4749
+20250626	10:59:32	92309a85-35eb-45c0-b900-de2c51bdd366	Successfully fetched item details for ID: 4749
+20250626	11:43:19	dc14f1db-095b-4826-9738-74a2e89d5145	Starting stock search with parameters: universal=cotton, equipmentNumber=, partNumber=
+20250626	11:43:19	b11d127f-c664-4d8c-8d69-d6ad2034e411	Using FULLTEXT search for universal parameter: cotton
+20250626	11:43:19	b3c71374-7ff4-44a1-9db8-19368476e302	Successfully found 2 results for search parameters
+20250626	11:43:51	c37938b8-8191-4172-92fe-6cadd9ba9e1a	Starting stock search with parameters: universal=filter, equipmentNumber=, partNumber=
+20250626	11:43:51	c45939b7-6cd5-449d-be15-5a0822a65354	Using FULLTEXT search for universal parameter: filter
+20250626	11:43:51	67e34c7e-d5ef-407b-9552-1794ce7bdb16	Successfully found 50 results for search parameters
+20250626	11:45:17	963d116f-0dad-4a1e-8525-4503ee8e71ee	Starting stock search with parameters: universal=cotton, equipmentNumber=, partNumber=
+20250626	11:45:17	d6d2fba9-d197-4d8a-a1af-517e3408d201	Using FULLTEXT search for universal parameter: cotton
+20250626	11:45:17	e0818e33-60da-47ba-bbc6-145fa198717b	Successfully found 2 results for search parameters
+20250626	11:45:20	670930ae-85b4-4920-ba23-b59f858f63df	Fetching item details for ID: 1839
+20250626	11:45:20	e7d834b1-eb7d-44b8-8cdb-c9303e3b3550	Successfully fetched item details for ID: 1839
+20250626	11:49:54	76dfbf45-dfe6-4753-980a-e71825268280	Fetching item details for ID: 1839
+20250626	11:49:54	beba8d6d-b3eb-4663-89c8-472d7e2b0b60	Successfully fetched item details for ID: 1839
+20250626	11:50:03	0a6aac4e-048b-4fd6-9ba0-bf6f6e373828	Using FULLTEXT search for universal parameter: cotton
+20250626	11:50:03	f93a253a-afd0-4157-876b-75b69e70eb2d	Starting stock search with parameters: universal=cotton, equipmentNumber=, partNumber=
+20250626	11:50:03	65653f14-6e4a-452d-915f-d25df6bd24eb	Successfully found 2 results for search parameters
+20250626	11:53:43	2113ec8e-43ea-45f6-b889-c766dae05870	Using FULLTEXT search for universal parameter: cotton
+20250626	11:53:43	45be5170-04e5-447b-beb7-dc72b1c01868	Starting stock search with parameters: universal=cotton, equipmentNumber=, partNumber=
+20250626	11:53:43	873fb85d-5edd-4e79-b0dd-cbb47a5e3dc3	Successfully found 2 results for search parameters
+20250626	11:55:14	a902f560-2039-4371-ae00-d61122f6a073	Starting stock search with parameters: universal=cotton, equipmentNumber=, partNumber=
+20250626	11:55:14	131b4c32-f689-496e-90c2-d284dd40ada5	Using FULLTEXT search for universal parameter: cotton
+20250626	11:55:14	ba081786-910c-485f-a0b5-b398077b5543	Successfully found 2 results for search parameters
+20250626	11:58:50	eeb487d0-1a95-42b9-85f2-44fe82888ce4	Starting stock search with parameters: universal=cotton, equipmentNumber=, partNumber=
+20250626	11:58:50	7576bccc-b03b-41c8-8f24-78194a3da103	Using FULLTEXT search for universal parameter: cotton
+20250626	11:58:50	e0d1829d-d3f0-4a60-b8a0-360baeddcfe4	Successfully found 2 results for search parameters
+20250626	12:00:44	4832b0ae-f8d3-4cf7-b4f1-ee24b3e52237	Starting stock search with parameters: universal=cotton, equipmentNumber=, partNumber=
+20250626	12:00:44	09adbf2a-f326-46a8-be56-cf016eedac00	Using FULLTEXT search for universal parameter: cotton
+20250626	12:00:44	59bdb671-28c4-49fb-b76a-dc02461ed024	Successfully found 2 results for search parameters
+20250626	12:22:43	00463ceb-acc5-4782-a3ea-4a7a796e4502	Using FULLTEXT search for universal parameter: cotton
+20250626	12:22:43	8e97fd43-1d03-4c06-bfac-28b7fb13c49e	Starting stock search with parameters: universal=cotton, equipmentNumber=, partNumber=
+20250626	12:22:43	e6d3174b-83e6-4760-8be3-737211dc5086	Successfully found 2 results for search parameters
+20250702	15:40:21	5ad12a54-a09a-414e-ae87-10f43f49b424	Starting stock search with parameters: universal=c, equipmentNumber=, partNumber=
+20250702	15:40:21	9fd32896-305f-4b45-ab4e-edcb9b3c789f	Using FULLTEXT search for universal parameter: c
+20250702	15:40:21	0eb4ed1e-248b-44bd-af35-6fddd6f7c634	Successfully found 50 results for search parameters
+20250702	15:40:24	626a2185-1e65-45dc-a83a-06037224ef97	Starting stock search with parameters: universal=cotton, equipmentNumber=, partNumber=
+20250702	15:40:24	e3b0f6d9-6702-43ae-906f-46a4947a5fc6	Using FULLTEXT search for universal parameter: cotton
+20250702	15:40:24	f219bf5f-d2f8-4703-b328-c05c59921942	Successfully found 2 results for search parameters
+20250702	15:40:33	50859a85-63e6-4ac9-aaa0-f19484793b81	Fetching item details for ID: 1839
+20250702	15:40:33	fbf5113e-eac2-42b4-bd47-a7133ad0a6bd	Successfully fetched item details for ID: 1839
+20250702	16:01:20	e338cbfd-8401-40f8-83ba-0517327f1dfe	Starting stock search with parameters: universal=cotton, equipmentNumber=, partNumber=
+20250702	16:01:20	b6b086fc-d256-45d5-b55a-a52d510417d7	Using FULLTEXT search for universal parameter: cotton
+20250702	16:01:20	158d8fc8-e651-44d6-be87-5059bc996710	Successfully found 2 results for search parameters
+20250703	10:16:22	b63f39a4-cce7-478a-bb34-90343283e702	Starting stock search with parameters: universal=c, equipmentNumber=, partNumber=
+20250703	10:16:22	035a88f8-7fdd-46da-81c0-ab3e4692e972	Using FULLTEXT search for universal parameter: c
+20250703	10:16:22	21435760-18ea-4e82-9ac9-c76ec2c811c3	Successfully found 50 results for search parameters
+20250703	10:16:23	2f9df8ce-8d4d-4da1-9c3c-5a600b825477	Starting stock search with parameters: universal=cotton, equipmentNumber=, partNumber=
+20250703	10:16:23	e4bda602-0e3e-48f6-a8fd-740a6494b4cc	Using FULLTEXT search for universal parameter: cotton
+20250703	10:16:23	0b512b8b-cf64-415c-ac8a-0b5ba71a915d	Successfully found 2 results for search parameters
+20250703	10:17:55	2a4f76e2-d7e5-4057-bcff-8ec88ba11730	Starting stock search with parameters: universal=cotton, equipmentNumber=, partNumber=
+20250703	10:17:55	22ee1cac-6cee-49f5-8907-c4993ea27027	Using FULLTEXT search for universal parameter: cotton
+20250703	10:17:55	c212a270-d1e9-487e-9511-d0b336dd6ab6	Successfully found 2 results for search parameters
+20250703	10:22:16	324670ae-bda3-4d49-86c8-6b68e3936437	Using FULLTEXT search for universal parameter: cot
+20250703	10:22:16	ad66d29b-336d-4320-b28a-9568be7fb0ba	Starting stock search with parameters: universal=cot, equipmentNumber=, partNumber=
+20250703	10:22:16	e5cecb33-1ec7-439a-b707-883c38b5c28f	Successfully found 5 results for search parameters
+20250703	10:22:20	4953991d-b41f-4bae-ad4d-b2f2886aeae9	Starting stock search with parameters: universal=cotton, equipmentNumber=, partNumber=
+20250703	10:22:20	b8505dbc-41eb-40b7-b062-7b284d9e025f	Using FULLTEXT search for universal parameter: cotton
+20250703	10:22:20	089a46c4-e471-47b1-838b-e22e450b67fd	Successfully found 2 results for search parameters
+20250703	10:23:02	9f500eaf-e895-4fb1-a637-fd9e8e8f2311	Starting stock search with parameters: universal=coton, equipmentNumber=, partNumber=
+20250703	10:23:02	a323bfa7-e723-42f8-b689-3e58e1d83cb9	Using FULLTEXT search for universal parameter: coton
+20250703	10:23:02	523d2602-4b58-43a1-8ba0-ae7baef84015	No results found for search parameters
+20250703	10:23:03	293b0d19-b11d-45b3-867d-93909a1ae574	Starting stock search with parameters: universal=co, equipmentNumber=, partNumber=
+20250703	10:23:03	f81ac3e4-7a91-4cd4-8128-5950ea35e797	Using FULLTEXT search for universal parameter: co
+20250703	10:23:03	20acd248-8f96-4234-9e7b-d60aa80d06ac	Successfully found 50 results for search parameters
+20250703	10:23:04	2fb98f8c-cdda-4c48-b8cf-a6d7fa106198	Starting stock search with parameters: universal=cotton, equipmentNumber=, partNumber=
+20250703	10:23:04	daeec292-a799-434e-8179-9d41d2611e49	Using FULLTEXT search for universal parameter: cotton
+20250703	10:23:04	d1d166b0-a548-4bc7-baf6-6e73ab8448fe	Successfully found 2 results for search parameters
+20250703	10:25:56	c8ba7de1-66fb-4e34-aba6-ad76a0023259	Starting stock search with parameters: universal=tw, equipmentNumber=, partNumber=
+20250703	10:25:56	7e96f424-87e2-4b59-823a-f6182d0b7914	Using FULLTEXT search for universal parameter: tw
+20250703	10:25:56	f2aa5842-99e7-4da8-afa4-8962f8a79309	Successfully found 4 results for search parameters
+20250703	10:26:00	3d27159f-5e48-4732-be13-14261b53d3d8	Starting stock search with parameters: universal=TGW, equipmentNumber=, partNumber=
+20250703	10:26:00	fb341a7f-50f9-4c62-8f80-459cf2e97169	Using FULLTEXT search for universal parameter: TGW
+20250703	10:26:00	6a1dbb91-9608-4954-88f8-2c701e770f57	No results found for search parameters
+20250703	10:26:01	542e7fd1-4eb3-49a3-8451-6bdf28d27f70	Starting stock search with parameters: universal=TW, equipmentNumber=, partNumber=
+20250703	10:26:01	e524941e-c5c3-42d4-842f-8da6532b3176	Using FULLTEXT search for universal parameter: TW
+20250703	10:26:01	ed85576b-6730-43ab-8998-62061aa66cd3	Successfully found 4 results for search parameters
+20250703	10:26:04	a20291e7-6fa8-4141-b907-4257404b479d	Starting stock search with parameters: universal=tyre, equipmentNumber=, partNumber=
+20250703	10:26:04	016ce23e-9939-4b6d-8e9d-c7bdacb9af83	Using FULLTEXT search for universal parameter: tyre
+20250703	10:26:04	e4116d41-54ab-4aaa-8e14-3a50539e64d4	Successfully found 50 results for search parameters
+20250703	10:26:12	521179ab-1eef-40ba-8f47-a410f9aeea62	Starting stock search with parameters: universal=GS, equipmentNumber=, partNumber=
+20250703	10:26:12	d91b78e4-eae1-406c-b5ff-ebda6eb86720	Using FULLTEXT search for universal parameter: GS
+20250703	10:26:12	88c04f54-81c2-462c-a94b-b242fba54f85	Successfully found 6 results for search parameters
+20250703	10:26:15	2ed0d4d6-40a1-406e-b584-76dc9cebf13e	Starting stock search with parameters: universal=GS 0, equipmentNumber=, partNumber=
+20250703	10:26:15	15d21780-bbc8-4142-933e-d1a0479b10b0	Using FULLTEXT search for universal parameter: GS 0
+20250703	10:26:15	b33cdd9b-de55-44e9-a47f-8dc5c2de149e	Successfully found 50 results for search parameters
+20250703	10:26:16	4a6893dd-f98b-4755-bdee-e4219a0d6d1d	Starting stock search with parameters: universal=GS 00, equipmentNumber=, partNumber=
+20250703	10:26:16	90f5679d-5d88-41a6-87f0-287cb42eb787	Using FULLTEXT search for universal parameter: GS 00
+20250703	10:26:16	586eb43e-2c8e-4d4b-b63d-8bc22b8d4639	Successfully found 50 results for search parameters
+20250703	10:26:20	444671bc-7373-4d53-96b7-ab2f34ce7a66	Starting stock search with parameters: universal=GS 92230, equipmentNumber=, partNumber=
+20250703	10:26:20	32d0ddec-e7ae-46dc-9502-ac4bc83df570	Using FULLTEXT search for universal parameter: GS 92230
+20250703	10:26:20	eeeeac44-57d8-4b6b-b5c3-87df58d6e198	Successfully found 1 results for search parameters
+20250703	10:26:23	c8f8b060-3d59-45c1-9bf6-c546e2e49100	Starting stock search with parameters: universal=TW, equipmentNumber=, partNumber=
+20250703	10:26:23	c2715cb5-7a53-46e2-abf4-7645250c23b2	Using FULLTEXT search for universal parameter: TW
+20250703	10:26:23	6bdf61cb-fd7b-4cff-91e1-ec114a7fb9d7	Successfully found 4 results for search parameters
+20250703	10:26:25	b0e118c7-f911-4bf4-8f71-12b09d2eeb8f	Starting stock search with parameters: universal=tyre, equipmentNumber=, partNumber=
+20250703	10:26:25	79845366-3fa1-4224-8f29-4af5c080518d	Using FULLTEXT search for universal parameter: tyre
+20250703	10:26:25	ca17b750-7d78-4968-ac48-7e4890c83e30	Successfully found 50 results for search parameters
+20250703	10:26:27	8bb29cb7-9e3a-48cc-ab97-ac1ad2e39e77	Starting stock search with parameters: universal=tyr, equipmentNumber=, partNumber=
+20250703	10:26:27	bebe8433-c161-49fc-bd70-ee0c39660a63	Using FULLTEXT search for universal parameter: tyr
+20250703	10:26:27	117fde4b-016a-4bd5-ac52-a25f17c68b9d	Successfully found 50 results for search parameters
+20250703	10:26:31	d562e9f8-7b7b-4f24-8d58-e49c16f389a4	Starting stock search with parameters: universal=TW, equipmentNumber=, partNumber=
+20250703	10:26:31	e24c8e1e-c660-44f7-9b3f-e0f4439d47bf	Using FULLTEXT search for universal parameter: TW
+20250703	10:26:31	c7a6fc9e-ccf4-4e3f-89bc-436ee6d10d91	Successfully found 4 results for search parameters
+20250703	10:26:32	e5fdce5b-9bbd-466b-aed9-1285fc0c12ee	Starting stock search with parameters: universal=TW 00, equipmentNumber=, partNumber=
+20250703	10:26:32	66a8baa9-f0d4-4ce1-b000-33ba6100281c	Using FULLTEXT search for universal parameter: TW 00
+20250703	10:26:32	4755956d-bea5-406c-a14b-4133a20ad9a8	Successfully found 50 results for search parameters
+20250703	10:26:33	ff720aa2-12e6-4785-9e96-7c4a9253f61a	Starting stock search with parameters: universal=TW 00145, equipmentNumber=, partNumber=
+20250703	10:26:33	6834ec21-9de3-4d7d-be95-351989d9b7f3	Using FULLTEXT search for universal parameter: TW 00145
+20250703	10:26:33	dfcef911-009d-4c2f-b669-4cc4916775f1	Successfully found 1 results for search parameters
+20250703	10:27:11	7889eb78-2928-4cb7-842c-58bf2acd2adb	Starting stock search with parameters: universal=TW 001, equipmentNumber=, partNumber=
+20250703	10:27:11	b0ac3872-df1f-44a8-8cee-999502f802cc	Using FULLTEXT search for universal parameter: TW 001
+20250703	10:27:11	ae7dad09-d679-489e-bb2f-4f253aa2d574	Successfully found 50 results for search parameters
+20250703	10:27:18	34b14217-8d88-43b5-8a8d-36a43e3e653d	Starting stock search with parameters: universal=tw, equipmentNumber=, partNumber=
+20250703	10:27:18	04c965f8-03ca-4de2-9f0a-ae1d4a507a2a	Using FULLTEXT search for universal parameter: tw
+20250703	10:27:19	31c8c1c4-af1b-4c41-88ce-6a0c604ae40a	Successfully found 4 results for search parameters
+20250703	10:27:20	bec7b04d-9ea4-4f4c-83d5-59eb5e9ad7be	Starting stock search with parameters: universal=tw 00, equipmentNumber=, partNumber=
+20250703	10:27:20	6a777a6c-d91d-44f9-a38f-4c1e9e3c5bb9	Using FULLTEXT search for universal parameter: tw 00
+20250703	10:27:20	c40bde4b-e97a-45e4-b07a-ee952d3b94f7	Successfully found 50 results for search parameters
+20250703	10:27:29	835a78e4-06fa-476e-a9ab-290e000dfd0b	Starting stock search with parameters: universal=tw 00, equipmentNumber=tyre, partNumber=
+20250703	10:27:29	c0cd3399-75c1-4fb3-91e9-1b6f254f86e6	Using FULLTEXT search for universal parameter: tw 00
+20250703	10:27:29	cd43b744-7f7b-4641-9506-5bee49fa0117	Successfully found 20 results for search parameters
+20250703	10:27:35	09f2798c-2610-48d6-8ecb-950fddb4008c	Starting stock search with parameters: universal=tw 00, equipmentNumber=, partNumber=
+20250703	10:27:35	1336801d-4f63-46d0-9ef2-3c83efde68bb	Using FULLTEXT search for universal parameter: tw 00
+20250703	10:27:35	f01b30c6-0e48-4e86-9ee6-4bb72d5343f1	Successfully found 50 results for search parameters
+20250703	10:27:40	27fd9f1c-e5be-4724-a23b-a38da282f173	Starting stock search with parameters: universal=tyre, equipmentNumber=, partNumber=
+20250703	10:27:40	1381bfbb-c5dc-4066-b3e9-9fc8a4db2e6a	Using FULLTEXT search for universal parameter: tyre
+20250703	10:27:40	e07ad1e1-3da9-43c9-a146-5164fa19edc2	Successfully found 50 results for search parameters
+20250703	10:59:16	24cae947-f0dc-4a8f-8ea4-0df0257b22f0	Starting stock search with parameters: universal=cotton, equipmentNumber=, partNumber=
+20250703	10:59:16	9a09c579-2acb-4f11-8417-22453d145c41	Using FULLTEXT search for universal parameter: cotton
+20250703	10:59:16	02b89c8b-7241-42da-a5b5-331194438ee2	Successfully found 2 results for search parameters
+20250703	10:59:57	6e14a3d2-6ee4-4522-b125-38b21e5278bc	Starting stock search with parameters: universal=s, equipmentNumber=, partNumber=
+20250703	10:59:57	58f2b1dc-840a-4861-861e-f683ad71d542	Using FULLTEXT search for universal parameter: s
+20250703	10:59:57	ec40e973-a8ae-4bd6-9a35-222e217b82a4	Successfully found 50 results for search parameters
+20250703	11:32:17	c5677621-9ce5-4bf2-a148-3859c0e15d7b	Starting stock search with parameters: universal=petrol, equipmentNumber=, partNumber=
+20250703	11:32:17	4f7e88b5-bb80-462a-ac96-739cf98b4943	Using FULLTEXT search for universal parameter: petrol
+20250703	11:32:17	17758f38-09e7-4124-8032-d804abfcebd1	Successfully found 1 results for search parameters
+20250703	11:32:19	f6a00cfc-7135-4eba-b675-2abf23d15630	Fetching item details for ID: 4744
+20250703	11:32:19	8ff3ed93-970c-42d1-a4bf-8bc86589c4e9	Successfully fetched item details for ID: 4744
+20250703	11:35:11	9ceee2e0-afbb-4327-a90f-bd62da5b68e9	Starting stock search with parameters: universal=petrol, equipmentNumber=, partNumber=
+20250703	11:35:11	17087335-a90e-439b-bfb1-07eb523a9a27	Using FULLTEXT search for universal parameter: petrol
+20250703	11:35:11	1209bf09-9c57-4b67-a8a4-a769639afb1d	Successfully found 1 results for search parameters
+20250703	11:45:35	2da8428c-4c76-4672-a1b0-90a41e025160	Starting stock search with parameters: universal=cp, equipmentNumber=, partNumber=
+20250703	11:45:35	463887b2-8ca8-4128-9cc8-55114fe26842	Using FULLTEXT search for universal parameter: cp
+20250703	11:45:35	db46529a-1466-4b4c-9586-fd69b1aad6bc	Successfully found 17 results for search parameters
+20250703	11:45:36	de772e07-2f7e-4687-8500-0501bf1ecf3b	Starting stock search with parameters: universal=c, equipmentNumber=, partNumber=
+20250703	11:45:36	dd12a959-a513-4a2a-9974-e47c3f5cdd75	Using FULLTEXT search for universal parameter: c
+20250703	11:45:36	5de46a2a-e3f5-44bb-b4c4-94094b34b629	Successfully found 50 results for search parameters
+20250703	11:46:28	9f92ac5d-da28-425f-8935-594c2d7e7d9f	Starting stock search with parameters: universal=petrol, equipmentNumber=, partNumber=
+20250703	11:46:28	9f587b9b-c981-49aa-884d-a644add85f93	Using FULLTEXT search for universal parameter: petrol
+20250703	11:46:28	119fae3d-44b4-49dd-af03-caf68cf07b9d	Successfully found 1 results for search parameters
+20250703	11:58:07	5abe381d-8b23-43fc-82b9-6cdb8a29a67f	Starting stock search with parameters: universal=c, equipmentNumber=, partNumber=
+20250703	11:58:07	018ec801-f67d-4b97-b75c-e0421f923e96	Using FULLTEXT search for universal parameter: c
+20250703	11:58:07	081961be-4b44-4e45-a3b0-2d390afbc18c	Successfully found 50 results for search parameters
+20250703	11:58:09	78d7d5b2-e89d-49fa-8296-10f0370b8d03	Using FULLTEXT search for universal parameter: cotton
+20250703	11:58:09	3d32ccd2-220b-4b16-8699-c55aff7efc32	Starting stock search with parameters: universal=cotton, equipmentNumber=, partNumber=
+20250703	11:58:09	69c72ad2-f822-4173-ba9d-a4fe02dedad1	Successfully found 2 results for search parameters
+20250703	11:58:27	b67f6f73-d4e6-4a75-97ac-e4e50b118ded	Starting stock search with parameters: universal=c, equipmentNumber=, partNumber=
+20250703	11:58:27	5880bf84-89db-4986-aacb-3042b2af48e2	Using FULLTEXT search for universal parameter: c
+20250703	11:58:27	407fe8ee-47ce-47b9-951d-f002acf4edbf	Successfully found 50 results for search parameters
+20250703	11:58:27	2038ab55-ed9e-46ef-a9d3-15818072b0f2	Starting stock search with parameters: universal=cotton, equipmentNumber=, partNumber=
+20250703	11:58:27	31139f6c-f485-4286-8c79-c54e3d81de67	Using FULLTEXT search for universal parameter: cotton
+20250703	11:58:27	31a04b31-b2bd-4523-997f-2e2a563b0dcb	Successfully found 2 results for search parameters
+20250703	11:58:29	f2814e47-4a9f-4af3-ac84-86dfa8e2d1f9	Fetching item details for ID: 1839
+20250703	11:58:29	61d98162-fe05-4b5f-a1e6-66c2ed5cb00f	Successfully fetched item details for ID: 1839
+20250703	17:37:13	cf4765f9-3150-4127-873a-e02882403cf7	Starting stock search with parameters: universal=cotton, equipmentNumber=, partNumber=
+20250703	17:37:13	3963d182-5bc0-44b5-a2a7-bf45769c671e	Using FULLTEXT search for universal parameter: cotton
+20250703	17:37:13	1060d299-ee9d-4d1b-a7db-49a10a8373bf	Successfully found 2 results for search parameters
+20250704	10:54:17	fee3111a-5b56-49e4-b071-84d717758dc5	Starting stock search with parameters: universal=c, equipmentNumber=, partNumber=
+20250704	10:54:17	fa8cc40d-96c6-4f70-ad83-cc609bfde2d7	Using FULLTEXT search for universal parameter: c
+20250704	10:54:17	af070d9a-8e35-445c-acd9-ce36cbaefb92	Successfully found 50 results for search parameters
+20250704	10:54:18	6b9ac168-78df-49c4-b76f-36e77c3835a5	Starting stock search with parameters: universal=cotton, equipmentNumber=, partNumber=
+20250704	10:54:18	5a06e613-ce09-4d3e-89ce-6fa2ede4fbde	Using FULLTEXT search for universal parameter: cotton
+20250704	10:54:18	2eb0d162-3433-4822-bad0-7d0ac3a89a22	Successfully found 2 results for search parameters
+20250704	10:54:19	f16d187b-2301-4e51-8d6d-caef8e11ded2	Fetching item details for ID: 1839
+20250704	10:54:19	47f51e96-5fa1-4906-b46e-cecf6cdcc16a	Successfully fetched item details for ID: 1839

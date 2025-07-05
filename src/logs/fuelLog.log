@@ -250,3 +250,38 @@
 20250620	12:21:00	08acf8a7-3ba3-4374-b7cb-f8f69ab6c6b9	Issue records created successfully with IDs: 80
 20250620	12:21:00	356e0b6d-796e-4f29-9d17-eb73d7ecf1c2	Fuel record created - Issue ID: 80, Fuel ID: 9, Equipment: 110, Fuel Type: diesel, Week: 1, FY: 2081/82
 20250623	10:48:51	b7d18784-512b-40f2-bd8a-1e5ebd564393	Error generating oil consumption report: ENOENT: no such file or directory, copyfile 'F:\Inventory 2081-82 developmentfolder\inventory-backend\public\templates\oil_consumption_report.xlsx' -> 'F:\Inventory 2081-82 developmentfolder\inventory-backend\temp\oil_consumption_report_2025-06-18_to_2025-06-26.xlsx'
+20250625	13:52:51	7f012308-beca-47d9-ae59-f0f0d356382c	Found existing stock record for fuel type diesel with NAC code: GT 07986
+20250625	13:52:51	d2bf9917-f4f8-4e9a-849c-93bf08e8ca78	Found existing stock record for fuel type diesel with NAC code: GT 07986
+20250625	13:52:51	4c2a75d4-b47d-4c47-8015-fa71e527667b	Found existing stock record for fuel type diesel with NAC code: GT 07986
+20250625	13:52:51	2fbcfe1e-1e66-4e8c-a47b-6b2fa07d2e35	Found existing stock record for fuel type diesel with NAC code: GT 07986
+20250625	13:52:51	51321a5e-cec9-46e6-9f05-be6c688dd749	Sending createIssue request: {"issueDate":"2025-06-25","issuedBy":{"name":"superadmin@god.com","staffId":"superadmin@god.com"},"items":[{"nacCode":"GT 07986","quantity":56,"equipmentNumber":"109","partNumber":"N/A"},{"nacCode":"GT 07986","quantity":200,"equipmentNumber":"112","partNumber":"N/A"},{"nacCode":"GT 07986","quantity":80,"equipmentNumber":"110","partNumber":"N/A"},{"nacCode":"GT 07986","quantity":90.99,"equipmentNumber":"113","partNumber":"N/A"}]}
+20250625	13:52:51	bd658a6e-e8b5-4d77-9218-5572d52a6b76	CreateIssue response data: {"message":"Issue created successfully","issueDate":"2025/06/25","issueSlipNumber":"17Y2081/82","issueIds":[83,84,85,86]}
+20250625	13:52:51	748ec011-f280-4884-8bd3-9c9beeda757f	Issue records created successfully with IDs: 83, 84, 85, 86
+20250625	13:52:51	bab5cbf7-6646-49ee-9727-d0e675dc0373	Fuel record created - Issue ID: 83, Fuel ID: 10, Equipment: 109, Fuel Type: diesel, Week: 2, FY: 2081/82
+20250625	13:52:51	592dbef4-3e37-4a77-8fd7-25b3e63431d5	Fuel record created - Issue ID: 84, Fuel ID: 11, Equipment: 112, Fuel Type: diesel, Week: 2, FY: 2081/82
+20250625	13:52:51	b6864630-68f2-4b75-af3e-eea87324b072	Fuel record created - Issue ID: 85, Fuel ID: 12, Equipment: 110, Fuel Type: diesel, Week: 2, FY: 2081/82
+20250625	13:52:51	64772d23-508f-46c3-98cf-78eb3584e13b	Fuel record created - Issue ID: 86, Fuel ID: 13, Equipment: 113, Fuel Type: diesel, Week: 2, FY: 2081/82
+20250626	10:33:57	4ce493b2-e0c5-4cb7-88c0-4bf56d76d841	Error getting last receive: Unknown column 'nac_code' in 'where clause'
+20250626	10:33:57	a085ca9d-45fd-4728-a1e0-df9c4fcfd954	Error getting last receive: Unknown column 'nac_code' in 'where clause'
+20250703	11:10:14	1c86edba-ebb7-4717-b16c-441a09fa7331	Error getting last receive: Unknown column 'nac_code' in 'where clause'
+20250703	11:10:14	28742f02-ad14-4ee2-8059-f64ff1ab6216	Error getting last receive: Unknown column 'nac_code' in 'where clause'
+20250703	11:21:08	80240430-9359-490a-873e-e1fb9de5d07b	Error getting last receive: Unknown column 'nac_code' in 'where clause'
+20250703	11:21:08	5d7c0e13-6852-4b92-9925-3b81a548b7ca	Error getting last receive: Unknown column 'nac_code' in 'where clause'
+20250703	11:26:39	33df37d7-c2bf-4a24-ae7d-14e50963b6e8	Error getting last receive: Unknown column 'nac_code' in 'where clause'
+20250703	11:26:39	ce53c038-53f8-4ca8-a9e2-dc0d2e8a43f0	Error getting last receive: Unknown column 'nac_code' in 'where clause'
+20250703	11:26:49	f7256f95-7807-4f32-b761-a0706d374376	Error receiving fuel: Failed to update stock balance
+20250703	11:32:05	215a2415-0a71-4978-aadf-bf6e3670b378	Fuel received successfully - Quantity: 100, Received by: superadmin@nac.com.np
+20250703	11:33:53	f4d1ee48-1fc6-495c-8cef-d2a8c5bb5d6e	Found existing stock record for fuel type petrol with NAC code: GT 00000
+20250703	11:33:53	6c4710b2-9ebc-4958-8c9f-3e7c418cc4ca	Found existing stock record for fuel type petrol with NAC code: GT 00000
+20250703	11:33:53	327f8c34-567f-466b-8c13-051865cf11ce	Sending createIssue request: {"issueDate":"2025-07-04","issuedBy":{"name":"superadmin@nac.com.np","staffId":"superadmin@nac.com.np"},"items":[{"nacCode":"GT 00000","quantity":20,"equipmentNumber":"1219","partNumber":"N/A"},{"nacCode":"GT 00000","quantity":20,"equipmentNumber":"1214","partNumber":"N/A"}]}
+20250703	11:33:53	371a4748-29ee-468c-895f-0dffae83cd82	CreateIssue response data: {"message":"Issue created successfully","issueDate":"2025/07/04","issueSlipNumber":"66Y2081/82","issueIds":[39,40]}
+20250703	11:33:53	12f87ef9-45af-4ae2-a33f-b810f3ffafb2	Issue records created successfully with IDs: 39, 40
+20250703	11:33:53	7371197c-b5fb-491a-a3cb-4e885ff19151	Fuel record created - Issue ID: 39, Fuel ID: 1, Equipment: 1219, Fuel Type: petrol, Week: 1, FY: 2081/82
+20250703	11:33:53	c8b68835-fe84-4989-80d4-e479f13fab34	Fuel record created - Issue ID: 40, Fuel ID: 2, Equipment: 1214, Fuel Type: petrol, Week: 1, FY: 2081/82
+20250703	11:34:53	973bf83b-6e0b-4784-b08d-8ea329b54009	Found existing stock record for fuel type petrol with NAC code: GT 00000
+20250703	11:34:53	956822d6-484f-484f-b214-a42e50db388d	Found existing stock record for fuel type petrol with NAC code: GT 00000
+20250703	11:34:53	db67c45f-d331-47c0-a6c1-589b77814fd9	Sending createIssue request: {"issueDate":"2025-07-05","issuedBy":{"name":"superadmin@nac.com.np","staffId":"superadmin@nac.com.np"},"items":[{"nacCode":"GT 00000","quantity":20,"equipmentNumber":"1214","partNumber":"N/A"},{"nacCode":"GT 00000","quantity":10,"equipmentNumber":"1225","partNumber":"N/A"}]}
+20250703	11:34:53	7b3ef5c2-aeab-40c3-a34d-876962c41332	CreateIssue response data: {"message":"Issue created successfully","issueDate":"2025/07/05","issueSlipNumber":"67Y2081/82","issueIds":[41,42]}
+20250703	11:34:53	f7dbe3bf-b6d3-465d-9f4d-f5d37a592eaa	Issue records created successfully with IDs: 41, 42
+20250703	11:34:53	9edb1e4e-94fb-4558-89ab-bb073ffba741	Fuel record created - Issue ID: 41, Fuel ID: 3, Equipment: 1214, Fuel Type: petrol, Week: 1, FY: 2081/82
+20250703	11:34:53	f6804eb6-a0ee-4036-b843-323fe5c5f1d5	Fuel record created - Issue ID: 42, Fuel ID: 4, Equipment: 1225, Fuel Type: petrol, Week: 1, FY: 2081/82

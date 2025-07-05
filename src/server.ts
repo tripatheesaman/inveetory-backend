@@ -28,7 +28,23 @@ const PORT = process.env.PORT || 3500;
 
 app.use(logger);
 app.use(cors({
-  origin: process.env.CORS_ORIGIN || 'http://localhost:3000',
+  origin: function (origin, callback) {
+    // Allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) return callback(null, true);
+    
+    const allowedOrigins = [
+      'http://localhost:3000',
+      'http://192.168.1.58:3000',
+      'http://192.168.1.58',
+      process.env.CORS_ORIGIN
+    ].filter(Boolean); // Remove undefined values
+    
+    if (allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true               
 }));
 app.use(cookieParser());

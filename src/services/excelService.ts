@@ -5,6 +5,7 @@ import pool from '../config/db';
 import sharp from 'sharp';
 import dotenv from 'dotenv';
 import { logEvents } from '../middlewares/logger';
+import { normalizeEquipmentNumbers } from '../utils/utils';
 
 dotenv.config();
 
@@ -273,7 +274,7 @@ export class ExcelService {
             worksheet.getCell(`F${currentRow}`).value = item.requested_quantity;
             worksheet.getCell(`G${currentRow}`).value = item.current_balance;
             worksheet.getCell(`H${currentRow}`).value = item.previous_rate;
-            worksheet.getCell(`I${currentRow}`).value = item.equipment_number;
+            worksheet.getCell(`I${currentRow}`).value = normalizeEquipmentNumbers(item.equipment_number);
                 specificationsText += `${item.nac_code}:${item.specifications}\n`;
 
                 if (!imagePlaced && item.image_path) {
@@ -596,7 +597,7 @@ export class ExcelService {
                     worksheet.getCell(`G${currentRow}`).value = Number((itemPrice + freightCharge).toFixed(2));
                     worksheet.getCell(`H${currentRow}`).value = vat_amount;
                     worksheet.getCell(`I${currentRow}`).value = Number(totalAmount.toFixed(2));
-                    worksheet.getCell(`J${currentRow}`).value = item.equipment_number || '';
+                    worksheet.getCell(`J${currentRow}`).value = normalizeEquipmentNumbers(item.equipment_number || '');
                     currentRow++;
                 }
             } else {
@@ -637,7 +638,7 @@ export class ExcelService {
                     worksheet.getCell(`I${currentRow}`).value = itemPlusFreight;
                     worksheet.getCell(`J${currentRow}`).value = Number(customsCharge.toFixed(2));
                     worksheet.getCell(`K${currentRow}`).value = finalTotal;
-                    worksheet.getCell(`L${currentRow}`).value = item.equipment_number || '';
+                    worksheet.getCell(`L${currentRow}`).value = normalizeEquipmentNumbers(item.equipment_number || '');
             currentRow++;
         }
 
@@ -650,6 +651,10 @@ export class ExcelService {
                 worksheet.getCell('K31').value = authorityDetails.quality_check_authority_name;
                 worksheet.getCell('K32').value = authorityDetails.quality_check_authority_designation;
             }
+
+            // After filling in the worksheet and before returning the buffer:
+            const sheetsToDelete = workbook.worksheets.filter(sheet => sheet.name !== sheetName);
+            sheetsToDelete.forEach(sheet => workbook.removeWorksheet(sheet.id));
 
             logEvents(`Successfully generated RRP Excel for: ${rrpNumber}`, "excelServiceLog.log");
         return await workbook.xlsx.writeBuffer();

@@ -1,0 +1,21 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = __importDefault(require("express"));
+const requestController_1 = require("../controllers/requestController");
+const verifyJWT_1 = __importDefault(require("../middlewares/verifyJWT"));
+const printController_1 = require("../controllers/printController");
+const router = express_1.default.Router();
+router.get('/pending', verifyJWT_1.default, requestController_1.getPendingRequests);
+router.get('/search', verifyJWT_1.default, requestController_1.searchRequests);
+router.get('/items/:requestNumber', verifyJWT_1.default, requestController_1.getRequestItems);
+router.get('/getlastrequestinfo', verifyJWT_1.default, requestController_1.getLastRequestInfo);
+router.post('/create', verifyJWT_1.default, requestController_1.createRequest);
+router.put('/:requestNumber', verifyJWT_1.default, requestController_1.updateRequest);
+router.put('/:requestNumber/approve', verifyJWT_1.default, requestController_1.approveRequest);
+router.put('/:requestNumber/reject', verifyJWT_1.default, requestController_1.rejectRequest);
+router.get('/:id', verifyJWT_1.default, requestController_1.getRequestById);
+router.get('/:requestNumber/print', printController_1.printRequest);
+exports.default = router;

@@ -9,7 +9,9 @@ import {
   getRRPSuppliers,
   addRRPSupplier,
   updateRRPSupplier,
-  deleteRRPSupplier
+  deleteRRPSupplier,
+  getFuelSettings,
+  updateFuelSettings
 } from '../controllers/settingsController';
 import verifyJWT from '../middlewares/verifyJWT';
 
@@ -37,5 +39,9 @@ router.get('/rrp/suppliers', getRRPSuppliers);
 router.post('/rrp/suppliers', addRRPSupplier);
 router.put('/rrp/suppliers/:id', updateRRPSupplier);
 router.delete('/rrp/suppliers/:id', deleteRRPSupplier);
+
+// Add this route for fuel settings
+router.get('/fuel', getFuelSettings);
+router.put('/fuel', updateFuelSettings);
 
 export default router; 

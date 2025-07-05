@@ -451,4 +451,205 @@ export const deleteRRPSupplier = async (req: Request, res: Response): Promise<vo
   } finally {
     connection.release();
   }
+};
+
+export const getFuelSettings = async (req: Request, res: Response): Promise<void> => {
+  const connection = await pool.getConnection();
+  try {
+    // 1. Get fuel authority details
+    const [authorityRows] = await connection.execute<RowDataPacket[]>(
+      'SELECT * FROM authority_details WHERE authority_type = ? ORDER BY id DESC LIMIT 1',
+      ['fuel']
+    );
+    let authorityDetails;
+    if (authorityRows.length === 0) {
+      authorityDetails = [{
+        id: 1,
+        authority_type: 'fuel',
+        level_1_authority_name: '',
+        level_1_authority_staffid: '',
+        level_1_authority_designation: null,
+        level_2_authority_name: null,
+        level_2_authority_staffid: null,
+        level_2_authority_designation: null,
+        level_3_authority_name: null,
+        level_3_authority_staffid: null,
+        level_3_authority_designation: null,
+        quality_check_authority_name: null,
+        quality_check_authority_staffid: null,
+        quality_check_authority_designation: null,
+        created_at: new Date(),
+        updated_at: new Date()
+      }];
+    } else {
+      authorityDetails = authorityRows;
+    }
+
+    // 2. Get valid equipment lists for petrol and diesel
+    const [petrolConfig] = await connection.execute<RowDataPacket[]>(
+      'SELECT config_value FROM app_config WHERE config_name = ? AND config_type = "fuel"',
+      ['valid_equipment_list_petrol']
+    );
+    const [dieselConfig] = await connection.execute<RowDataPacket[]>(
+      'SELECT config_value FROM app_config WHERE config_name = ? AND config_type = "fuel"',
+      ['valid_equipment_list_diesel']
+    );
+    const petrolList = petrolConfig.length > 0 ? petrolConfig[0].config_value.replace(/\r\n/g, '').split(',').map((item: string) => item.trim()).filter((item: string) => item) : [];
+    const dieselList = dieselConfig.length > 0 ? dieselConfig[0].config_value.replace(/\r\n/g, '').split(',').map((item: string) => item.trim()).filter((item: string) => item) : [];
+
+    // 3. For each equipment, get the latest is_kilometer_reset value from fuel_records
+    const allEquipment = Array.from(new Set([...petrolList, ...dieselList]));
+    let equipmentStatus: { [key: string]: { is_kilometer_reset: boolean | null, kilometers: number | null } } = {};
+    if (allEquipment.length > 0) {
+      const [records] = await connection.query<RowDataPacket[]>(
+        `SELECT fr.kilometers, fr.is_kilometer_reset, id.issued_for
+         FROM fuel_records fr
+         JOIN issue_details id ON fr.issue_fk = id.id
+         WHERE id.issued_for IN (?)
+         ORDER BY id.issue_date DESC, fr.id DESC`,
+        [allEquipment]
+      );
+      // Map to latest per equipment
+      for (const equipment of allEquipment) {
+        const record = records.find((r: any) => r.issued_for === equipment);
+        equipmentStatus[equipment] = record ? {
+          is_kilometer_reset: !!record.is_kilometer_reset,
+          kilometers: record.kilometers
+        } : { is_kilometer_reset: null, kilometers: null };
+      }
+    }
+
+    res.status(200).json({
+      authorityDetails,
+      petrolList,
+      dieselList,
+      equipmentStatus
+    });
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+    logEvents(`Error in getFuelSettings: ${errorMessage}`, "settingsLog.log");
+    res.status(500).json({
+      error: 'Internal Server Error',
+      message: errorMessage
+    });
+  } finally {
+    connection.release();
+  }
+};
+
+export const updateFuelSettings = async (req: Request, res: Response): Promise<void> => {
+  const { authorityDetails, petrolList, dieselList, equipmentStatus } = req.body;
+  const connection = await pool.getConnection();
+  try {
+    await connection.beginTransaction();
+
+    // 1. Update authority details for fuel
+    await connection.execute('DELETE FROM authority_details WHERE authority_type = ?', ['fuel']);
+    for (const auth of authorityDetails) {
+      await connection.execute(
+        `INSERT INTO authority_details (
+          authority_type,
+          level_1_authority_name,
+          level_1_authority_staffid,
+          level_1_authority_designation,
+          level_2_authority_name,
+          level_2_authority_staffid,
+          level_2_authority_designation,
+          level_3_authority_name,
+          level_3_authority_staffid,
+          level_3_authority_designation,
+          quality_check_authority_name,
+          quality_check_authority_staffid,
+          quality_check_authority_designation
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+        [
+          'fuel',
+          auth.level_1_authority_name,
+          auth.level_1_authority_staffid,
+          auth.level_1_authority_designation,
+          auth.level_2_authority_name,
+          auth.level_2_authority_staffid,
+          auth.level_2_authority_designation,
+          auth.level_3_authority_name,
+          auth.level_3_authority_staffid,
+          auth.level_3_authority_designation,
+          auth.quality_check_authority_name,
+          auth.quality_check_authority_staffid,
+          auth.quality_check_authority_designation
+        ]
+      );
+    }
+
+    // 2. Update valid equipment lists in app_config
+    const petrolListStr = petrolList.join(',');
+    const dieselListStr = dieselList.join(',');
+    // Petrol
+    const [petrolConfig] = await connection.execute<RowDataPacket[]>(
+      'SELECT * FROM app_config WHERE config_name = ? AND config_type = "fuel"',
+      ['valid_equipment_list_petrol']
+    );
+    if (petrolConfig.length > 0) {
+      await connection.execute(
+        'UPDATE app_config SET config_value = ? WHERE config_name = ? AND config_type = "fuel"',
+        [petrolListStr, 'valid_equipment_list_petrol']
+      );
+    } else {
+      await connection.execute(
+        'INSERT INTO app_config (config_name, config_value, config_type) VALUES (?, ?, "fuel")',
+        ['valid_equipment_list_petrol', petrolListStr]
+      );
+    }
+    // Diesel
+    const [dieselConfig] = await connection.execute<RowDataPacket[]>(
+      'SELECT * FROM app_config WHERE config_name = ? AND config_type = "fuel"',
+      ['valid_equipment_list_diesel']
+    );
+    if (dieselConfig.length > 0) {
+      await connection.execute(
+        'UPDATE app_config SET config_value = ? WHERE config_name = ? AND config_type = "fuel"',
+        [dieselListStr, 'valid_equipment_list_diesel']
+      );
+    } else {
+      await connection.execute(
+        'INSERT INTO app_config (config_name, config_value, config_type) VALUES (?, ?, "fuel")',
+        ['valid_equipment_list_diesel', dieselListStr]
+      );
+    }
+
+    // 3. For each equipment, if is_kilometer_reset is true, update the latest fuel_records
+    for (const equipment of Object.keys(equipmentStatus)) {
+      const status = equipmentStatus[equipment];
+      if (status && status.is_kilometer_reset === true) {
+        // Find the latest fuel_record for this equipment
+        const [latest] = await connection.query<RowDataPacket[]>(
+          `SELECT fr.id
+           FROM fuel_records fr
+           JOIN issue_details id ON fr.issue_fk = id.id
+           WHERE id.issued_for = ?
+           ORDER BY id.issue_date DESC, fr.id DESC
+           LIMIT 1`,
+          [equipment]
+        );
+        if (latest.length > 0) {
+          await connection.execute(
+            'UPDATE fuel_records SET is_kilometer_reset = 1 WHERE id = ?',
+            [latest[0].id]
+          );
+        }
+      }
+    }
+
+    await connection.commit();
+    res.status(200).json({ message: 'Fuel settings updated successfully' });
+  } catch (error) {
+    await connection.rollback();
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+    logEvents(`Error in updateFuelSettings: ${errorMessage}`, "settingsLog.log");
+    res.status(500).json({
+      error: 'Internal Server Error',
+      message: errorMessage
+    });
+  } finally {
+    connection.release();
+  }
 }; 

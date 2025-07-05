@@ -424,6 +424,29 @@ export const approveRequest = async (req: Request, res: Response): Promise<void>
 
         await connection.beginTransaction();
 
+        // First, get all NAC codes from the request being approved
+        const [requestItems] = await connection.query<RowDataPacket[]>(
+            `SELECT nac_code FROM request_details WHERE request_number = ?`,
+            [requestNumber]
+        );
+
+        // For each NAC code, check if there are existing requests with the same NAC code
+        // that haven't been received yet (receive_fk is null) and update their receive_fk to 0
+        // and set is_received as true
+        for (const item of requestItems) {
+            if (item.nac_code && item.nac_code !== 'N/A') {
+                await connection.query(
+                    `UPDATE request_details 
+                     SET receive_fk = 0, is_received = 1
+                     WHERE nac_code = ? 
+                     AND receive_fk IS NULL 
+                     AND request_number != ?`,
+                    [item.nac_code, requestNumber]
+                );
+            }
+        }
+
+        // Approve the current request
         await connection.query(
             `UPDATE request_details 
              SET approval_status = 'APPROVED',

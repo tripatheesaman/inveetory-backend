@@ -1218,3 +1218,9 @@
 20250603	10:09:43	17f5cde9-fff0-4e28-97b0-ad5693adfb7f	Found 1 stock details for processing
 20250603	10:09:43	d8312ab2-653b-45fe-a4c0-de054b711053	Successfully generated stock card report for 2 items
 20250604	12:28:44	3faae195-8dec-4b00-8247-13311f646fbc	Error in generateStockCardReport: Cannot read properties of undefined (reading 'replace')
+20250703	11:35:14	e527779a-53ac-4315-b35e-08d0eb3e43c6	Error in generateStockCardReport: Unknown column 'transaction_id' in 'field list'
+20250703	11:44:50	0debf545-b711-4fe6-847f-6740f2527900	Error in generateStockCardReport: Unknown column 'nac_code' in 'where clause'
+20250703	11:45:20	c4d7a878-697a-4040-a026-2c2b7edaa144	Error in generateStockCardReport: Failed to generate stock card Excel: Invalid time value
+20250703	11:46:31	a7116c5d-b1b1-469d-9870-9ca256e9553c	Error in generateStockCardReport: Failed to generate stock card Excel: Invalid time value
+20250703	11:48:37	8755b2ca-2774-4aaf-8a40-312e20dd6053	Error in generateStockCardReport: Failed to generate stock card Excel: Invalid time value
+20250703	11:56:47	47dfe9ab-4330-4376-b88b-c62b587d7789	Error in generateStockCardReport: Failed to generate stock card Excel: Invalid time value

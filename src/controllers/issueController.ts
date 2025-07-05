@@ -119,17 +119,6 @@ export const createIssue = async (req: Request, res: Response): Promise<void> =>
     const issueIds: number[] = [];
 
     for (const item of items) {
-      // Get the latest issue before the current issue date
-      const [previousIssues] = await connection.query<RowDataPacket[]>(
-        `SELECT remaining_balance 
-         FROM issue_details 
-         WHERE nac_code = ? 
-         AND issue_date < ? 
-         AND approval_status = 'APPROVED'
-         ORDER BY issue_date DESC, id DESC 
-         LIMIT 1`,
-        [item.nacCode, formattedIssueDate]
-      );
 
       // Get current stock balance
       const [stockResults] = await connection.query<RowDataPacket[]>(
@@ -160,15 +149,21 @@ export const createIssue = async (req: Request, res: Response): Promise<void> =>
 
       // Calculate adjusted balance
       let adjustedBalance;
-      if (beforeIssues.length === 0) {
-        // If no previous issues, use the minimum balance from after issues
-        adjustedBalance = afterIssues.length > 0 
-          ? Math.min(...afterIssues.map(issue => issue.remaining_balance))
-          : stockDetails.current_balance;
+      const maxIssueDate = allIssues.length > 0 ? new Date(Math.max(...allIssues.map(issue => new Date(String(issue.issue_date)).getTime()))) : null;
+      if (maxIssueDate && new Date(String(formattedIssueDate)) < maxIssueDate) {
+        if (beforeIssues.length === 0) {
+          if (afterIssues.length > 0) {
+            adjustedBalance = Math.min(...afterIssues.map(issue => issue.remaining_balance));
+          } else {
+            adjustedBalance = stockDetails.current_balance;
+          }
+        } else {
+          // Use max balance from before issues minus current issue quantity
+          const maxBalance = Math.max(...beforeIssues.map(issue => issue.remaining_balance));
+          adjustedBalance = maxBalance - item.quantity;
+        }
       } else {
-        // Use max balance from before issues minus current issue quantity
-        const maxBalance = Math.max(...beforeIssues.map(issue => issue.remaining_balance));
-        adjustedBalance = maxBalance - item.quantity;
+        adjustedBalance = stockDetails.current_balance;
       }
 
       // Insert the new issue record
@@ -193,7 +188,7 @@ export const createIssue = async (req: Request, res: Response): Promise<void> =>
           item.partNumber,
           item.quantity,
           item.equipmentNumber,
-          0,
+          adjustedBalance,
           issueCost,
           JSON.stringify(issuedBy),
           JSON.stringify(issuedBy),
@@ -274,13 +269,19 @@ export const approveIssue = async (req: Request, res: Response): Promise<void> =
         i.nac_code,
         i.issue_quantity,
         i.issue_date,
-        i.issue_slip_number,
-        s.current_balance
+        i.issue_slip_number
       FROM issue_details i
-      LEFT JOIN stock_details s ON i.nac_code COLLATE utf8mb4_unicode_ci = s.nac_code COLLATE utf8mb4_unicode_ci
       WHERE i.id IN (${issueIds.map(() => '?').join(',')})`,
       issueIds
     );
+
+    // Fetch current balances for all relevant NAC codes
+    const uniqueNacCodes = [...new Set(issueDetails.map((issue: any) => issue.nac_code))];
+    const [stockBalances] = await connection.query<RowDataPacket[]>(
+      `SELECT nac_code, current_balance FROM stock_details WHERE nac_code IN (${uniqueNacCodes.map(() => '?').join(',')})`,
+      uniqueNacCodes
+    );
+    const balanceMap = new Map(stockBalances.map((row: any) => [row.nac_code, row.current_balance]));
 
     // Process each issue
     for (const issue of issueDetails) {
@@ -299,15 +300,22 @@ export const approveIssue = async (req: Request, res: Response): Promise<void> =
 
       // Calculate adjusted balance
       let adjustedBalance;
-      if (beforeIssues.length === 0) {
-        // If no previous issues, use the minimum balance from after issues
-        adjustedBalance = afterIssues.length > 0 
-          ? Math.min(...afterIssues.map(i => i.remaining_balance))
-          : issue.current_balance;
+      const maxIssueDate = allIssues.length > 0 ? new Date(Math.max(...allIssues.map(i => new Date(String(i.issue_date)).getTime()))) : null;
+      const stockCurrentBalance = balanceMap.get(issue.nac_code);
+      if (maxIssueDate && new Date(String(issue.issue_date)) < maxIssueDate) {
+        if (beforeIssues.length === 0) {
+          if (afterIssues.length > 0) {
+            adjustedBalance = Math.min(...afterIssues.map(i => i.remaining_balance));
+          } else {
+            adjustedBalance = stockCurrentBalance;
+          }
+        } else {
+          // Use max balance from before issues minus current issue quantity
+          const maxBalance = Math.max(...beforeIssues.map(i => i.remaining_balance));
+          adjustedBalance = maxBalance - issue.issue_quantity;
+        }
       } else {
-        // Use max balance from before issues minus current issue quantity
-        const maxBalance = Math.max(...beforeIssues.map(i => i.remaining_balance));
-        adjustedBalance = maxBalance - issue.issue_quantity;
+        adjustedBalance = stockCurrentBalance;
       }
 
       // Update the current issue's remaining balance

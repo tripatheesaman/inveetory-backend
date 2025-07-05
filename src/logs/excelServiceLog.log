@@ -267,3 +267,89 @@
 20250620	12:09:01	037179b7-c2ca-4480-9174-f1c852a56efe	Successfully generated RRP Excel for: L003T1
 20250620	12:18:35	581b30de-cf86-4245-9910-ac0eadb32f26	Generating stock card Excel for 1 items
 20250620	12:18:36	31ae299d-f654-4a96-b0e7-82ca3987bdce	Successfully generated stock card Excel
+20250626	11:11:05	c7d233ac-ec6c-43d7-bc08-b0d05c14f85d	Generating request Excel for request number: R001
+20250626	11:11:05	cc10d282-8fe1-4459-b750-e1fd585fe056	Fetching request details for request number: R001
+20250626	11:11:05	9fa66214-5913-46fa-acfe-d839658b945e	Found 3 items for request: R001
+20250626	11:11:05	111e13ba-00f2-4010-9f90-8f41b33f9104	Successfully fetched all details for request: R001
+20250626	11:11:05	152e7f76-6fec-40ae-9c8f-4db879a2d021	Resizing image: /images/request/17e3dbc5-2a3b-4099-9ff7-f44a3e25c3b2.png
+20250626	11:11:05	980f792c-d8dd-4941-9dc9-4784a46a6fb1	Successfully resized image: /images/request/17e3dbc5-2a3b-4099-9ff7-f44a3e25c3b2.png
+20250626	11:11:05	7f8f63e4-7f8d-4dfa-bf8f-fb3c58fd2392	Resizing image: /images/request/17e3dbc5-2a3b-4099-9ff7-f44a3e25c3b2.png
+20250626	11:11:05	98c90c60-fc70-49b0-9a02-bf9823d7bf09	Successfully resized image: /images/request/17e3dbc5-2a3b-4099-9ff7-f44a3e25c3b2.png
+20250626	11:11:05	526e88fe-ea7b-4659-9103-9a2418182e9e	Successfully generated request Excel for: R001
+20250626	11:12:50	b67d90a6-2cc4-4cc6-94d5-3f7c018624e0	Generating RRP Excel for RRP number: L001T1
+20250626	11:12:50	13ab9d24-c6d8-4243-a773-016cdbabcee1	Fetching RRP details for RRP number: L001T1
+20250626	11:12:50	1fc15297-9df5-450a-9b3b-8efa0aff1e9b	Successfully fetched all RRP details for: L001T1
+20250626	11:12:50	8da09db3-f609-4420-b032-924f42e933ac	Successfully generated RRP Excel for: L001T1
+20250626	11:13:32	7f795f12-b174-4026-81f6-4a530ed456bc	Generating RRP Excel for RRP number: F001T1
+20250626	11:13:32	f8478487-648f-4872-bdc9-0f8dd87ed2c8	Fetching RRP details for RRP number: F001T1
+20250626	11:13:32	38025fcc-4daf-4a97-80cc-0637d681b85d	Successfully fetched all RRP details for: F001T1
+20250626	11:13:32	2b255408-c8fa-4826-8c0d-c9df472295e2	Successfully generated RRP Excel for: F001T1
+20250626	11:34:05	b8a26ad9-f383-4aae-88b1-e4d8a0c87a07	Generating RRP Excel for RRP number: F001T1
+20250626	11:34:05	76cbd50c-70a6-464a-b428-943f222d3881	Fetching RRP details for RRP number: F001T1
+20250626	11:34:05	8b6c7636-b783-4ad6-8e20-1462627c4c68	Successfully fetched all RRP details for: F001T1
+20250626	11:34:06	3a1d4a23-8be6-4dea-bf09-a08249cda256	Successfully generated RRP Excel for: F001T1
+20250626	11:34:24	992d8ee4-9bf6-4581-a364-841b0b06ee96	Generating request Excel for request number: R001
+20250626	11:34:24	9696c7a8-e633-410d-9d33-e30f12e466fb	Fetching request details for request number: R001
+20250626	11:34:24	3e6bd0c8-7930-467a-8096-119f60e533c3	Found 3 items for request: R001
+20250626	11:34:24	65c352bd-70b6-4e7f-87b0-531bb0a24b7e	Successfully fetched all details for request: R001
+20250626	11:34:24	c784ec68-a67c-425e-b1f5-cf98948db130	Resizing image: /images/request/17e3dbc5-2a3b-4099-9ff7-f44a3e25c3b2.png
+20250626	11:34:24	a4e47b1d-4bc4-48eb-8bd2-0cf929bcca57	Resizing image: /images/request/17e3dbc5-2a3b-4099-9ff7-f44a3e25c3b2.png
+20250626	11:34:24	cf61aa3e-14c7-4aac-b7ef-706af73ac61c	Successfully resized image: /images/request/17e3dbc5-2a3b-4099-9ff7-f44a3e25c3b2.png
+20250626	11:34:24	b9af193e-95e2-4aa9-90a7-a2f30dfd4afa	Successfully resized image: /images/request/17e3dbc5-2a3b-4099-9ff7-f44a3e25c3b2.png
+20250626	11:34:24	73c8abdb-ae19-428f-80ca-a0752a614892	Successfully generated request Excel for: R001
+20250626	11:35:40	2dc70f21-a8fd-4256-87b5-1e89e62f906a	Generating RRP Excel for RRP number: L001T1
+20250626	11:35:40	479ce649-8449-428f-a0d5-27330237aaa8	Fetching RRP details for RRP number: L001T1
+20250626	11:35:40	a94cff8e-07d1-4bec-a741-aeaa8292895d	Successfully fetched all RRP details for: L001T1
+20250626	11:35:40	cd997ca1-5bad-4282-992b-0812fd42454f	Successfully generated RRP Excel for: L001T1
+20250626	11:35:48	b919b64b-75c9-4e60-a09a-4b7c2d3a9605	Generating RRP Excel for RRP number: F001T1
+20250626	11:35:48	fcef7ae6-8f44-4fdf-8a3b-cb76c7222017	Fetching RRP details for RRP number: F001T1
+20250626	11:35:48	33e29ca5-8569-4cb6-8004-9c6eaacd07b9	Successfully fetched all RRP details for: F001T1
+20250626	11:35:48	cb027896-a86d-4c5e-9273-6e793b418d5a	Successfully generated RRP Excel for: F001T1
+20250626	12:22:19	0eedf4a1-b7a0-40a6-a9a2-4cffec78b679	Generating stock card Excel for 1 items
+20250626	12:22:19	98fe0dba-be29-4b64-b6d4-ac3560ae98af	Successfully generated stock card Excel
+20250626	12:22:47	869d640c-50e0-4d79-8b9d-9d10bd8f5eeb	Generating stock card Excel for 1 items
+20250626	12:22:47	43db14e6-c42d-4beb-94ed-7acd81443e2d	Successfully generated stock card Excel
+20250703	10:25:38	c6b48b7f-0d0c-458e-ba90-9e6b59ad0694	Generating request Excel for request number: R001
+20250703	10:25:38	6dadea5f-4fe0-4d6b-8074-469e87b30f26	Fetching request details for request number: R001
+20250703	10:25:38	0645b422-b51d-4aa5-8b93-546a756b0d80	Found 1 items for request: R001
+20250703	10:25:38	3ddc7c95-9212-43e9-a134-452efb654c39	Successfully fetched all details for request: R001
+20250703	10:25:38	86ef1bd2-f2e6-4536-8d29-42445f243b9c	Successfully generated request Excel for: R001
+20250703	10:25:38	a9ad8315-b8cf-4e27-8e74-0aefa5766138	Generating request Excel for request number: R002
+20250703	10:25:38	623813db-915d-49f3-bb87-6fe02f766216	Fetching request details for request number: R002
+20250703	10:25:38	2ee1068b-7c3e-45c7-8a79-fd66b70f544c	Found 1 items for request: R002
+20250703	10:25:38	25ef54ed-b97b-4359-b282-1fd24cb1ad7e	Successfully fetched all details for request: R002
+20250703	10:25:38	aa672e8f-0e65-45f5-979d-621991fd14c7	Successfully generated request Excel for: R002
+20250703	11:00:28	63cbfcb1-ee5e-4cd3-91d9-bd6a95217394	Generating request Excel for request number: R001
+20250703	11:00:28	9c61292f-1a36-4ac5-9e7c-6cee818dfee7	Fetching request details for request number: R001
+20250703	11:00:28	e6b63720-4cbb-4f00-9157-1cb975f73b64	Found 2 items for request: R001
+20250703	11:00:28	02aac640-cb45-4acb-b6a6-060721750146	Successfully fetched all details for request: R001
+20250703	11:00:28	df8cd73a-ad25-459b-82af-3e26f634d8f4	Resizing image: /images/request/0ac6a740-144d-425f-bd2a-f90dd76eaded.blob
+20250703	11:00:28	9eda202e-70a1-4fd0-b45f-accb22d3bb8b	Successfully resized image: /images/request/0ac6a740-144d-425f-bd2a-f90dd76eaded.blob
+20250703	11:00:28	5cbd4420-2042-4ad2-8aa2-58a4cab473bc	Resizing image: /images/request/0ac6a740-144d-425f-bd2a-f90dd76eaded.blob
+20250703	11:00:28	9fc3bb80-a83c-4f45-bbbd-e9c89b712d29	Successfully resized image: /images/request/0ac6a740-144d-425f-bd2a-f90dd76eaded.blob
+20250703	11:00:28	240225f5-3cad-4cd9-8d32-a41018418da7	Successfully generated request Excel for: R001
+20250703	11:00:28	0e2e2716-a42e-498a-9dc0-237d7add3cb9	Generating request Excel for request number: R001
+20250703	11:00:28	2877b5f5-ca40-4c60-ab6d-a79de72f7cb3	Fetching request details for request number: R001
+20250703	11:00:28	6b3c857e-6b58-4ca7-8ef2-c8e3acc2dd1e	Found 2 items for request: R001
+20250703	11:00:28	7a72e619-9194-4d64-b4ed-9721a2fd23b8	Successfully fetched all details for request: R001
+20250703	11:00:28	9ae3d225-7bad-48c1-b9b2-3411d75d71ab	Resizing image: /images/request/0ac6a740-144d-425f-bd2a-f90dd76eaded.blob
+20250703	11:00:28	8c452380-4e12-468c-bbb6-1c35170e885e	Successfully resized image: /images/request/0ac6a740-144d-425f-bd2a-f90dd76eaded.blob
+20250703	11:00:28	94dcc636-19ec-479d-bc71-858cefe2787e	Resizing image: /images/request/0ac6a740-144d-425f-bd2a-f90dd76eaded.blob
+20250703	11:00:28	8d65886c-6009-45e0-bf27-43956859a9d2	Successfully resized image: /images/request/0ac6a740-144d-425f-bd2a-f90dd76eaded.blob
+20250703	11:00:28	31b7a33e-88ec-458c-a941-9a4d3af2bccd	Successfully generated request Excel for: R001
+20250703	11:45:20	ebf65f5e-e140-4786-8a47-e34f094b8ee7	Generating stock card Excel for 1 items
+20250703	11:45:20	1008d103-2295-4bef-92dd-3039222b67f1	Error generating stock card Excel: Invalid time value
+20250703	11:45:40	6fdb72aa-46fb-485f-8cd8-cb42bbf44263	Generating stock card Excel for 1 items
+20250703	11:45:40	86fab3f5-15f5-4e82-8a31-76c6d7d728a0	Successfully generated stock card Excel
+20250703	11:45:50	d9c3b51c-1187-4f69-9718-e06cf3cb0716	Generating stock card Excel for 1 items
+20250703	11:45:50	6df667a5-55a4-4a82-92f9-847ad7092dac	Successfully generated stock card Excel
+20250703	11:46:31	3dfaada7-d41e-48cf-9d0d-0303751dd896	Generating stock card Excel for 1 items
+20250703	11:46:31	9c2cf7d5-78cc-433d-abb8-5213d714a24e	Error generating stock card Excel: Invalid time value
+20250703	11:48:37	44b4167c-09ca-4c19-8c77-8ff93d40fce5	Generating stock card Excel for 1 items
+20250703	11:48:37	feef069e-d257-47d5-944f-ce273da34e8c	Error generating stock card Excel: Invalid time value
+20250703	11:56:47	44e9d80b-99be-4ad3-a8cf-9601069eb77a	Generating stock card Excel for 1 items
+20250703	11:56:47	74051fab-ea5e-4adf-ac95-7c5666631d33	Error generating stock card Excel: Invalid time value
+20250703	11:57:38	8da491c7-c6a9-44cf-af1a-ae8eba10d80c	Generating stock card Excel for 1 items
+20250703	11:57:38	b1bd6023-588a-4afe-88a7-e4e8d44ec406	Successfully generated stock card Excel
+20250703	11:58:12	b4bb75e4-9da0-4f97-b051-0762c93d1ad8	Generating stock card Excel for 1 items
+20250703	11:58:12	eb7f55cf-bba4-4b6a-bfc5-1797b0ca665a	Successfully generated stock card Excel
